@@ -1,16 +1,36 @@
 package udp;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by tangyifeng on 2017/10/10.
  * Email: yifengtang_hust@outlook.com
  */
-public class UDPPackage {
+public class UDPPackage implements Serializable {
 
     private int seqNum;
     private byte[] data;
     private boolean ack;
+    private boolean hello;
+    private boolean goodbye;
+
+    public boolean isHello() {
+        return hello;
+    }
+
+    public void setHello(boolean hello) {
+        this.hello = hello;
+    }
+
+    public boolean isGoodbye() {
+        return goodbye;
+    }
+
+    public void setGoodbye(boolean goodbye) {
+        this.goodbye = goodbye;
+    }
+
     private int hashcode;
     private boolean cor;
 

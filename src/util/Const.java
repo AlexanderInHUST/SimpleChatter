@@ -6,7 +6,20 @@ package util;
  */
 public class Const {
 
+    // debug
+    public static final boolean IS_DEBUG = true;
+
+    // package const
     public static final long DEFAULT_TIMEOUT = 500;
     public static final int PACKAGE_LEN = 1024;
     public static final int WINDOW_WIDTH = 1000;
+
+    // three hello const
+    public final static int RECEIVER = 0;
+    public final static int SENDER = 1;
+
+
+    // UDP
+    public final static int UDP_PORT = 8888;
+    public final static int UDP_POWER_BYTE = 2;
 }

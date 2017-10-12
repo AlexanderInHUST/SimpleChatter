@@ -14,7 +14,7 @@ import static util.Const.PACKAGE_LEN;
  */
 public class UDPPackageHelper {
 
-    public byte[] composeUDPPackage(ArrayList<UDPPackage> packsArray) {
+    public byte[] composeDataUDPPackage(ArrayList<UDPPackage> packsArray) {
         ArrayList<byte[]> bytes = new ArrayList<>();
         for (UDPPackage pack : packsArray) {
             bytes.add(pack.getData());
@@ -22,19 +22,33 @@ public class UDPPackageHelper {
         return ArrayUtils.concatAll(bytes);
     }
 
-    public ArrayList<UDPPackage> cutUDPPackage(byte[] data, boolean isAck) {
+    public ArrayList<UDPPackage> cutDataUDPPackage(byte[] data) {
         ArrayList<UDPPackage> packsArray = new ArrayList<>();
-        if (!isAck) {
-            int nums = data.length / PACKAGE_LEN;
-            for (int i = 0; i < nums + 1; i++) {
-                int length = Math.min((i + 1) * PACKAGE_LEN, data.length);
-                byte[] curBytes = new byte[length];
-                System.arraycopy(data, i * PACKAGE_LEN, curBytes, 0, length);
-                packsArray.add(createUDPPackage(i, curBytes, false));
-            }
-        } else {
-            packsArray.add(createUDPPackage(0, data,true)); // Data is ack_seq in String
+        int nums = (data.length - 1) / PACKAGE_LEN;
+        for (int i = 0; i < nums + 1; i++) {
+            int length = Math.min(PACKAGE_LEN, data.length - i * PACKAGE_LEN);
+            byte[] curBytes = new byte[length];
+            System.arraycopy(data, i * PACKAGE_LEN, curBytes, 0, length);
+            packsArray.add(createDataUDPPackage(i, curBytes));
         }
+        return packsArray;
+    }
+
+    public ArrayList<UDPPackage> getAckPackage(int seqnum) {
+        ArrayList<UDPPackage> packsArray = new ArrayList<>();
+        packsArray.add(createAckUDPPackage(seqnum));
+        return packsArray;
+    }
+
+    public ArrayList<UDPPackage> getHelloPackage(int seqnum) {
+        ArrayList<UDPPackage> packsArray = new ArrayList<>();
+        packsArray.add(createHelloUDPPackage(seqnum));
+        return packsArray;
+    }
+
+    public ArrayList<UDPPackage> getGoodbyePackage(int seqnum) {
+        ArrayList<UDPPackage> packsArray = new ArrayList<>();
+        packsArray.add(createGoodbyeUDPPackage(seqnum));
         return packsArray;
     }
 
@@ -44,18 +58,57 @@ public class UDPPackageHelper {
         return (hashCode == pack.getHashcode()) && (cor == pack.isCor());
     }
 
-    private UDPPackage createUDPPackage(int seqNum, byte[] data, boolean isAck) {
+    private UDPPackage createDataUDPPackage(int seqNum, byte[] data) {
         UDPPackage pack = new UDPPackage();
         pack.setSeqNum(seqNum);
         pack.setData(data);
-        pack.setAck(isAck);
+        pack.setAck(false);
+        pack.setHello(false);
+        pack.setGoodbye(false);
+        pack.setHashcode(calHashcode(pack));
+        pack.setCor(calCor(pack));
+        return pack;
+    }
+
+    private UDPPackage createAckUDPPackage(int seqNum) {
+        UDPPackage pack = new UDPPackage();
+        pack.setSeqNum(seqNum);
+        pack.setData(null);
+        pack.setAck(true);
+        pack.setHello(false);
+        pack.setGoodbye(false);
+        pack.setHashcode(calHashcode(pack));
+        pack.setCor(calCor(pack));
+        return pack;
+    }
+
+    private UDPPackage createHelloUDPPackage(int seqNum) {
+        UDPPackage pack = new UDPPackage();
+        pack.setSeqNum(seqNum);
+        pack.setData(null);
+        pack.setAck(false);
+        pack.setHello(true);
+        pack.setGoodbye(false);
+        pack.setHashcode(calHashcode(pack));
+        pack.setCor(calCor(pack));
+        return pack;
+    }
+
+    private UDPPackage createGoodbyeUDPPackage(int seqNum) {
+        UDPPackage pack = new UDPPackage();
+        pack.setSeqNum(seqNum);
+        pack.setData(null);
+        pack.setAck(false);
+        pack.setHello(false);
+        pack.setGoodbye(true);
         pack.setHashcode(calHashcode(pack));
         pack.setCor(calCor(pack));
         return pack;
     }
 
     private int calHashcode(UDPPackage udpPackage) {
-        return udpPackage.getSeqNum() + Arrays.hashCode(udpPackage.getData()) + (udpPackage.isAck() ? 1 : 0);
+        return udpPackage.getSeqNum() + Arrays.hashCode(udpPackage.getData()) + (udpPackage.isAck() ? 1 : 0)
+                + (udpPackage.isHello() ? 1 : 0) + (udpPackage.isGoodbye() ? 1 : 0);
     }
 
     private boolean calCor(UDPPackage udpPackage) {
@@ -66,12 +119,12 @@ public class UDPPackageHelper {
         cor &= udpPackage.getHashcode();
         return (cor & 1) == 1;
     }
-//    public static void main(String[] args) {
-//        UDPPackageHelper helper = new UDPPackageHelper();
-//        byte[] test = "wtgrwegeijgojfdsobjrtelkglfdsakewff".getBytes();
-//        ArrayList<UDPPackage> packages = helper.cutUDPPackage(Integer.toString(Integer.MAX_VALUE).getBytes(), true);
-//        System.out.println(helper.checkUDPPackage(packages.get(0)));
-//        String string = new String(helper.composeUDPPackage(packages));
-//        System.out.println(string);
-//    }
+    public static void main(String[] args) {
+        UDPPackageHelper helper = new UDPPackageHelper();
+        byte[] test = "wtgrwegeijgojfdsobjrtelkglfdsakewff".getBytes();
+        ArrayList<UDPPackage> packages = helper.cutDataUDPPackage(Integer.toString(Integer.MAX_VALUE).getBytes());
+        System.out.println(helper.checkUDPPackage(packages.get(0)));
+        String string = new String(helper.composeDataUDPPackage(packages));
+        System.out.println(string);
+    }
 }
