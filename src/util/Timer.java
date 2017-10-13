@@ -111,11 +111,10 @@ public class Timer {
 //        });
 //        timer.startCount();
 //        try {
-//            Thread.sleep(499);
+//            Thread.sleep(90);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
 //        timer.stopCount();
 //    }
-
 }

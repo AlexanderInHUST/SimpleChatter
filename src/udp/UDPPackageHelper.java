@@ -73,7 +73,7 @@ public class UDPPackageHelper {
     private UDPPackage createAckUDPPackage(int seqNum) {
         UDPPackage pack = new UDPPackage();
         pack.setSeqNum(seqNum);
-        pack.setData(null);
+        pack.setData(new byte[]{});
         pack.setAck(true);
         pack.setHello(false);
         pack.setGoodbye(false);
@@ -85,7 +85,7 @@ public class UDPPackageHelper {
     private UDPPackage createHelloUDPPackage(int seqNum) {
         UDPPackage pack = new UDPPackage();
         pack.setSeqNum(seqNum);
-        pack.setData(null);
+        pack.setData(new byte[]{});
         pack.setAck(false);
         pack.setHello(true);
         pack.setGoodbye(false);
@@ -97,7 +97,7 @@ public class UDPPackageHelper {
     private UDPPackage createGoodbyeUDPPackage(int seqNum) {
         UDPPackage pack = new UDPPackage();
         pack.setSeqNum(seqNum);
-        pack.setData(null);
+        pack.setData(new byte[]{});
         pack.setAck(false);
         pack.setHello(false);
         pack.setGoodbye(true);
@@ -119,12 +119,12 @@ public class UDPPackageHelper {
         cor &= udpPackage.getHashcode();
         return (cor & 1) == 1;
     }
-    public static void main(String[] args) {
-        UDPPackageHelper helper = new UDPPackageHelper();
-        byte[] test = "wtgrwegeijgojfdsobjrtelkglfdsakewff".getBytes();
-        ArrayList<UDPPackage> packages = helper.cutDataUDPPackage(Integer.toString(Integer.MAX_VALUE).getBytes());
-        System.out.println(helper.checkUDPPackage(packages.get(0)));
-        String string = new String(helper.composeDataUDPPackage(packages));
-        System.out.println(string);
-    }
+//    public static void main(String[] args) {
+//        UDPPackageHelper helper = new UDPPackageHelper();
+//        byte[] test = "wtgrwegeijgojfdsobjrtelkglfdsakewff".getBytes();
+//        ArrayList<UDPPackage> packages = helper.cutDataUDPPackage(Integer.toString(Integer.MAX_VALUE).getBytes());
+//        System.out.println(helper.checkUDPPackage(packages.get(0)));
+//        String string = new String(helper.composeDataUDPPackage(packages));
+//        System.out.println(string);
+//    }
 }

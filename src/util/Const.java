@@ -10,7 +10,7 @@ public class Const {
     public static final boolean IS_DEBUG = true;
 
     // package const
-    public static final long DEFAULT_TIMEOUT = 500;
+    public static final long DEFAULT_TIMEOUT = 100;
     public static final int PACKAGE_LEN = 1024;
     public static final int WINDOW_WIDTH = 1000;
 
@@ -20,6 +20,8 @@ public class Const {
 
 
     // UDP
-    public final static int UDP_PORT = 8888;
+    public final static int UDP_BACK_PORT = 8888;
+    public final static int UDP_SEND_PORT = 8999;
     public final static int UDP_POWER_BYTE = 2;
+    public final static int UDP_TIMEOUT = 500;
 }
