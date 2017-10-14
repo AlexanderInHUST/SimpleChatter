@@ -42,11 +42,11 @@ public class ThreeHello {
                 case 1: {
                     hello1 = packageHelper.getHelloPackage(1).get(0);
                     helper.sendUDP(hello1, hostname, port + 1);
-//                    Log.log(CLASS_NAME, "hello 1 has sent!");
+                    Log.log(CLASS_NAME, "hello 1 has sent!");
 
                     setTimer(1);
                     ack1 = helper.receiveUDP(port);
-//                    Log.log(CLASS_NAME, "ack 1 has received!");
+                    Log.log(CLASS_NAME, "ack 1 has received!");
 
                     if (ack1 != null) {
                         state = 2;
@@ -58,25 +58,26 @@ public class ThreeHello {
                 case 2: {
                     clearTimer(1);
                     if (packageHelper.checkUDPPackage(ack1) && ack1.isAck() && ack1.getSeqNum() == 1) {
-//                        Log.log(CLASS_NAME, "ack 1 has accepted!");
+                        Log.log(CLASS_NAME, "ack 1 has accepted!");
                         state = 3;
                         break;
                     }
-//                    Log.log(CLASS_NAME, "ack 1 has not accepted!");
+                    Log.log(CLASS_NAME, "ack 1 has not accepted!");
                     state = 4;
                     break;
                 }
                 case 3: {
                     UDPPackage hello2 = packageHelper.getHelloPackage(2).get(0);
                     helper.sendUDP(hello2, hostname, port + 1);
-//                    Log.log(CLASS_NAME, "hello 2 has sent!");
+                    Log.log(CLASS_NAME, "hello 2 has sent!");
                     return true;
                 }
                 case 4: {
                     sendCount++;
                     clearTimer(1);
-//                    Log.log(CLASS_NAME, "sender timeout!");
+                    Log.log(CLASS_NAME, "sender timeout!");
                     if (sendCount > 50) {
+                        helper.shutdownReceiveUDP();
                         return false;
                     } else {
                         state = 1;
@@ -104,24 +105,24 @@ public class ThreeHello {
                 case 1: {
                     if (packageHelper.checkUDPPackage(hello1) && hello1.isHello() && hello1.getSeqNum() == 1) {
                         state = 2;
-//                        Log.log(CLASS_NAME, "hello 1 has accepted!");
+                        Log.log(CLASS_NAME, "hello 1 has accepted!");
                         break;
                     }
-//                    Log.log(CLASS_NAME, "hello 1 has not accepted!");
+                    Log.log(CLASS_NAME, "hello 1 has not accepted!");
                     state = 4;
                     break;
                 }
                 case 2: {
                     ack1 = packageHelper.getAckPackage(1).get(0);
                     helper.sendUDP(ack1, helper.getSenderHost(), port);
-//                    Log.log(CLASS_NAME, "ack 1 has sent!");
+                    Log.log(CLASS_NAME, "ack 1 has sent!");
 
                     setTimer(1);
                     hello2 = helper.receiveUDP(port + 1);
 
                     if (hello2 != null) {
                         state = 3;
-//                        Log.log(CLASS_NAME, "hello 2 has received!");
+                        Log.log(CLASS_NAME, "hello 2 has received!");
                     } else {
                         state = 4;
                     }
@@ -130,18 +131,19 @@ public class ThreeHello {
                 case 3: {
                     clearTimer(1);
                     if (packageHelper.checkUDPPackage(hello2) && hello2.isHello() && hello2.getSeqNum() == 2) {
-//                        Log.log(CLASS_NAME, "hello 2 has accepted!");
+                        Log.log(CLASS_NAME, "hello 2 has accepted!");
                         return true;
                     }
-//                    Log.log(CLASS_NAME, "hello 2 has not accepted!");
+                    Log.log(CLASS_NAME, "hello 2 has not accepted!");
                     state = 4;
                     break;
                 }
                 case 4: {
                     receiveCount++;
-//                    Log.log(CLASS_NAME, "receiver timeout!");
+                    Log.log(CLASS_NAME, "receiver timeout!");
                     clearTimer(1);
                     if (receiveCount > 50) {
+                        helper.shutdownReceiveUDP();
                         return false;
                     } else {
                         state = 0;
@@ -193,11 +195,6 @@ public class ThreeHello {
             result1 = hello1.startAsReceiver(UDP_SEND_PORT);
             System.out.println(result1);
         }).start();
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         result2 = hello2.startAsSender("localhost", UDP_SEND_PORT);
         System.out.println(result2);
     }

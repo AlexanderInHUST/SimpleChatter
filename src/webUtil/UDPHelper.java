@@ -8,6 +8,7 @@ import util.Log;
 
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 
 import static util.Const.*;
 
@@ -24,9 +25,15 @@ public class UDPHelper {
     private boolean result;
     private byte[] sendBuff, receiveBuff;
     private String senderHost = "";
+    private int offset;
 
     public interface TimeoutListener {
         void onTimeout();
+    }
+
+    public UDPHelper() {
+        Random random = new Random();
+        offset = random.nextInt() % 50;
     }
 
     public boolean sendUDP(UDPPackage pack, String hostname, int port) {
@@ -35,7 +42,7 @@ public class UDPHelper {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
             outputStream.writeObject(pack);
-            sendSocket = new DatagramSocket(UDP_BACK_PORT);
+            sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
             InetAddress address = InetAddress.getByName(hostname);
             sendBuff = bytes.toByteArray();
             sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
@@ -87,7 +94,7 @@ public class UDPHelper {
     }
 
     public void shutdownReceiveUDP() {
-        if(!receiveSocket.isClosed()) {
+        if(receiveSocket != null && !receiveSocket.isClosed()) {
             receiveSocket.close();
         }
 //        Log.log(CLASS_NAME, "pack-receive shutdown!");

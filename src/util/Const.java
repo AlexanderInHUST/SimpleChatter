@@ -10,7 +10,7 @@ public class Const {
     public static final boolean IS_DEBUG = true;
 
     // package const
-    public static final long DEFAULT_TIMEOUT = 100;
+    public static final long DEFAULT_TIMEOUT = 10;
     public static final int PACKAGE_LEN = 1024;
     public static final int WINDOW_WIDTH = 1000;
 
