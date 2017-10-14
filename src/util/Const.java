@@ -12,7 +12,7 @@ public class Const {
     // package const
     public static final long DEFAULT_TIMEOUT = 10;
     public static final int PACKAGE_LEN = 1024;
-    public static final int WINDOW_WIDTH = 1000;
+    public static final int WINDOW_WIDTH = 3;
 
     // three hello const
     public final static int RECEIVER = 0;

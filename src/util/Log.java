@@ -6,8 +6,8 @@ package util;
  */
 public class Log {
 
-    public static void log(String className, String detail) {
-        if (Const.IS_DEBUG) {
+    public static void log(String className, String detail, boolean isDebug) {
+        if (isDebug) {
             System.out.println(className + ": " + detail);
         }
     }

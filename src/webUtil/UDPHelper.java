@@ -19,6 +19,7 @@ import static util.Const.*;
 public class UDPHelper {
 
     private static final String CLASS_NAME = "UDPHelper";
+    private static final boolean IS_DEBUG = false;
 
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
@@ -33,7 +34,7 @@ public class UDPHelper {
 
     public UDPHelper() {
         Random random = new Random();
-        offset = random.nextInt() % 50;
+        offset = random.nextInt() % 500;
     }
 
     public boolean sendUDP(UDPPackage pack, String hostname, int port) {
@@ -48,7 +49,7 @@ public class UDPHelper {
             sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
             sendSocket.send(sendPacket);
 
-//            Log.log(CLASS_NAME, "pack has been sent!");
+            Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
 
             bytes.close();
             outputStream.close();
@@ -56,7 +57,7 @@ public class UDPHelper {
             result = true;
         } catch (IOException e) {
             e.printStackTrace();
-//            Log.log(CLASS_NAME, "pack-sending fail!");
+            Log.log(CLASS_NAME, "pack-sending fail!", IS_DEBUG);
             sendSocket.close();
             result = false;
         }
@@ -70,7 +71,7 @@ public class UDPHelper {
             receivePacket = new DatagramPacket(receiveBuff, 0, UDP_POWER_BYTE * PACKAGE_LEN);
             receiveSocket.receive(receivePacket);
 
-//            Log.log(CLASS_NAME, "pack has been received!");
+            Log.log(CLASS_NAME, "pack has been received!", IS_DEBUG);
 
             senderHost = receivePacket.getAddress().getHostAddress();
             ByteArrayInputStream bytes = new ByteArrayInputStream(receiveBuff);
@@ -83,12 +84,12 @@ public class UDPHelper {
             return result;
         } catch (SocketException e1) {
             receiveSocket.close();
-//            Log.log(CLASS_NAME, "pack-receive fail");
+            Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             receiveSocket.close();
-//            Log.log(CLASS_NAME, "pack-receive fail");
+            Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
         }
     }
@@ -97,26 +98,20 @@ public class UDPHelper {
         if(receiveSocket != null && !receiveSocket.isClosed()) {
             receiveSocket.close();
         }
-//        Log.log(CLASS_NAME, "pack-receive shutdown!");
+        Log.log(CLASS_NAME, "pack-receive shutdown!", IS_DEBUG);
     }
 
     public String getSenderHost() {
         return senderHost;
     }
 
-//    public static void main(String[] args) {
-//        UDPHelper helper = new UDPHelper();
-//        UDPPackageHelper packageHelper = new UDPPackageHelper();
-//        new Thread(() -> {
-//                UDPPackage pack = helper.receiveUDP(UDP_SEND_PORT);
-//                System.out.println(pack.getData());
-//        }).start();
-//        try {
-//            Thread.sleep(400);
-//            helper.sendUDP(packageHelper.getAckPackage(1).get(0), "localhost", UDP_SEND_PORT);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-////        helper.shutdownReceiveUDP();
-//    }
+    public static void main(String[] args) {
+        UDPHelper helper = new UDPHelper();
+        UDPPackageHelper packageHelper = new UDPPackageHelper();
+        new Thread(() -> {
+                helper.sendUDP(packageHelper.getAckPackage(1).get(0), "localhost", UDP_SEND_PORT);
+        }).start();
+        UDPPackage pack = helper.receiveUDP(UDP_SEND_PORT);
+        helper.shutdownReceiveUDP();
+    }
 }

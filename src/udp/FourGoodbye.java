@@ -15,9 +15,9 @@ import static util.Const.UDP_SEND_PORT;
 public class FourGoodbye {
 
     private static final String CLASS_NAME = "FourGoodbye";
+    private static final boolean IS_DEBUG = true;
 
     private volatile int state;
-    private int sendCount, receiveCount;
     private HashMap<Integer, TimerRunnable> timeTable = new HashMap<>();
 
     private UDPHelper helper = new UDPHelper();
@@ -30,18 +30,17 @@ public class FourGoodbye {
         while (true) {
             switch (state) {
                 case 0: {
-                    sendCount = 0;
                     state = 1;
                     break;
                 }
                 case 1: {
                     goodbye1 = packageHelper.getGoodbyePackage(1).get(0);
                     helper.sendUDP(goodbye1, hostname, port + 1);
-//                    Log.log(CLASS_NAME, "goodbye 1 has sent!");
+                    Log.log(CLASS_NAME, "goodbye 1 has sent!", IS_DEBUG);
 
                     setTimer(1);
                     ack1 = helper.receiveUDP(port);
-//                    Log.log(CLASS_NAME, "ack 1 has received!");
+                    Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
                     state = 2;
                     break;
                 }
@@ -49,7 +48,7 @@ public class FourGoodbye {
                     clearTimer(1);
                     setTimer(1);
                     goodbye2 = helper.receiveUDP(port);
-//                    Log.log(CLASS_NAME, "goodbye 2 has received!");
+                    Log.log(CLASS_NAME, "goodbye 2 has received!", IS_DEBUG);
                     state = 3;
                     break;
                 }
@@ -57,14 +56,14 @@ public class FourGoodbye {
                     clearTimer(1);
                     ack2 = packageHelper.getAckPackage(2).get(0);
                     helper.sendUDP(ack2, hostname, port + 1);
-//                    Log.log(CLASS_NAME, "ack 2 has received!");
+                    Log.log(CLASS_NAME, "ack 2 has received!", IS_DEBUG);
                     state = 4;
                     break;
                 }
                 case 4: {
                     clearTimer(1);
                     helper.shutdownReceiveUDP();
-//                    Log.log(CLASS_NAME, "See you dude!");
+                    Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
                     return;
                 }
             }
@@ -77,27 +76,27 @@ public class FourGoodbye {
                 case 0: {
                     ack1 = packageHelper.getAckPackage(1).get(0);
                     helper.sendUDP(ack1, sendHostname, port);
-//                    Log.log(CLASS_NAME, "ack 1 has been sent!");
+                    Log.log(CLASS_NAME, "ack 1 has been sent!", IS_DEBUG);
                     state = 1;
                     break;
                 }
                 case 1: {
                     goodbye2 = packageHelper.getGoodbyePackage(2).get(0);
                     helper.sendUDP(goodbye2, sendHostname, port);
-//                    Log.log(CLASS_NAME, "goodbye 2 has been sent!");
+                    Log.log(CLASS_NAME, "goodbye 2 has been sent!", IS_DEBUG);
                     state = 2;
                 }
                 case 2: {
                     setTimer(1);
                     ack2 = helper.receiveUDP(port + 1);
-//                    Log.log(CLASS_NAME, "ack 2 has received!");
+                    Log.log(CLASS_NAME, "ack 2 has received!", IS_DEBUG);
                     state = 4;
                     break;
                 }
                 case 4: {
                     clearTimer(1);
                     helper.shutdownReceiveUDP();
-//                    Log.log(CLASS_NAME, "See you dude!");
+                    Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
                     return;
                 }
             }
@@ -139,11 +138,8 @@ public class FourGoodbye {
     public static void main(String[] args) {
         FourGoodbye goodbye1 = new FourGoodbye();
         FourGoodbye goodbye2 = new FourGoodbye();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                goodbye1.startAsReceiver("localhost", UDP_SEND_PORT);
-            }
+        new Thread(() -> {
+            goodbye1.startAsReceiver("localhost", UDP_SEND_PORT);
         }).start();
         goodbye2.startAsSender("localhost", UDP_SEND_PORT);
     }

@@ -1,5 +1,10 @@
 package udp;
 
+import util.Log;
+
+import java.util.Random;
+import java.util.concurrent.locks.Lock;
+
 import static util.Const.WINDOW_WIDTH;
 
 /**
@@ -8,26 +13,72 @@ import static util.Const.WINDOW_WIDTH;
  */
 public class SlidingWindow {
 
-    private boolean checkList[];
-    private int minPos, maxPos;
-    private Thread slideThread;
-    private int state;
-    private boolean inputFlag;
+    private static final String CLASS_NAME = "SlidingWindow";
+    private static final boolean IS_DEBUG = false;
 
+    private volatile boolean checkList[];
+    private volatile int head, tail;
 
-    public SlidingWindow() {
-        minPos = 0;
-        maxPos = WINDOW_WIDTH - 1;
+    public void initialWindow() {
+        head = WINDOW_WIDTH;
+        tail = 0;
         checkList = new boolean[2 * WINDOW_WIDTH];
-        for (boolean b : checkList) {
-            b = false;
+        for (int i = 0; i < checkList.length; i++) {
+            checkList[i] = false;
+        }
+        Log.log(CLASS_NAME, "window initialed", IS_DEBUG);
+    }
+
+    public boolean checkWindow(int seqNum) {
+        synchronized (SlidingWindow.class) {
+            boolean result = false;
+            if (head > tail) {
+                if (head >= seqNum % checkList.length && seqNum % checkList.length >= tail &&
+                        !checkList[seqNum % checkList.length]) {
+                    result = true;
+                }
+            } else {
+                if (!(tail > seqNum % checkList.length && seqNum % checkList.length > head) &&
+                        !checkList[seqNum % checkList.length]) {
+                    result = true;
+                }
+            }
+            Log.log(CLASS_NAME, "window checked" + seqNum, IS_DEBUG);
+            return result;
         }
     }
 
-
-
-
-    private boolean check() {
-        return true;
+    public void updateWindow(int seqNum) {
+        synchronized (SlidingWindow.class) {
+            checkList[seqNum % checkList.length] = true;
+            while (checkList[tail]) {
+                checkList[tail] = false;
+                tail = (tail + 1) % checkList.length;
+                head = (head + 1) % checkList.length;
+                checkList[head] = false;
+            }
+            Log.log(CLASS_NAME, "window update" + seqNum, IS_DEBUG);
+        }
     }
+
+    public static void main(String[] args) {
+        SlidingWindow window = new SlidingWindow();
+        Random random = new Random();
+        window.initialWindow();
+        for (int i = 0; i < 100; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int seqnum = Math.abs(random.nextInt()) % 6;
+//            int seqnum = i;
+                    if (window.checkWindow(seqnum)) {
+                        window.updateWindow(seqnum);
+//                System.out.println(seqnum);
+                    }
+                }
+            }).start();
+
+        }
+    }
+
 }
