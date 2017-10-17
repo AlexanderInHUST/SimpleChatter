@@ -37,7 +37,7 @@ public class UDPHelper {
         offset = random.nextInt() % 500;
     }
 
-    public boolean sendUDP(UDPPackage pack, String hostname, int port) {
+    public synchronized boolean sendUDP(UDPPackage pack, String hostname, int port) {
         try {
             sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -64,7 +64,7 @@ public class UDPHelper {
         return result;
     }
 
-    public UDPPackage receiveUDP(int port){
+    public synchronized UDPPackage receiveUDP(int port){
         try {
             receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             receiveSocket = new DatagramSocket(port);

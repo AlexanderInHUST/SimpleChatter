@@ -26,7 +26,7 @@ public class FourGoodbye {
     private UDPPackage ack1, ack2;
     private UDPPackage goodbye1, goodbye2;
 
-    private void startAsSender(String hostname, int port) {
+    public void startAsSender(String hostname, int port) {
         while (true) {
             switch (state) {
                 case 0: {

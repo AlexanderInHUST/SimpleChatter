@@ -19,6 +19,10 @@ public class Const {
     public final static int SENDER = 1;
 
 
+    //Stable UDP
+    public final static int SEND_TIMEOUT = 100;
+    public final static int SEND_COUNT = 10;
+
     // UDP
     public final static int UDP_BACK_PORT = 8888;
     public final static int UDP_SEND_PORT = 8999;

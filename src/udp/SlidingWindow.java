@@ -18,9 +18,19 @@ public class SlidingWindow {
 
     private volatile boolean checkList[];
     private volatile int head, tail;
+    private volatile int readHead;
+
+    public int getHead() {
+        return readHead;
+    }
+
+    public int getTail() {
+        return tail;
+    }
 
     public void initialWindow() {
-        head = WINDOW_WIDTH;
+        head = WINDOW_WIDTH - 1;
+        readHead = head;
         tail = 0;
         checkList = new boolean[2 * WINDOW_WIDTH];
         for (int i = 0; i < checkList.length; i++) {
@@ -55,6 +65,7 @@ public class SlidingWindow {
                 checkList[tail] = false;
                 tail = (tail + 1) % checkList.length;
                 head = (head + 1) % checkList.length;
+                readHead++;
                 checkList[head] = false;
             }
             Log.log(CLASS_NAME, "window update" + seqNum, IS_DEBUG);
@@ -73,7 +84,9 @@ public class SlidingWindow {
 //            int seqnum = i;
                     if (window.checkWindow(seqnum)) {
                         window.updateWindow(seqnum);
-//                System.out.println(seqnum);
+                System.out.println(seqnum);
+                    } else {
+//                        System.out.println("check error " + seqnum);
                     }
                 }
             }).start();
