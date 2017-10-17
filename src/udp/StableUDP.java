@@ -42,6 +42,8 @@ public class StableUDP {
     private UDPHelper helper = new UDPHelper();
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
 
+    private int sendPort, recvPort;
+
     public ArrayList<UDPPackage> getRecvData() {
         ArrayList<UDPPackage> result = new ArrayList<>();
         for (int i = 0; i < recvData.size(); i++) {
@@ -54,9 +56,9 @@ public class StableUDP {
         this.sendData = sendData;
     }
 
-    public boolean startAsReceiver(int port) {
+    public boolean startAsReceiver(int recvPort) {
         receiveHello = new ThreeHello();
-        if (!receiveHello.startAsReceiver(port)) {
+        if (!receiveHello.startAsReceiver(recvPort)) { // Receiver port
             return false;
         }
         receiveWindow = new SlidingWindow();
@@ -80,7 +82,7 @@ public class StableUDP {
                     } else {
                         recvTimer = getRecvTimer();
                         recvTimer.startCount();
-                        UDPPackage pack = helper.receiveUDP(port);
+                        UDPPackage pack = helper.receiveUDP(recvPort); // Receiver port
                         if (isRecvGoodbye) {
                             state = 5;
                         } else {
@@ -89,7 +91,7 @@ public class StableUDP {
                             } else {
                                 recvTimer.stopCount();
                                 recvTimer.killCount();
-                                executorService.submit(new RecvThread(pack, port));
+                                executorService.submit(new RecvThread(pack, helper.getSendPort())); // Sender port
                                 state = 1;
                             }
                         }
@@ -99,13 +101,13 @@ public class StableUDP {
                 case 5: {
                     executorService.shutdown();
                     recvGoodbye = new FourGoodbye();
-                    recvGoodbye.startAsReceiver(helper.getSenderHost(), port + 1); // care of port!
+                    recvGoodbye.startAsReceiver(helper.getSenderHost(), helper.getSendPort(), recvPort); // Receiver port
                     return true;
                 }
                 case 6: {
                     executorService.shutdown();
                     sendGoodbye = new FourGoodbye();
-                    sendGoodbye.startAsSender(helper.getSenderHost(), port + 1); // care of port!
+                    sendGoodbye.startAsSender(helper.getSenderHost(), helper.getSendPort(), recvPort); // care of port! !!!! Something will go wrong
                     return true;
                 }
             }
@@ -157,7 +159,7 @@ public class StableUDP {
                             receiveWindow.updateWindow(someData.getSeqNum());
                             recvData.put(someData.getSeqNum(), someData);
                             UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
-                            helper.sendUDP(ackPack, helper.getSenderHost(), port + 1); // care for port!
+                            helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
                         }
                         return;
                     }
@@ -166,9 +168,9 @@ public class StableUDP {
         }
     }
 
-    public boolean startAsSender(String hostname, int port) {
+    public boolean startAsSender(String hostname, int sendPort, int recvPort) {
         sendHello = new ThreeHello();
-        if (!sendHello.startAsSender(hostname, port)) {
+        if (!sendHello.startAsSender(hostname, sendPort, recvPort)) {
             return false;
         }
         sendWindow = new SlidingWindow();
@@ -192,10 +194,10 @@ public class StableUDP {
                         state = 10;
                     } else {
                         for (int i = 0; i < sendWindow.getHead(); i++) {
-                            helper.sendUDP(sendData.get(i), hostname, port);
+                            helper.sendUDP(sendData.get(i), hostname, sendPort); // ?
                         }
                         sentNum = sendWindow.getHead() - 1;
-                        executorService.submit(new SendTimerThread(hostname, port));
+                        executorService.submit(new SendTimerThread(hostname, sendPort)); // care
                         state = 2;
                     }
                     break;
@@ -204,7 +206,7 @@ public class StableUDP {
                     if (isCorrupt) {
                         state = 10;
                     } else {
-                        UDPPackage someAck = helper.receiveUDP(port + 1); // care of port!
+                        UDPPackage someAck = helper.receiveUDP(recvPort); // care of port!
                         if (someAck == null) {
                             if (isCorrupt || isDone) {
                                 state = 10;
@@ -215,7 +217,7 @@ public class StableUDP {
                                 state = 2;
                             }
                         } else {
-                            executorService.submit(new SendThread(someAck, hostname, port + 1)); // care of port!
+                            executorService.submit(new SendThread(someAck, hostname, sendPort)); // care of port!
                             state = 2;
                         }
                     }
@@ -224,13 +226,13 @@ public class StableUDP {
                 case 9: {
                     executorService.shutdown();
                     recvGoodbye = new FourGoodbye();
-                    recvGoodbye.startAsReceiver(hostname, port); // care of port!
+                    recvGoodbye.startAsReceiver(hostname, sendPort, recvPort); // care of port!
                     return true;
                 }
                 case 10: {
                     executorService.shutdown();
                     sendGoodbye = new FourGoodbye();
-                    sendGoodbye.startAsSender(hostname, port);
+                    sendGoodbye.startAsSender(hostname, sendPort, recvPort);
                     return true;
                 }
             }
@@ -242,12 +244,12 @@ public class StableUDP {
         private int sendState;
         private UDPPackage ack;
         private String hostName;
-        private int port;
+        private int sendPort;
 
-        private SendThread(UDPPackage ack, String hostName, int port) {
+        private SendThread(UDPPackage ack, String hostName, int sendPort) {
             this.ack = ack;
             this.hostName = hostName;
-            this.port = port;
+            this.sendPort = sendPort;
             sendState = 4;
         }
 
@@ -319,7 +321,7 @@ public class StableUDP {
                             return;
                         } else {
                             for (int i = sentNum + 1; i < sendWindow.getHead(); i++) {
-                                helper.sendUDP(sendData.get(i), hostName, port);
+                                helper.sendUDP(sendData.get(i), hostName, sendPort);
                                 timetableHandler.add(i);
                             }
                             sentNum = sendWindow.getHead() - 1;
@@ -337,14 +339,14 @@ public class StableUDP {
         private int seqNum;
         private HashMap<Integer, Long> curMap;
         private String hostName;
-        private int port;
+        private int sendPort;
 
-        private SendTimerThread(String hostName, int port) {
+        private SendTimerThread(String hostName, int sendPort) {
             sendTimerState = 0;
             countTime = 0;
             seqNum = -1;
             this.hostName = hostName;
-            this.port = port;
+            this.sendPort = sendPort;
         }
 
         @Override
@@ -371,7 +373,7 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            helper.sendUDP(sendData.get(seqNum), hostName, port);
+                            helper.sendUDP(sendData.get(seqNum), hostName, sendPort);
                             countTime++;
                             sendTimerState = 0;
                         }

@@ -25,7 +25,8 @@ public class UDPHelper {
     private DatagramSocket sendSocket, receiveSocket;
     private boolean result;
     private byte[] sendBuff, receiveBuff;
-    private String senderHost = "";
+    private String senderHost = "", receiverHost = "";
+    private int sendPort, receiverPort;
     private int offset;
 
     public interface TimeoutListener {
@@ -103,6 +104,14 @@ public class UDPHelper {
 
     public String getSenderHost() {
         return senderHost;
+    }
+
+    public void setSendPort(int sendPort) {
+        this.sendPort = sendPort;
+    }
+
+    public int getSendPort() {
+        return sendPort;
     }
 
     public static void main(String[] args) {

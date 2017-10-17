@@ -1,5 +1,6 @@
 package udp;
 
+import util.BitUtil;
 import util.Log;
 import util.Timer;
 import webUtil.UDPHelper;
@@ -32,7 +33,7 @@ public class ThreeHello {
     private UDPPackage ack1;
     private UDPPackage hello1, hello2;
 
-    public boolean startAsSender(String hostname, int port) {
+    public boolean startAsSender(String hostname, int sendPort, int recvPort) {
         while (true) {
             switch (state) {
                 case 0: {
@@ -41,12 +42,12 @@ public class ThreeHello {
                     break;
                 }
                 case 1: {
-                    hello1 = packageHelper.getHelloPackage(1).get(0);
-                    helper.sendUDP(hello1, hostname, port + 1);
+                    hello1 = packageHelper.getHelloPackage(1, recvPort).get(0);
+                    helper.sendUDP(hello1, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 1 has sent!", IS_DEBUG);
 
                     setTimer(1);
-                    ack1 = helper.receiveUDP(port);
+                    ack1 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
 
                     if (ack1 != null) {
@@ -68,8 +69,8 @@ public class ThreeHello {
                     break;
                 }
                 case 3: {
-                    UDPPackage hello2 = packageHelper.getHelloPackage(2).get(0);
-                    helper.sendUDP(hello2, hostname, port + 1);
+                    UDPPackage hello2 = packageHelper.getHelloPackage(2, recvPort).get(0);
+                    helper.sendUDP(hello2, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 2 has sent!", IS_DEBUG);
                     return true;
                 }
@@ -89,13 +90,13 @@ public class ThreeHello {
         }
     }
 
-    public boolean startAsReceiver(int port) {
+    public boolean startAsReceiver(int recvPort) {
+        receiveCount = 0;
         while (true) {
             switch (state) {
                 case 0: {
-                    receiveCount = 0;
-                    hello1 = helper.receiveUDP(port + 1);
-//                    Log.log(CLASS_NAME, "hello 1 has received!");
+                    hello1 = helper.receiveUDP(recvPort);
+                    Log.log(CLASS_NAME, "hello 1 has received!", IS_DEBUG);
                     if (hello1 != null) {
                         state = 1;
                     } else {
@@ -115,11 +116,12 @@ public class ThreeHello {
                 }
                 case 2: {
                     ack1 = packageHelper.getAckPackage(1).get(0);
-                    helper.sendUDP(ack1, helper.getSenderHost(), port);
+                    helper.setSendPort(BitUtil.toInt(hello1.getData()));
+                    helper.sendUDP(ack1, helper.getSenderHost(), helper.getSendPort());
                     Log.log(CLASS_NAME, "ack 1 has sent!", IS_DEBUG);
 
                     setTimer(1);
-                    hello2 = helper.receiveUDP(port + 1);
+                    hello2 = helper.receiveUDP(recvPort);
 
                     if (hello2 != null) {
                         state = 3;
@@ -193,10 +195,10 @@ public class ThreeHello {
         boolean result2;
         new Thread(() -> {
             boolean result1;
-            result1 = hello1.startAsReceiver(UDP_SEND_PORT);
+            result1 = hello1.startAsReceiver(24242);
             System.out.println(result1);
         }).start();
-        result2 = hello2.startAsSender("localhost", UDP_SEND_PORT);
+        result2 = hello2.startAsSender("localhost", 24242, 45234);
         System.out.println(result2);
     }
 }

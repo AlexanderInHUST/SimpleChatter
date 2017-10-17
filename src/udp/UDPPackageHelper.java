@@ -2,6 +2,7 @@ package udp;
 
 import com.sun.istack.internal.Nullable;
 import util.ArrayUtils;
+import util.BitUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +41,9 @@ public class UDPPackageHelper {
         return packsArray;
     }
 
-    public ArrayList<UDPPackage> getHelloPackage(int seqnum) {
+    public ArrayList<UDPPackage> getHelloPackage(int seqnum, int myport) {
         ArrayList<UDPPackage> packsArray = new ArrayList<>();
-        packsArray.add(createHelloUDPPackage(seqnum));
+        packsArray.add(createHelloUDPPackage(seqnum, myport));
         return packsArray;
     }
 
@@ -82,10 +83,10 @@ public class UDPPackageHelper {
         return pack;
     }
 
-    private UDPPackage createHelloUDPPackage(int seqNum) {
+    private UDPPackage createHelloUDPPackage(int seqNum, int myPort) {
         UDPPackage pack = new UDPPackage();
         pack.setSeqNum(seqNum);
-        pack.setData(new byte[]{});
+        pack.setData(BitUtil.toByteArray(myPort));
         pack.setAck(false);
         pack.setHello(true);
         pack.setGoodbye(false);
