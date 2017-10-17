@@ -12,6 +12,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static util.Const.RECV_TIMEOUT;
 import static util.Const.SEND_COUNT;
 import static util.Const.SEND_TIMEOUT;
 
@@ -33,7 +34,7 @@ public class StableUDP {
 
     private volatile int countTime;
     private volatile int sentNum;
-    private volatile HashMap<Integer, Long> timeTable;
+    private TimetableHandler timetableHandler;
 
     private volatile TreeMap<Integer, UDPPackage> recvData;
     private volatile ArrayList<UDPPackage> sendData;
@@ -172,7 +173,7 @@ public class StableUDP {
         }
         sendWindow = new SlidingWindow();
         executorService = Executors.newCachedThreadPool();
-        timeTable = new HashMap<>();
+        timetableHandler = new TimetableHandler();
         state = 0;
         while (true) {
             switch (state) {
@@ -280,7 +281,7 @@ public class StableUDP {
                             return;
                         } else {
                             sendWindow.updateWindow(ack.getSeqNum());
-                            timeTable.remove(ack.getSeqNum());
+                            timetableHandler.remove(ack.getSeqNum());
                             sendState = 6;
                         }
                         break;
@@ -289,7 +290,7 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            if (timeTable.isEmpty()) {
+                            if (timetableHandler.isEmpty()) {
                                 isDone = true;
                                 helper.shutdownReceiveUDP();
                                 return;
@@ -319,7 +320,7 @@ public class StableUDP {
                         } else {
                             for (int i = sentNum + 1; i < sendWindow.getHead(); i++) {
                                 helper.sendUDP(sendData.get(i), hostName, port);
-                                timeTable.put(i, System.currentTimeMillis()); // unsafe
+                                timetableHandler.add(i);
                             }
                             sentNum = sendWindow.getHead() - 1;
                             return;
@@ -360,7 +361,7 @@ public class StableUDP {
                                 state = 10;
                                 return;
                             } else {
-                                seqNum = checkTime();
+                                seqNum = timetableHandler.checkTime();
                                 sendTimerState = 1;
                             }
                         }
@@ -379,29 +380,11 @@ public class StableUDP {
                 }
             }
         }
-
-        @SuppressWarnings("unchecked")
-        private int checkTime() {
-            boolean timeoutFound = false;
-            int result = 0;
-            while (!timeoutFound) {
-                curMap = (HashMap<Integer, Long>) timeTable.clone();
-                long curTime = System.currentTimeMillis();
-                for (Integer seq : curMap.keySet()) {
-                    if (curTime - curMap.get(seq) > SEND_TIMEOUT) {
-                        timeoutFound = true;
-                        result = seq;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
     }
 
     private Timer getRecvTimer() {
         Timer timer = new Timer();
-        timer.setTimeout(5000);
+        timer.setTimeout(RECV_TIMEOUT);
         timer.setTimerListener(new Timer.TimerListener() {
             @Override
             public void onTimeout() {
