@@ -18,7 +18,7 @@ public class FourGoodbye {
     private static final boolean IS_DEBUG = true;
 
     private volatile int state;
-    private HashMap<Integer, TimerRunnable> timeTable = new HashMap<>();
+    private Timer timer = getTimer();
 
     private UDPHelper helper = new UDPHelper();
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
@@ -37,33 +37,33 @@ public class FourGoodbye {
                     goodbye1 = packageHelper.getGoodbyePackage(1).get(0);
                     helper.sendUDP(goodbye1, hostname, sendPort);
                     Log.log(CLASS_NAME, "goodbye 1 has sent!", IS_DEBUG);
-
-                    setTimer(1);
+                    startTimer();
                     ack1 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
                     state = 2;
                     break;
                 }
                 case 2: {
-                    clearTimer(1);
-                    setTimer(1);
+                    clearTimer();
+                    startTimer();
                     goodbye2 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "goodbye 2 has received!", IS_DEBUG);
                     state = 3;
                     break;
                 }
                 case 3: {
-                    clearTimer(1);
+                    clearTimer();
                     ack2 = packageHelper.getAckPackage(2).get(0);
                     helper.sendUDP(ack2, hostname, sendPort);
-                    Log.log(CLASS_NAME, "ack 2 has received!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "ack 2 has sent!", IS_DEBUG);
                     state = 4;
                     break;
                 }
                 case 4: {
-                    clearTimer(1);
+                    clearTimer();
                     helper.shutdownReceiveUDP();
                     Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
+                    killTimer();
                     return;
                 }
             }
@@ -87,25 +87,25 @@ public class FourGoodbye {
                     state = 2;
                 }
                 case 2: {
-                    setTimer(1);
+                    startTimer();
                     ack2 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 2 has received!", IS_DEBUG);
                     state = 4;
                     break;
                 }
                 case 4: {
-                    clearTimer(1);
+                    clearTimer();
                     helper.shutdownReceiveUDP();
                     Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
+                    killTimer();
                     return;
                 }
             }
         }
     }
 
-    private TimerRunnable getTimer1() {
-        TimerRunnable goodbye1Timer = new TimerRunnable();
-        Timer timer = goodbye1Timer.getTimer();
+    private Timer getTimer() {
+        Timer timer = new Timer();
         timer.setTimerListener(new Timer.TimerListener() {
             @Override
             public void onTimeout() {
@@ -119,21 +119,24 @@ public class FourGoodbye {
             @Override
             public void onKill() {}
         });
-        return goodbye1Timer;
+        return timer;
     }
 
-    private void setTimer(int seqnum) {
-        timeTable.put(seqnum, getTimer1());
-        timeTable.get(seqnum).run();
+    private void startTimer() {
+        timer.startCount();
     }
 
-    private void clearTimer(int seqnum) {
-        if (timeTable.containsKey(seqnum)) {
-            timeTable.get(seqnum).getTimer().stopCount();
-            timeTable.get(seqnum).getTimer().killCount();
-            timeTable.remove(seqnum);
+    private void clearTimer() {
+        if (timer.isStartFlag()) {
+            timer.stopCount();
+            timer.resetCount();
         }
     }
+
+    private void killTimer() {
+        timer.killCount();
+    }
+
 
     public static void main(String[] args) {
         FourGoodbye goodbye1 = new FourGoodbye();

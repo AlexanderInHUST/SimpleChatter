@@ -25,7 +25,16 @@ public class ThreeHello {
 
     private volatile int state;
     private int sendCount, receiveCount;
-    private HashMap<Integer, TimerRunnable> timeTable = new HashMap<>();
+
+    private String who;
+
+    private Timer timer = getTimer();
+
+    public ThreeHello(String who) {
+        this.who = who;
+    }
+
+    public ThreeHello() {}
 
     private UDPHelper helper = new UDPHelper();
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
@@ -46,7 +55,7 @@ public class ThreeHello {
                     helper.sendUDP(hello1, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 1 has sent!", IS_DEBUG);
 
-                    setTimer(1);
+                    startTimer();
                     ack1 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
 
@@ -58,7 +67,7 @@ public class ThreeHello {
                     break;
                 }
                 case 2: {
-                    clearTimer(1);
+                    clearTimer();
                     if (packageHelper.checkUDPPackage(ack1) && ack1.isAck() && ack1.getSeqNum() == 1) {
                         Log.log(CLASS_NAME, "ack 1 has accepted!", IS_DEBUG);
                         state = 3;
@@ -72,14 +81,16 @@ public class ThreeHello {
                     UDPPackage hello2 = packageHelper.getHelloPackage(2, recvPort).get(0);
                     helper.sendUDP(hello2, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 2 has sent!", IS_DEBUG);
+                    killTimer();
                     return true;
                 }
                 case 4: {
                     sendCount++;
-                    clearTimer(1);
+                    clearTimer();
                     Log.log(CLASS_NAME, "sender timeout!", IS_DEBUG);
                     if (sendCount > 50) {
                         helper.shutdownReceiveUDP();
+                        killTimer();
                         return false;
                     } else {
                         state = 1;
@@ -120,7 +131,7 @@ public class ThreeHello {
                     helper.sendUDP(ack1, helper.getSenderHost(), helper.getSendPort());
                     Log.log(CLASS_NAME, "ack 1 has sent!", IS_DEBUG);
 
-                    setTimer(1);
+                    startTimer();
                     hello2 = helper.receiveUDP(recvPort);
 
                     if (hello2 != null) {
@@ -132,9 +143,10 @@ public class ThreeHello {
                     break;
                 }
                 case 3: {
-                    clearTimer(1);
+                    clearTimer();
                     if (packageHelper.checkUDPPackage(hello2) && hello2.isHello() && hello2.getSeqNum() == 2) {
                         Log.log(CLASS_NAME, "hello 2 has accepted!", IS_DEBUG);
+                        killTimer();
                         return true;
                     }
                     Log.log(CLASS_NAME, "hello 2 has not accepted!", IS_DEBUG);
@@ -144,9 +156,10 @@ public class ThreeHello {
                 case 4: {
                     receiveCount++;
                     Log.log(CLASS_NAME, "receiver timeout!", IS_DEBUG);
-                    clearTimer(1);
+                    clearTimer();
                     if (receiveCount > 50) {
                         helper.shutdownReceiveUDP();
+                        killTimer();
                         return false;
                     } else {
                         state = 0;
@@ -157,9 +170,8 @@ public class ThreeHello {
         }
     }
 
-    private TimerRunnable getTimer() {
-        TimerRunnable hello1Timer = new TimerRunnable();
-        Timer timer = hello1Timer.getTimer();
+    private Timer getTimer() {
+        Timer timer = new Timer();
         timer.setTimerListener(new Timer.TimerListener() {
             @Override
             public void onTimeout() {
@@ -168,30 +180,34 @@ public class ThreeHello {
             }
 
             @Override
-            public void onStop() {}
+            public void onStop() {
+                System.out.println("Stoped!" + who);
+            }
 
             @Override
-            public void onKill() {}
+            public void onKill() {
+                System.out.println("Killed!" + who);
+            }
         });
-        return hello1Timer;
+        return timer;
     }
 
-    private void setTimer(int seqnum) {
-        timeTable.put(seqnum, getTimer());
-        timeTable.get(seqnum).run();
+    private void startTimer() {
+        timer.startCount();
     }
 
-    private void clearTimer(int seqnum) {
-        if (timeTable.containsKey(seqnum)) {
-            timeTable.get(seqnum).getTimer().stopCount();
-            timeTable.get(seqnum).getTimer().killCount();
-            timeTable.remove(seqnum);
-        }
+    private void clearTimer() {
+        timer.stopCount();
+        timer.resetCount();
+    }
+
+    private void killTimer() {
+        timer.killCount();
     }
 
     public static void main(String[] args) {
-        ThreeHello hello1 = new ThreeHello();
-        ThreeHello hello2 = new ThreeHello();
+        ThreeHello hello1 = new ThreeHello("hello1");
+        ThreeHello hello2 = new ThreeHello("hello2");
         boolean result2;
         new Thread(() -> {
             boolean result1;

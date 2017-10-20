@@ -8,10 +8,10 @@ import static util.Const.DEFAULT_TIMEOUT;
  */
 public class Timer {
 
-    private long timeout, startTime;
-    private boolean startFlag, stopFlag, killFlag;
+    private volatile long timeout, startTime;
+    private volatile boolean startFlag, stopFlag, killFlag;
     private TimerListener timerListener;
-    private int state;
+    private volatile int state;
 
     public interface TimerListener {
         void onTimeout();
@@ -21,10 +21,7 @@ public class Timer {
 
     public Timer() {
         setTimeout(DEFAULT_TIMEOUT);
-        startFlag = false;
-        stopFlag = false;
-        killFlag = false;
-        state = 0;
+        resetCount();
         getCountThread().start();
     }
 
@@ -46,6 +43,17 @@ public class Timer {
 
     public void setTimerListener(TimerListener timerListener) {
         this.timerListener = timerListener;
+    }
+
+    public boolean isStartFlag() {
+        return startFlag;
+    }
+
+    public void resetCount() {
+        startFlag = false;
+        stopFlag = false;
+        killFlag = false;
+        state = 0;
     }
 
     private Thread getCountThread() {
@@ -79,11 +87,13 @@ public class Timer {
                         }
                         case 3: {
                             timerListener.onTimeout();
-                            return;
+                            state = 0;
+                            break;
                         }
                         case 4: {
                             timerListener.onStop();
-                            return;
+                            state = 0;
+                            break;
                         }
                     }
                 }
