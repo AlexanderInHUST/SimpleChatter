@@ -26,21 +26,17 @@ public class ThreeHello {
     private volatile int state;
     private int sendCount, receiveCount;
 
-    private String who;
-
     private Timer timer = getTimer();
 
-    public ThreeHello(String who) {
-        this.who = who;
-    }
-
-    public ThreeHello() {}
-
-    private UDPHelper helper = new UDPHelper();
+    private UDPHelper helper;
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
 
     private UDPPackage ack1;
     private UDPPackage hello1, hello2;
+
+    public ThreeHello(UDPHelper helper) {
+        this.helper = helper;
+    }
 
     public boolean startAsSender(String hostname, int sendPort, int recvPort) {
         while (true) {
@@ -181,12 +177,12 @@ public class ThreeHello {
 
             @Override
             public void onStop() {
-                System.out.println("Stoped!" + who);
+
             }
 
             @Override
             public void onKill() {
-                System.out.println("Killed!" + who);
+
             }
         });
         return timer;
@@ -206,15 +202,17 @@ public class ThreeHello {
     }
 
     public static void main(String[] args) {
-        ThreeHello hello1 = new ThreeHello("hello1");
-        ThreeHello hello2 = new ThreeHello("hello2");
+        UDPHelper sendHelper = new UDPHelper();
+        UDPHelper recvHelper = new UDPHelper();
+        ThreeHello hello1 = new ThreeHello(recvHelper);
+        ThreeHello hello2 = new ThreeHello(sendHelper);
         boolean result2;
         new Thread(() -> {
             boolean result1;
             result1 = hello1.startAsReceiver(24242);
-            System.out.println(result1);
+            System.out.println(result1 + " recv");
         }).start();
         result2 = hello2.startAsSender("localhost", 24242, 45234);
-        System.out.println(result2);
+        System.out.println(result2 + " send");
     }
 }

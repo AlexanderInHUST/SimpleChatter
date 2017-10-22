@@ -15,7 +15,7 @@ import static util.Const.UDP_SEND_PORT;
 public class FourGoodbye {
 
     private static final String CLASS_NAME = "FourGoodbye";
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
 
     private volatile int state;
     private Timer timer = getTimer();

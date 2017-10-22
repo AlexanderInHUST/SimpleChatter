@@ -22,7 +22,7 @@ public class Const {
     //Stable UDP
     public final static int SEND_TIMEOUT = 100;
     public final static int SEND_COUNT = 10;
-    public final static int RECV_TIMEOUT = 2000;
+    public final static int RECV_TIMEOUT = 500000;
 
     // UDP
     public final static int UDP_BACK_PORT = 8888;
