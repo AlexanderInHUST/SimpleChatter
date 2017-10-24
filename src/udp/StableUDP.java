@@ -415,7 +415,7 @@ public class StableUDP {
                             } else {
                                 seqNum = timetableHandler.checkTime();
                                 Log.log(CLASS_NAME, "found seqnum " + seqNum + " timeout! (Send Timer Thread)", IS_DEBUG);
-                                timetableHandler.remove(sentNum);
+                                timetableHandler.remove(seqNum);
                                 sendTimerState = 1;
                             }
                         }
@@ -426,7 +426,7 @@ public class StableUDP {
                             return;
                         } else {
                             helper.sendUDP(sendData.get(seqNum), hostName, sendPort);
-                            timetableHandler.add(sentNum);
+                            timetableHandler.add(seqNum);
                             countTime++;
                             sendTimerState = 0;
                         }
@@ -475,6 +475,7 @@ public class StableUDP {
             }
         }).start();
         ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage("Hello world!".getBytes());
+        System.out.println(data.size());
         sender.setSendData(data);
 //        try {
 //            Thread.sleep(1000);
