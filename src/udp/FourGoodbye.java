@@ -105,7 +105,7 @@ public class FourGoodbye {
     }
 
     private Timer getTimer() {
-        Timer timer = new Timer();
+        Timer timer = new Timer("FourGoodbye");
         timer.setTimerListener(new Timer.TimerListener() {
             @Override
             public void onTimeout() {

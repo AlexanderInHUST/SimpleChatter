@@ -17,7 +17,7 @@ public class SlidingWindow {
     private static final boolean IS_DEBUG = false;
 
     private volatile boolean checkList[];
-    private volatile int head, tail;
+    private volatile int head, tail; // head means the last seqnum of available pack
     private volatile int readHead;
 
     public int getHead() {

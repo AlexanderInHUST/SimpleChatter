@@ -1,6 +1,8 @@
 package udp;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 import static util.Const.SEND_TIMEOUT;
 
@@ -11,9 +13,18 @@ import static util.Const.SEND_TIMEOUT;
 public class TimetableHandler {
 
     private volatile HashMap<Integer, Long> timeTable;
+    private boolean isCorrupt = false;
 
     public TimetableHandler() {
         timeTable = new HashMap<>();
+    }
+
+    public boolean isCorrupt() {
+        return isCorrupt;
+    }
+
+    public void setCorrupt(boolean corrupt) {
+        isCorrupt = corrupt;
     }
 
     public void remove(int seqNum) {
@@ -35,10 +46,10 @@ public class TimetableHandler {
     }
 
     public int checkTime() {
-        synchronized (TimetableHandler.class) {
-            boolean timeoutFound = false;
-            int result = 0;
-            while (!timeoutFound) {
+        boolean timeoutFound = false;
+        int result = 0;
+        while (!timeoutFound && !isCorrupt) {
+            synchronized (TimetableHandler.class) {
                 long curTime = System.currentTimeMillis();
                 for (Integer seq : timeTable.keySet()) {
                     if (curTime - timeTable.get(seq) > SEND_TIMEOUT) {
@@ -48,7 +59,30 @@ public class TimetableHandler {
                     }
                 }
             }
-            return result;
+        }
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        TimetableHandler handler = new TimetableHandler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    int one = handler.checkTime();
+                    System.out.println(one);
+                    handler.remove(one);
+                }
+            }
+        }).start();
+        for (int i = 0; i < 10; i++) {
+            handler.add(i);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

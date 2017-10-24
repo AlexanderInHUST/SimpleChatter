@@ -38,34 +38,36 @@ public class UDPHelper {
         offset = random.nextInt() % 500;
     }
 
-    public synchronized boolean sendUDP(UDPPackage pack, String hostname, int port) {
-        try {
-            sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
-            outputStream.writeObject(pack);
-            sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
-            InetAddress address = InetAddress.getByName(hostname);
-            sendBuff = bytes.toByteArray();
-            sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
-            sendSocket.send(sendPacket);
+    public boolean sendUDP(UDPPackage pack, String hostname, int port) {
+        synchronized (this) {
+            try {
+                sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
+                outputStream.writeObject(pack);
+                sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
+                InetAddress address = InetAddress.getByName(hostname);
+                sendBuff = bytes.toByteArray();
+                sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
+                sendSocket.send(sendPacket);
 
-            Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
+                Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
 
-            bytes.close();
-            outputStream.close();
-            sendSocket.close();
-            result = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.log(CLASS_NAME, "pack-sending fail!", IS_DEBUG);
-            sendSocket.close();
-            result = false;
+                bytes.close();
+                outputStream.close();
+                sendSocket.close();
+                result = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.log(CLASS_NAME, "pack-sending fail!", IS_DEBUG);
+                sendSocket.close();
+                result = false;
+            }
+            return result;
         }
-        return result;
     }
 
-    public synchronized UDPPackage receiveUDP(int port){
+    public UDPPackage receiveUDP(int port){
         try {
             receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             receiveSocket = new DatagramSocket(port);
@@ -112,6 +114,10 @@ public class UDPHelper {
 
     public int getSendPort() {
         return sendPort;
+    }
+
+    public boolean isRunning() {
+        return receiveSocket != null && !receiveSocket.isClosed();
     }
 
     public static void main(String[] args) {

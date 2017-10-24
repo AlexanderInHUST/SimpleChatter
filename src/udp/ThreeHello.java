@@ -21,7 +21,7 @@ public class ThreeHello {
     // Port should be managed!
 
     private static final String CLASS_NAME = "ThreeHello";
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
 
     private volatile int state;
     private int sendCount, receiveCount;
@@ -167,7 +167,7 @@ public class ThreeHello {
     }
 
     private Timer getTimer() {
-        Timer timer = new Timer();
+        Timer timer = new Timer("ThreeHello");
         timer.setTimerListener(new Timer.TimerListener() {
             @Override
             public void onTimeout() {

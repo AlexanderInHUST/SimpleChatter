@@ -13,13 +13,16 @@ public class Timer {
     private TimerListener timerListener;
     private volatile int state;
 
+    private String whoIAm;
+
     public interface TimerListener {
         void onTimeout();
         void onStop();
         void onKill();
     }
 
-    public Timer() {
+    public Timer(String whoIAm) {
+        this.whoIAm = whoIAm;
         setTimeout(DEFAULT_TIMEOUT);
         resetCount();
         getCountThread().start();
