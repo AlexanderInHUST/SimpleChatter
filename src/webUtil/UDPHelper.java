@@ -21,10 +21,7 @@ public class UDPHelper {
     private static final String CLASS_NAME = "UDPHelper";
     private static final boolean IS_DEBUG = false;
 
-    private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
-    private boolean result;
-    private byte[] sendBuff, receiveBuff;
     private String senderHost = "", receiverHost = "";
     private int sendPort, receiverPort;
     private int offset;
@@ -34,21 +31,24 @@ public class UDPHelper {
     }
 
     public UDPHelper() {
-        Random random = new Random();
-        offset = random.nextInt() % 500;
+
     }
 
     public boolean sendUDP(UDPPackage pack, String hostname, int port) {
+        byte[] sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
+        boolean result;
+        DatagramPacket sendPacket;
         try {
-            sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
             outputStream.writeObject(pack);
-            sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
-            InetAddress address = InetAddress.getByName(hostname);
-            sendBuff = bytes.toByteArray();
-            sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
             synchronized (this) {
+                Random random = new Random();
+                offset = random.nextInt() % 500;
+                sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
+                InetAddress address = InetAddress.getByName(hostname);
+                sendBuff = bytes.toByteArray();
+                sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
                 sendSocket.send(sendPacket);
             }
 
@@ -57,18 +57,20 @@ public class UDPHelper {
             bytes.close();
             outputStream.close();
             sendSocket.close();
-            result = true;
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             Log.log(CLASS_NAME, "pack-sending fail!", IS_DEBUG);
             sendSocket.close();
-            result = false;
+            return false;
         }
-        return result;
     }
 
     public UDPPackage receiveUDP(int port) {
         try {
+            byte[] receiveBuff;
+            DatagramPacket receivePacket;
+
             receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             receiveSocket = new DatagramSocket(port);
             receivePacket = new DatagramPacket(receiveBuff, 0, UDP_POWER_BYTE * PACKAGE_LEN);

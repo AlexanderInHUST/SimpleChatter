@@ -14,21 +14,28 @@ import static util.Const.WINDOW_WIDTH;
 public class SlidingWindow {
 
     private static final String CLASS_NAME = "SlidingWindow";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private volatile boolean checkList[];
     private volatile int head, tail; // head means the last seqnum of available pack
     private volatile int readHead;
 
+    private String who;
+
     public int getHead() {
         return readHead;
+    }
+
+    public int getRealHead() {
+        return head;
     }
 
     public int getTail() {
         return tail;
     }
 
-    public void initialWindow() {
+    public void initialWindow(String who) {
+        this.who = who;
         head = WINDOW_WIDTH - 1;
         readHead = head;
         tail = 0;
@@ -36,12 +43,13 @@ public class SlidingWindow {
         for (int i = 0; i < checkList.length; i++) {
             checkList[i] = false;
         }
-        Log.log(CLASS_NAME, "window initialed", IS_DEBUG);
+//        Log.log(CLASS_NAME, "window initialed", IS_DEBUG);
     }
 
     public boolean checkWindow(int seqNum) {
         synchronized (SlidingWindow.class) {
             boolean result = false;
+            Log.log(CLASS_NAME, who + " window checking " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
             if (head > tail) {
                 if (head >= seqNum % checkList.length && seqNum % checkList.length >= tail &&
                         !checkList[seqNum % checkList.length]) {
@@ -53,7 +61,9 @@ public class SlidingWindow {
                     result = true;
                 }
             }
-            Log.log(CLASS_NAME, "window checked" + seqNum, IS_DEBUG);
+            if (!result) {
+                Log.log(CLASS_NAME, who + " window checked " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+            }
             return result;
         }
     }
@@ -68,14 +78,14 @@ public class SlidingWindow {
                 readHead++;
                 checkList[head] = false;
             }
-            Log.log(CLASS_NAME, "window update" + seqNum, IS_DEBUG);
+            Log.log(CLASS_NAME, who + " window update " + seqNum + " tail " + tail + " head " + head, IS_DEBUG);
         }
     }
 
     public static void main(String[] args) {
         SlidingWindow window = new SlidingWindow();
         Random random = new Random();
-        window.initialWindow();
+        window.initialWindow(" ");
         for (int i = 0; i < 100; i++) {
             new Thread(new Runnable() {
                 @Override

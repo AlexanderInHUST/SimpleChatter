@@ -1,8 +1,11 @@
 package udp;
 
+import util.Log;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static util.Const.SEND_TIMEOUT;
 
@@ -12,11 +15,14 @@ import static util.Const.SEND_TIMEOUT;
  */
 public class TimetableHandler {
 
-    private volatile HashMap<Integer, Long> timeTable;
+    private static final String CLASS_NAME = "TimetableHandler";
+    private static final boolean IS_DEBUG = true;
+
+    private volatile ConcurrentHashMap<Integer, Long> timeTable;
     private boolean isCorrupt = false;
 
     public TimetableHandler() {
-        timeTable = new HashMap<>();
+        timeTable = new ConcurrentHashMap<>();
     }
 
     public boolean isCorrupt() {
@@ -30,12 +36,22 @@ public class TimetableHandler {
     public void remove(int seqNum) {
         synchronized (TimetableHandler.class) {
             timeTable.remove(seqNum);
+            Log.log(CLASS_NAME, "time table remove " + seqNum + ". Size is " + timeTable.size(), IS_DEBUG);
+        }
+    }
+
+    public void refresh(int seqNum) {
+        synchronized (TimetableHandler.class) {
+            if (timeTable.containsKey(seqNum)) {
+                timeTable.replace(seqNum, System.currentTimeMillis());
+            }
         }
     }
 
     public void add(int seqNum) {
         synchronized (TimetableHandler.class) {
             timeTable.put(seqNum, System.currentTimeMillis());
+            Log.log(CLASS_NAME, "time table add " + seqNum + ". Size is " + timeTable.size(), IS_DEBUG);
         }
     }
 
@@ -78,6 +94,10 @@ public class TimetableHandler {
         }).start();
         for (int i = 0; i < 10; i++) {
             handler.add(i);
+        }
+
+        for (int i = 0; i < 10; i = i + 2) {
+            handler.remove(i);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
