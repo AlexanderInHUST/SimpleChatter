@@ -38,7 +38,7 @@ public class StableUDP {
 
     private volatile int countTime;
     private volatile int sentNum;
-    private TimetableHandler timetableHandler;
+    private volatile TimetableHandler timetableHandler;
 
     private volatile TreeMap<Integer, UDPPackage> recvData;
     private volatile ArrayList<UDPPackage> sendData;
@@ -321,6 +321,7 @@ public class StableUDP {
                                 } else if (!(ack.isAck() && sendWindow.checkWindow(ack.getSeqNum()))) {
                                     return;
                                 } else {
+                                    Log.log(CLASS_NAME, "ack accepted! (in sender thread)", IS_DEBUG);
                                     countTime = 0;
                                     sendState = 5;
                                 }
@@ -334,6 +335,7 @@ public class StableUDP {
                         } else {
                             sendWindow.updateWindow(ack.getSeqNum());
                             timetableHandler.remove(ack.getSeqNum());
+                            Log.log(CLASS_NAME, "window update! (in sender thread)", IS_DEBUG);
                             sendState = 6;
                         }
                         break;
@@ -342,7 +344,16 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            if (timetableHandler.isEmpty()) {
+//                            if (timetableHandler.isEmpty()) {
+//                                isDone = true;
+//                                helper.shutdownReceiveUDP();
+//                                return;
+//                            } else if (sentNum == sendData.size() - 1) {
+//                                return;
+//                            } else {
+//                                sendState = 7;
+//                            }
+                            if (timetableHandler.isEmpty() && sentNum == sendData.size() - 1) {
                                 isDone = true;
                                 helper.shutdownReceiveUDP();
                                 return;
@@ -370,12 +381,14 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            for (int i = sentNum + 1; i < sendWindow.getHead(); i++) {
-                                helper.sendUDP(sendData.get(i), hostName, sendPort);
-                                timetableHandler.add(i);
+                            synchronized (SendTimerThread.class) {
+                                for (int i = sentNum + 1; i < sendWindow.getHead(); i++) {
+                                    helper.sendUDP(sendData.get(i), hostName, sendPort);
+                                    timetableHandler.add(i);
+                                }
+                                sentNum = sendWindow.getHead() - 1;
+                                return;
                             }
-                            sentNum = sendWindow.getHead() - 1;
-                            return;
                         }
                     }
                 }

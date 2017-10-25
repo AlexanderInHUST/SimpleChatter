@@ -12,7 +12,7 @@ public class Const {
     // package const
     public static final long DEFAULT_TIMEOUT = 10;
     public static final int PACKAGE_LEN = 2;
-    public static final int WINDOW_WIDTH = 20;
+    public static final int WINDOW_WIDTH = 3;
 
     // three hello const
     public final static int RECEIVER = 0;
@@ -20,8 +20,8 @@ public class Const {
 
 
     //Stable UDP
-    public final static int SEND_TIMEOUT = 20;
-    public final static int SEND_COUNT = 10;
+    public final static int SEND_TIMEOUT = 200;
+    public final static int SEND_COUNT = 50;
 
     public final static int RECV_TIMEOUT = 500;
 

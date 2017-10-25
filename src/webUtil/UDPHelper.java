@@ -48,7 +48,9 @@ public class UDPHelper {
             InetAddress address = InetAddress.getByName(hostname);
             sendBuff = bytes.toByteArray();
             sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
-            sendSocket.send(sendPacket);
+            synchronized (this) {
+                sendSocket.send(sendPacket);
+            }
 
             Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
 
