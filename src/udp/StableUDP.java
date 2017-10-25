@@ -13,9 +13,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static util.Const.RECV_TIMEOUT;
-import static util.Const.SEND_COUNT;
-import static util.Const.SEND_TIMEOUT;
+import static util.Const.*;
 
 /**
  * Created by tangyifeng on 2017/10/10.
@@ -157,6 +155,9 @@ public class StableUDP {
                                     isRecvGoodbye = true;
                                     return;
                                 } else if (!receiveWindow.checkWindow(someData.getSeqNum())) {
+                                    UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
+                                    Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
+                                    helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
                                     Log.log(CLASS_NAME, "window check fail! (subthread in recv)", IS_DEBUG);
                                     return;
                                 } else if (someData.isAck() || someData.isHello()) {
@@ -487,7 +488,7 @@ public class StableUDP {
                 }
             }
         }).start();
-        ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage("Hello world!".getBytes());
+        ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage(SAMPLE_TEXT.getBytes());
         System.out.println(data.size());
         sender.setSendData(data);
 //        try {
