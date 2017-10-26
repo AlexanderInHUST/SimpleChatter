@@ -22,6 +22,7 @@ public class UDPPackageHelper {
             if (packsArray.get(i) != null) {
                 bytes.add(packsArray.get(i).getData());
             } else {
+                UDPPackage p = packsArray.get(i);
                 System.out.println("ERROR! " + i);
             }
         }

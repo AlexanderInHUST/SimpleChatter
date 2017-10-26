@@ -22,15 +22,15 @@ public class SlidingWindow {
 
     private String who;
 
-    public int getHead() {
+    public synchronized int getHead() {
         return readHead;
     }
 
-    public int getRealHead() {
+    public synchronized int getRealHead() {
         return head;
     }
 
-    public int getTail() {
+    public synchronized int getTail() {
         return tail;
     }
 

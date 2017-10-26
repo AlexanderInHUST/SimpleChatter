@@ -48,6 +48,7 @@ public class StableUDP {
 
     public ArrayList<UDPPackage> getRecvData() {
         ArrayList<UDPPackage> result = new ArrayList<>();
+        System.out.println(recvData.size());
         for (int i = 0; i < recvData.size(); i++) {
             result.add(recvData.get(i));
         }
@@ -184,6 +185,9 @@ public class StableUDP {
                             receiveWindow.updateWindow(someData.getSeqNum());
                             Log.log(CLASS_NAME, "window update with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
                             recvData.put(someData.getSeqNum(), someData);
+                            if (someData == null) {
+                                System.out.println("shit!");
+                            }
                             UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
                             Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
                             helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
