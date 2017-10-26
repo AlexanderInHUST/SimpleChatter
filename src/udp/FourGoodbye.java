@@ -36,34 +36,42 @@ public class FourGoodbye {
                 case 1: {
                     goodbye1 = packageHelper.getGoodbyePackage(1).get(0);
                     helper.sendUDP(goodbye1, hostname, sendPort);
-                    Log.log(CLASS_NAME, "goodbye 1 has sent!", IS_DEBUG);
-                    startTimer();
+                    Log.log(CLASS_NAME, "goodbye 1 has sent! (send)", IS_DEBUG);
+//                    startTimer();
+                    timer.startCount();
                     ack1 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "ack 1 has received! (send)", IS_DEBUG);
+                    timer.stopCount();
                     state = 2;
                     break;
                 }
                 case 2: {
-                    clearTimer();
-                    startTimer();
+//                    clearTimer();
+//                    startTimer();
+                    timer.resetCount();
+                    timer.startCount();
                     goodbye2 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "goodbye 2 has received!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "goodbye 2 has received! (send)", IS_DEBUG);
+                    timer.stopCount();
                     state = 3;
                     break;
                 }
                 case 3: {
-                    clearTimer();
+//                    clearTimer();
+//                    timer.killCount();
+                    timer.resetCount();
                     ack2 = packageHelper.getAckPackage(2).get(0);
                     helper.sendUDP(ack2, hostname, sendPort);
-                    Log.log(CLASS_NAME, "ack 2 has sent!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "ack 2 has sent! (send)", IS_DEBUG);
                     state = 4;
                     break;
                 }
                 case 4: {
-                    clearTimer();
+//                    clearTimer();
+                    timer.killCount();
                     helper.shutdownReceiveUDP();
-                    Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
-                    killTimer();
+                    Log.log(CLASS_NAME, "See you dude! (send)", IS_DEBUG);
+//                    killTimer();
                     return;
                 }
             }
@@ -76,28 +84,31 @@ public class FourGoodbye {
                 case 0: {
                     ack1 = packageHelper.getAckPackage(1).get(0);
                     helper.sendUDP(ack1, sendHostname, sendPort);
-                    Log.log(CLASS_NAME, "ack 1 has been sent!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "ack 1 has been sent! (recv)", IS_DEBUG);
                     state = 1;
                     break;
                 }
                 case 1: {
                     goodbye2 = packageHelper.getGoodbyePackage(2).get(0);
                     helper.sendUDP(goodbye2, sendHostname, sendPort);
-                    Log.log(CLASS_NAME, "goodbye 2 has been sent!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "goodbye 2 has been sent! (recv)", IS_DEBUG);
                     state = 2;
                 }
                 case 2: {
-                    startTimer();
+//                    startTimer();
+                    timer.startCount();
                     ack2 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "ack 2 has received!", IS_DEBUG);
+                    Log.log(CLASS_NAME, "ack 2 has received (recv)!", IS_DEBUG);
+                    timer.stopCount();
                     state = 4;
                     break;
                 }
                 case 4: {
-                    clearTimer();
+//                    clearTimer();
+                    timer.killCount();
                     helper.shutdownReceiveUDP();
-                    Log.log(CLASS_NAME, "See you dude!", IS_DEBUG);
-                    killTimer();
+                    Log.log(CLASS_NAME, "See you dude! (recv)", IS_DEBUG);
+//                    killTimer();
                     return;
                 }
             }
@@ -121,22 +132,6 @@ public class FourGoodbye {
         });
         return timer;
     }
-
-    private void startTimer() {
-        timer.startCount();
-    }
-
-    private void clearTimer() {
-        if (timer.isStartFlag()) {
-            timer.stopCount();
-            timer.resetCount();
-        }
-    }
-
-    private void killTimer() {
-        timer.killCount();
-    }
-
 
     public static void main(String[] args) {
         FourGoodbye goodbye1 = new FourGoodbye();

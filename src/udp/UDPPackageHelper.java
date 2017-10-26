@@ -17,8 +17,13 @@ public class UDPPackageHelper {
 
     public byte[] composeDataUDPPackage(ArrayList<UDPPackage> packsArray) {
         ArrayList<byte[]> bytes = new ArrayList<>();
-        for (UDPPackage pack : packsArray) {
-            bytes.add(pack.getData());
+        System.out.println(packsArray.size());
+        for (int i = 0; i < packsArray.size(); i++) {
+            if (packsArray.get(i) != null) {
+                bytes.add(packsArray.get(i).getData());
+            } else {
+                System.out.println("ERROR! " + i);
+            }
         }
         return ArrayUtils.concatAll(bytes);
     }

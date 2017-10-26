@@ -24,7 +24,7 @@ public class UDPHelper {
     private DatagramSocket sendSocket, receiveSocket;
     private String senderHost = "", receiverHost = "";
     private int sendPort, receiverPort;
-    private int offset;
+    private volatile int offset = 0;
 
     public interface TimeoutListener {
         void onTimeout();
@@ -44,19 +44,21 @@ public class UDPHelper {
             outputStream.writeObject(pack);
             synchronized (this) {
                 Random random = new Random();
-                offset = random.nextInt() % 500;
-                sendSocket = new DatagramSocket(UDP_BACK_PORT - offset);
+                offset = (random.nextInt() * 10000) % 10;
+                sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
+//                offset = (offset + 1) % 500;
                 InetAddress address = InetAddress.getByName(hostname);
                 sendBuff = bytes.toByteArray();
                 sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
                 sendSocket.send(sendPacket);
+
+
+                Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
+
+                bytes.close();
+                outputStream.close();
+                sendSocket.close();
             }
-
-            Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
-
-            bytes.close();
-            outputStream.close();
-            sendSocket.close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();

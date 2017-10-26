@@ -14,7 +14,7 @@ import static util.Const.WINDOW_WIDTH;
 public class SlidingWindow {
 
     private static final String CLASS_NAME = "SlidingWindow";
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
 
     private volatile boolean checkList[];
     private volatile int head, tail; // head means the last seqnum of available pack

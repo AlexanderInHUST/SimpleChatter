@@ -17,7 +17,9 @@ public class Timer {
 
     public interface TimerListener {
         void onTimeout();
+
         void onStop();
+
         void onKill();
     }
 
@@ -30,6 +32,7 @@ public class Timer {
 
     public void startCount() {
         startFlag = true;
+        stopFlag = false;
     }
 
     public void stopCount() {
@@ -54,8 +57,8 @@ public class Timer {
 
     public void resetCount() {
         startFlag = false;
-        stopFlag = false;
-        killFlag = false;
+//        stopFlag = false;
+//        killFlag = false;
         state = 0;
     }
 
@@ -66,6 +69,7 @@ public class Timer {
                 while (!killFlag) {
                     switch (state) {
                         case 0: {
+                            startTime = System.currentTimeMillis();
                             if (startFlag) {
                                 state = 1;
                             } else {
@@ -74,23 +78,31 @@ public class Timer {
                             break;
                         }
                         case 1: {
-                            startTime = System.currentTimeMillis();
                             state = 2;
                             break;
                         }
                         case 2: {
-                            if (System.currentTimeMillis() - startTime <= timeout && !stopFlag) {
-                                state = 2;
-                            } else if (stopFlag) {
+//                            if (System.currentTimeMillis() - startTime <= timeout && !stopFlag) {
+//                                state = 2;
+//                            } else if (stopFlag) {
+//                                state = 4;
+//                            } else {
+//                                System.out.println(System.currentTimeMillis() + " " + startTime + " " +  (System.currentTimeMillis() - startTime) + " " + timeout);
+//                                state = 3;
+//                            }
+                            if (stopFlag) {
                                 state = 4;
-                            } else {
+                            } else if (System.currentTimeMillis() - startTime > timeout) {
                                 state = 3;
+                            } else {
+                                state = 2;
                             }
                             break;
                         }
                         case 3: {
+
                             timerListener.onTimeout();
-//                            startFlag = false;
+                            startFlag = false;
                             state = 0;
                             break;
                         }
