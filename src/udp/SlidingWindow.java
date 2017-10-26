@@ -39,7 +39,7 @@ public class SlidingWindow {
         head = WINDOW_WIDTH - 1;
         readHead = head;
         tail = 0;
-        checkList = new boolean[2 * WINDOW_WIDTH];
+        checkList = new boolean[4 * WINDOW_WIDTH];
         for (int i = 0; i < checkList.length; i++) {
             checkList[i] = false;
         }

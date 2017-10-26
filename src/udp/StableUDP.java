@@ -471,6 +471,9 @@ public class StableUDP {
                             } else {
                                 seqNum = timetableHandler.checkTime();
                                 Log.log(CLASS_NAME, "found seqnum " + seqNum + " timeout! (Send Timer Thread)", IS_DEBUG);
+                                if (seqNum == -1) {
+                                    return;
+                                }
 //                                timetableHandler.remove(seqNum);
                                 sendTimerState = 1;
                             }

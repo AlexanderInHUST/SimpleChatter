@@ -41,15 +41,15 @@ public class FourGoodbye {
                     timer.startCount();
                     ack1 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 1 has received! (send)", IS_DEBUG);
-                    timer.stopCount();
+//                    timer.stopCount();
                     state = 2;
                     break;
                 }
                 case 2: {
 //                    clearTimer();
 //                    startTimer();
-                    timer.resetCount();
-                    timer.startCount();
+//                    timer.resetCount();
+//                    timer.startCount();
                     goodbye2 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "goodbye 2 has received! (send)", IS_DEBUG);
                     timer.stopCount();

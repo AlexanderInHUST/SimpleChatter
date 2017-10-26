@@ -65,7 +65,7 @@ public class TimetableHandler {
 
     public int checkTime() {
         boolean timeoutFound = false;
-        int result = 0;
+        int result = -1;
         while (!timeoutFound && !isCorrupt) {
             synchronized (TimetableHandler.class) {
                 long curTime = System.currentTimeMillis();
