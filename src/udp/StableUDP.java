@@ -421,7 +421,8 @@ public class StableUDP {
                             return;
                         } else {
                             synchronized (SendTimerThread.class) {
-                                for (int i = sentNum + 1; i <= sendWindow.getHead(); i++) {
+                                int curHead = sendWindow.getHead();
+                                for (int i = sentNum + 1; i <= curHead; i++) {
                                     if (i < sendData.size()) {
                                         timetableHandler.add(i);
                                         helper.sendUDP(sendData.get(i), hostName, sendPort);
@@ -429,7 +430,7 @@ public class StableUDP {
 //                                    timetableHandler.add(i);
                                     }
                                 }
-                                sentNum = sendWindow.getHead();
+                                sentNum = curHead;
                                 return;
                             }
                         }
@@ -522,7 +523,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             builder.append(SAMPLE_TEXT);
         }
         StableUDP sender = new StableUDP();
@@ -535,6 +536,7 @@ public class StableUDP {
                     String s = new String(packageHelper.composeDataUDPPackage(data));
                     System.out.println(s);
                     System.out.println("recv test done!");
+                    System.out.println(data.size());
                 }
             }
         }).start();
@@ -543,5 +545,6 @@ public class StableUDP {
         sender.setSendData(data);
         sender.startAsSender("localhost", 32323, 32324);
         System.out.println("send test done!");
+        System.out.println(data.size());
     }
 }

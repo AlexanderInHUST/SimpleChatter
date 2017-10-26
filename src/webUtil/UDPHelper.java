@@ -42,23 +42,23 @@ public class UDPHelper {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
             outputStream.writeObject(pack);
-            synchronized (this) {
-                Random random = new Random();
-                offset = (random.nextInt() * 10000) % 10;
-                sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
-//                offset = (offset + 1) % 500;
-                InetAddress address = InetAddress.getByName(hostname);
-                sendBuff = bytes.toByteArray();
-                sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
-                sendSocket.send(sendPacket);
 
+            Random random = new Random();
+            offset = (random.nextInt() * 10000) % 10;
+            InetAddress address = InetAddress.getByName(hostname);
+            sendBuff = bytes.toByteArray();
+            sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
+
+            synchronized (this) {
+                sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
+                sendSocket.send(sendPacket);
 
                 Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
 
-                bytes.close();
-                outputStream.close();
                 sendSocket.close();
             }
+            bytes.close();
+            outputStream.close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
