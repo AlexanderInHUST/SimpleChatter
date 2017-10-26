@@ -423,7 +423,7 @@ public class StableUDP {
                             synchronized (SendTimerThread.class) {
                                 int curHead = sendWindow.getHead();
                                 for (int i = sentNum + 1; i <= curHead; i++) {
-                                    if (i < sendData.size()) {
+                                    if (i < sendData.size() && sendWindow.checkWindow(i)) {
                                         timetableHandler.add(i);
                                         helper.sendUDP(sendData.get(i), hostName, sendPort);
                                         Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);

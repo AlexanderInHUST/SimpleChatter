@@ -14,7 +14,7 @@ import static util.Const.WINDOW_WIDTH;
 public class SlidingWindow {
 
     private static final String CLASS_NAME = "SlidingWindow";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private volatile boolean checkList[];
     private volatile int head, tail; // head means the last seqnum of available pack
@@ -48,7 +48,7 @@ public class SlidingWindow {
 
     public synchronized boolean checkWindow(int seqNum) {
         boolean result = false;
-        Log.log(CLASS_NAME, who + " window checking " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+//        Log.log(CLASS_NAME, who + " window checking " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
         if (head > tail) {
             if (head >= seqNum % checkList.length && seqNum % checkList.length >= tail &&
                     !checkList[seqNum % checkList.length]) {
@@ -61,7 +61,7 @@ public class SlidingWindow {
             }
         }
         if (!result) {
-            Log.log(CLASS_NAME, who + " window checked " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+            Log.log(CLASS_NAME, who + " window checked " + seqNum + " " + checkList[seqNum % checkList.length] + " " + (readHead - checkList.length) + " " + readHead, IS_DEBUG);
         }
         return result;
     }
