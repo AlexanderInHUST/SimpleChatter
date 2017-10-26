@@ -46,40 +46,36 @@ public class SlidingWindow {
 //        Log.log(CLASS_NAME, "window initialed", IS_DEBUG);
     }
 
-    public boolean checkWindow(int seqNum) {
-        synchronized (SlidingWindow.class) {
-            boolean result = false;
-            Log.log(CLASS_NAME, who + " window checking " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
-            if (head > tail) {
-                if (head >= seqNum % checkList.length && seqNum % checkList.length >= tail &&
-                        !checkList[seqNum % checkList.length]) {
-                    result = true;
-                }
-            } else {
-                if (!(tail > seqNum % checkList.length && seqNum % checkList.length > head) &&
-                        !checkList[seqNum % checkList.length]) {
-                    result = true;
-                }
+    public synchronized boolean checkWindow(int seqNum) {
+        boolean result = false;
+        Log.log(CLASS_NAME, who + " window checking " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+        if (head > tail) {
+            if (head >= seqNum % checkList.length && seqNum % checkList.length >= tail &&
+                    !checkList[seqNum % checkList.length]) {
+                result = true;
             }
-            if (!result) {
-                Log.log(CLASS_NAME, who + " window checked " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+        } else {
+            if (!(tail > seqNum % checkList.length && seqNum % checkList.length > head) &&
+                    !checkList[seqNum % checkList.length]) {
+                result = true;
             }
-            return result;
         }
+        if (!result) {
+            Log.log(CLASS_NAME, who + " window checked " + seqNum + " " + checkList[seqNum % checkList.length], IS_DEBUG);
+        }
+        return result;
     }
 
-    public void updateWindow(int seqNum) {
-        synchronized (SlidingWindow.class) {
-            checkList[seqNum % checkList.length] = true;
-            while (checkList[tail]) {
-                checkList[tail] = false;
-                tail = (tail + 1) % checkList.length;
-                head = (head + 1) % checkList.length;
-                readHead++;
-                checkList[head] = false;
-            }
-            Log.log(CLASS_NAME, who + " window update " + seqNum + " tail " + tail + " head " + head, IS_DEBUG);
+    public synchronized void updateWindow(int seqNum) {
+        checkList[seqNum % checkList.length] = true;
+        while (checkList[tail]) {
+            checkList[tail] = false;
+            tail = (tail + 1) % checkList.length;
+            head = (head + 1) % checkList.length;
+            readHead++;
+            checkList[head] = false;
         }
+        Log.log(CLASS_NAME, who + " window update " + seqNum + " tail " + tail + " head " + head, IS_DEBUG);
     }
 
     public static void main(String[] args) {
@@ -94,7 +90,7 @@ public class SlidingWindow {
 //            int seqnum = i;
                     if (window.checkWindow(seqnum)) {
                         window.updateWindow(seqnum);
-                System.out.println(seqnum);
+                        System.out.println(seqnum);
                     } else {
 //                        System.out.println("check error " + seqnum);
                     }

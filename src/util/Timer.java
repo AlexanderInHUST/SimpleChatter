@@ -90,11 +90,13 @@ public class Timer {
                         }
                         case 3: {
                             timerListener.onTimeout();
+//                            startFlag = false;
                             state = 0;
                             break;
                         }
                         case 4: {
                             timerListener.onStop();
+                            startFlag = false;
                             state = 0;
                             break;
                         }

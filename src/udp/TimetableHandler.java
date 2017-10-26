@@ -35,8 +35,10 @@ public class TimetableHandler {
 
     public void remove(int seqNum) {
         synchronized (TimetableHandler.class) {
-            timeTable.remove(seqNum);
-            Log.log(CLASS_NAME, "time table remove " + seqNum + ". Size is " + timeTable.size(), IS_DEBUG);
+            if (timeTable.containsKey(seqNum)) {
+                timeTable.remove(seqNum);
+                Log.log(CLASS_NAME, "time table remove " + seqNum + ". Size is " + timeTable.size(), IS_DEBUG);
+            }
         }
     }
 
