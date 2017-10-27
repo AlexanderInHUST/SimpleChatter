@@ -1,6 +1,7 @@
 package util;
 
 import static util.Const.DEFAULT_TIMEOUT;
+import static util.Const.RECV_TIMEOUT;
 
 /**
  * Created by tangyifeng on 2017/10/10.
@@ -100,7 +101,7 @@ public class Timer {
                             break;
                         }
                         case 3: {
-
+                            System.out.println(System.currentTimeMillis() + " " + startTime + " " +  (System.currentTimeMillis() - startTime) + " " + timeout);
                             timerListener.onTimeout();
                             startFlag = false;
                             state = 0;

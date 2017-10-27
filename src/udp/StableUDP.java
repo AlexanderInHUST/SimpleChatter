@@ -6,6 +6,7 @@ import webUtil.UDPHelper;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -185,9 +186,9 @@ public class StableUDP {
                             receiveWindow.updateWindow(someData.getSeqNum());
                             Log.log(CLASS_NAME, "window update with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
                             recvData.put(someData.getSeqNum(), someData);
-                            if (someData == null) {
-                                System.out.println("shit!");
-                            }
+//                            if (someData == null) {
+//                                System.out.println("shit!");
+//                            }
                             UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
                             Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
                             helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
@@ -372,7 +373,7 @@ public class StableUDP {
                             return;
                         } else {
                             sendWindow.updateWindow(ack.getSeqNum());
-                            Log.log(CLASS_NAME, "window update! " + ack.getSeqNum() + " (in sender thread)", IS_DEBUG);
+                            Log.log(CLASS_NAME, "window update! " + ack.getSeqNum() + " " + sentNum + " (in sender thread)", IS_DEBUG);
                             sendState = 6;
                         }
                         break;
@@ -420,18 +421,24 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            synchronized (SendTimerThread.class) {
+                            synchronized (StableUDP.class) {
                                 int curHead = sendWindow.getHead();
-                                for (int i = sentNum + 1; i <= curHead; i++) {
-                                    if (i < sendData.size() && sendWindow.checkWindow(i)) {
-                                        timetableHandler.add(i);
-                                        helper.sendUDP(sendData.get(i), hostName, sendPort);
-                                        Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);
+                                Log.log(CLASS_NAME, "current sent num is " + " " + sentNum, IS_DEBUG);
+                                synchronized (TimetableHandler.class) {
+                                    for (int i = sentNum + 1; i <= curHead; i++) {
+                                        if (i < sendData.size() && sendWindow.checkWindow(i)) {
+//
+                                            timetableHandler.add(i);
+                                            helper.sendUDP(sendData.get(i), hostName, sendPort);
+                                            Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);
+//                                        }
 //                                    timetableHandler.add(i);
+                                        }
                                     }
                                 }
                                 sentNum = curHead;
                                 return;
+
                             }
                         }
                     }
@@ -523,7 +530,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 5000; i++) {
             builder.append(SAMPLE_TEXT);
         }
         StableUDP sender = new StableUDP();
@@ -534,7 +541,7 @@ public class StableUDP {
                 if (recv.startAsReceiver(32323)) {
                     ArrayList<UDPPackage> data = recv.getRecvData();
                     String s = new String(packageHelper.composeDataUDPPackage(data));
-                    System.out.println(s);
+//                    System.out.println(s);
                     System.out.println("recv test done!");
                     System.out.println(data.size());
                 }
