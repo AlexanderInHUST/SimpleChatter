@@ -21,7 +21,7 @@ public class ThreeHello {
     // Port should be managed!
 
     private static final String CLASS_NAME = "ThreeHello";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private volatile int state;
     private int sendCount, receiveCount;
@@ -51,8 +51,11 @@ public class ThreeHello {
                     helper.sendUDP(hello1, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 1 has sent!", IS_DEBUG);
 
-                    startTimer();
+//                    startTimer();
+                    timer.startCount();
                     ack1 = helper.receiveUDP(recvPort);
+                    timer.stopCount();
+                    timer.resetCount();
                     Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
 
                     if (ack1 != null) {
@@ -63,7 +66,7 @@ public class ThreeHello {
                     break;
                 }
                 case 2: {
-                    clearTimer();
+//                    clearTimer();
                     if (packageHelper.checkUDPPackage(ack1) && ack1.isAck() && ack1.getSeqNum() == 1) {
                         Log.log(CLASS_NAME, "ack 1 has accepted!", IS_DEBUG);
                         state = 3;
@@ -77,16 +80,18 @@ public class ThreeHello {
                     UDPPackage hello2 = packageHelper.getHelloPackage(2, recvPort).get(0);
                     helper.sendUDP(hello2, hostname, sendPort);
                     Log.log(CLASS_NAME, "hello 2 has sent!", IS_DEBUG);
-                    killTimer();
+//                    killTimer();
+                    timer.killCount();
                     return true;
                 }
                 case 4: {
                     sendCount++;
-                    clearTimer();
+//                    clearTimer();
                     Log.log(CLASS_NAME, "sender timeout!", IS_DEBUG);
                     if (sendCount > 50) {
                         helper.shutdownReceiveUDP();
-                        killTimer();
+//                        killTimer();
+                        timer.killCount();
                         return false;
                     } else {
                         state = 1;
@@ -102,7 +107,12 @@ public class ThreeHello {
         while (true) {
             switch (state) {
                 case 0: {
+//                    timer.setTimeout(5000);
+                    timer.startCount();
                     hello1 = helper.receiveUDP(recvPort);
+                    timer.stopCount();
+                    timer.resetCount();
+
                     Log.log(CLASS_NAME, "hello 1 has received!", IS_DEBUG);
                     if (hello1 != null) {
                         state = 1;
@@ -127,35 +137,40 @@ public class ThreeHello {
                     helper.sendUDP(ack1, helper.getSenderHost(), helper.getSendPort());
                     Log.log(CLASS_NAME, "ack 1 has sent!", IS_DEBUG);
 
-                    startTimer();
+//                    startTimer();
+                    timer.startCount();
                     hello2 = helper.receiveUDP(recvPort);
+                    timer.stopCount();
+                    timer.resetCount();
 
-                    if (hello2 != null) {
+//                    if (hello2 != null) {
                         state = 3;
-                        Log.log(CLASS_NAME, "hello 2 has received!", IS_DEBUG);
-                    } else {
-                        state = 4;
-                    }
+//                        Log.log(CLASS_NAME, "hello 2 has received!", IS_DEBUG);
+//                    } else {
+//                        state = 4;
+//                    }
                     break;
                 }
                 case 3: {
-                    clearTimer();
-                    if (packageHelper.checkUDPPackage(hello2) && hello2.isHello() && hello2.getSeqNum() == 2) {
+//                    clearTimer();
+//                    if (packageHelper.checkUDPPackage(hello2) && hello2.isHello() && hello2.getSeqNum() == 2) {
                         Log.log(CLASS_NAME, "hello 2 has accepted!", IS_DEBUG);
-                        killTimer();
+//                        killTimer();
+                        timer.killCount();
                         return true;
-                    }
-                    Log.log(CLASS_NAME, "hello 2 has not accepted!", IS_DEBUG);
-                    state = 4;
-                    break;
+//                    }
+//                    Log.log(CLASS_NAME, "hello 2 has not accepted!", IS_DEBUG);
+//                    state = 4;
+//                    break;
                 }
                 case 4: {
                     receiveCount++;
                     Log.log(CLASS_NAME, "receiver timeout!", IS_DEBUG);
-                    clearTimer();
+//                    clearTimer();
                     if (receiveCount > 50) {
                         helper.shutdownReceiveUDP();
-                        killTimer();
+//                        killTimer();
+                        timer.killCount();
                         return false;
                     } else {
                         state = 0;
@@ -188,18 +203,18 @@ public class ThreeHello {
         return timer;
     }
 
-    private void startTimer() {
-        timer.startCount();
-    }
-
-    private void clearTimer() {
-        timer.stopCount();
-        timer.resetCount();
-    }
-
-    private void killTimer() {
-        timer.killCount();
-    }
+//    private void startTimer() {
+//        timer.startCount();
+//    }
+//
+//    private void clearTimer() {
+//        timer.stopCount();
+//        timer.resetCount();
+//    }
+//
+//    private void killTimer() {
+//        timer.killCount();
+//    }
 
     public static void main(String[] args) {
         UDPHelper sendHelper = new UDPHelper();
@@ -212,7 +227,7 @@ public class ThreeHello {
             result1 = hello1.startAsReceiver(24242);
             System.out.println(result1 + " recv");
         }).start();
-        result2 = hello2.startAsSender("localhost", 24242, 45234);
+        result2 = hello2.startAsSender("localhost", 24242, 23222);
         System.out.println(result2 + " send");
     }
 }

@@ -6,7 +6,6 @@ import webUtil.UDPHelper;
 
 import java.util.HashMap;
 
-import static util.Const.UDP_SEND_PORT;
 
 /**
  * Created by tangyifeng on 2017/10/13.
@@ -18,7 +17,7 @@ public class FourGoodbye {
     private static final boolean IS_DEBUG = true;
 
     private volatile int state;
-    private Timer timer = getTimer();
+    private Timer timer;
 
     private UDPHelper helper = new UDPHelper();
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
@@ -27,6 +26,7 @@ public class FourGoodbye {
     private UDPPackage goodbye1, goodbye2;
 
     public void startAsSender(String hostname, int sendPort, int recvPort) {
+        timer = getTimer();
         while (true) {
             switch (state) {
                 case 0: {
@@ -41,31 +41,31 @@ public class FourGoodbye {
                     timer.startCount();
                     ack1 = helper.receiveUDP(recvPort);
                     Log.log(CLASS_NAME, "ack 1 has received! (send)", IS_DEBUG);
-//                    timer.stopCount();
-                    state = 2;
-                    break;
-                }
-                case 2: {
-//                    clearTimer();
-//                    startTimer();
-//                    timer.resetCount();
-//                    timer.startCount();
-                    goodbye2 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "goodbye 2 has received! (send)", IS_DEBUG);
                     timer.stopCount();
-                    state = 3;
-                    break;
-                }
-                case 3: {
-//                    clearTimer();
-//                    timer.killCount();
-                    timer.resetCount();
-                    ack2 = packageHelper.getAckPackage(2).get(0);
-                    helper.sendUDP(ack2, hostname, sendPort);
-                    Log.log(CLASS_NAME, "ack 2 has sent! (send)", IS_DEBUG);
                     state = 4;
                     break;
                 }
+//                case 2: {
+////                    clearTimer();
+////                    startTimer();
+//                    timer.resetCount();
+//                    timer.startCount();
+//                    goodbye2 = helper.receiveUDP(recvPort);
+//                    Log.log(CLASS_NAME, "goodbye 2 has received! (send)", IS_DEBUG);
+//                    timer.stopCount();
+//                    state = 3;
+//                    break;
+//                }
+//                case 3: {
+////                    clearTimer();
+////                    timer.killCount();
+//                    timer.resetCount();
+//                    ack2 = packageHelper.getAckPackage(2).get(0);
+//                    helper.sendUDP(ack2, hostname, sendPort);
+//                    Log.log(CLASS_NAME, "ack 2 has sent! (send)", IS_DEBUG);
+//                    state = 4;
+//                    break;
+//                }
                 case 4: {
 //                    clearTimer();
                     timer.killCount();
@@ -85,28 +85,28 @@ public class FourGoodbye {
                     ack1 = packageHelper.getAckPackage(1).get(0);
                     helper.sendUDP(ack1, sendHostname, sendPort);
                     Log.log(CLASS_NAME, "ack 1 has been sent! (recv)", IS_DEBUG);
-                    state = 1;
-                    break;
-                }
-                case 1: {
-                    goodbye2 = packageHelper.getGoodbyePackage(2).get(0);
-                    helper.sendUDP(goodbye2, sendHostname, sendPort);
-                    Log.log(CLASS_NAME, "goodbye 2 has been sent! (recv)", IS_DEBUG);
-                    state = 2;
-                }
-                case 2: {
-//                    startTimer();
-                    timer.startCount();
-                    ack2 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "ack 2 has received (recv)!", IS_DEBUG);
-                    timer.stopCount();
                     state = 4;
                     break;
                 }
+//                case 1: {
+//                    goodbye2 = packageHelper.getGoodbyePackage(2).get(0);
+//                    helper.sendUDP(goodbye2, sendHostname, sendPort);
+//                    Log.log(CLASS_NAME, "goodbye 2 has been sent! (recv)", IS_DEBUG);
+//                    state = 2;
+//                }
+//                case 2: {
+////                    startTimer();
+//                    timer.startCount();
+//                    ack2 = helper.receiveUDP(recvPort);
+//                    Log.log(CLASS_NAME, "ack 2 has received (recv)!", IS_DEBUG);
+//                    timer.stopCount();
+//                    state = 4;
+//                    break;
+//                }
                 case 4: {
 //                    clearTimer();
-                    timer.killCount();
-                    helper.shutdownReceiveUDP();
+//                    timer.killCount();
+//                    helper.shutdownReceiveUDP();
                     Log.log(CLASS_NAME, "See you dude! (recv)", IS_DEBUG);
 //                    killTimer();
                     return;
@@ -137,8 +137,8 @@ public class FourGoodbye {
         FourGoodbye goodbye1 = new FourGoodbye();
         FourGoodbye goodbye2 = new FourGoodbye();
         new Thread(() -> {
-            goodbye1.startAsReceiver("localhost", 12345, 12346);
+            goodbye1.startAsSender("localhost", 12345, 12346);
         }).start();
-        goodbye2.startAsSender("localhost", 12346, 12345);
+        goodbye2.startAsReceiver("localhost", 12346, 12345);
     }
 }

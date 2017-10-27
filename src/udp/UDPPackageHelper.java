@@ -1,6 +1,5 @@
 package udp;
 
-import com.sun.istack.internal.Nullable;
 import util.ArrayUtils;
 import util.BitUtil;
 

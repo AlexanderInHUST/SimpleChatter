@@ -16,7 +16,7 @@ import static util.Const.SEND_TIMEOUT;
 public class TimetableHandler {
 
     private static final String CLASS_NAME = "TimetableHandler";
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
 
     private volatile ConcurrentHashMap<Integer, Long> timeTable;
     private boolean isCorrupt = false;
