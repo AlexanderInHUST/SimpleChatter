@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static util.Const.*;
 
@@ -164,11 +166,13 @@ public class StableUDP {
                                     isRecvGoodbye = true;
                                     return;
                                 } else if (!receiveWindow.checkWindow(someData.getSeqNum())) {
-                                    UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
-                                    Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (fail) (subthread in recv)", IS_DEBUG);
-                                    helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
-                                    Log.log(CLASS_NAME, "window check fail! (subthread in recv)", IS_DEBUG);
-                                    return;
+                                    synchronized (this) {
+                                        UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
+                                        Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (fail) (subthread in recv)", IS_DEBUG);
+                                        helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
+                                        Log.log(CLASS_NAME, "window check fail! (subthread in recv)", IS_DEBUG);
+                                        return;
+                                    }
                                 } else if (someData.isAck() || someData.isHello()) {
                                     Log.log(CLASS_NAME, "pack ack or hello found! (subthread in recv)", IS_DEBUG);
                                     return;
@@ -183,17 +187,19 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            receiveWindow.updateWindow(someData.getSeqNum());
-                            Log.log(CLASS_NAME, "window update with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
-                            recvData.put(someData.getSeqNum(), someData);
+                            synchronized (this) {
+                                receiveWindow.updateWindow(someData.getSeqNum());
+                                Log.log(CLASS_NAME, "window update with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
+                                recvData.put(someData.getSeqNum(), someData);
 //                            if (someData == null) {
 //                                System.out.println("shit!");
 //                            }
-                            UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
-                            Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
-                            helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
+                                UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
+                                Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
+                                helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
+                                return;
+                            }
                         }
-                        return;
                     }
                 }
             }
@@ -213,8 +219,7 @@ public class StableUDP {
         state = 0;
 
         recvTimer = getRecvTimer("recv");
-
-//        recvTimer.setTimeout(5000);
+        recvTimer.setTimeout(RECV_TIMEOUT);
 
 //        try {
 //            Thread.sleep(2000);
@@ -254,7 +259,7 @@ public class StableUDP {
                         UDPPackage someAck = helper.receiveUDP(recvPort); // care of port!
                         Log.log(CLASS_NAME, "ack got! (main thread in send)", IS_DEBUG);
 //
-                       recvTimer.stopCount();
+                        recvTimer.stopCount();
                         recvTimer.resetCount();
                         if (someAck == null) {
                             if (isCorrupt || isDone) {
@@ -303,7 +308,7 @@ public class StableUDP {
 
     private class FirstSendThread implements Runnable {
 
-        private int sendSize = Math.min(sendWindow.getHead() + 1, sendData.size());
+        private int sendSize = Math.min(sendWindow.getHead() / 2 + 1, sendData.size());
         private String hostname;
         private int sendPort;
 
@@ -318,6 +323,12 @@ public class StableUDP {
             for (int i = 0; i < sendSize; i++) {
                 helper.sendUDP(sendData.get(i), hostname, sendPort); // ?
                 timetableHandler.add(i);
+//                try {
+//                    this.wait(SEND_TIMEOUT);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
             }
             sentNum = sendSize - 1;
             Log.log(CLASS_NAME, "first data (seq num " + sentNum + ") has been sent!", IS_DEBUG);
@@ -331,12 +342,14 @@ public class StableUDP {
         private UDPPackage ack;
         private String hostName;
         private int sendPort;
+        private Lock lock;
 
         private SendThread(UDPPackage ack, String hostName, int sendPort) {
             this.ack = ack;
             this.hostName = hostName;
             this.sendPort = sendPort;
             sendState = 4;
+            lock = new ReentrantLock();
         }
 
         @Override
@@ -400,34 +413,36 @@ public class StableUDP {
 //                            } else if (sentNum == sendData.size() - 1) {
 //                                return;
                             } else {
-                                sendState = 7;
-                            }
-                        }
-                        break;
-                    }
-                    case 7: {
-                        if (isCorrupt) {
-                            return;
-                        } else {
-                            if (!sendWindow.checkWindow(sentNum + 1)) {
-                                return;
-                            } else {
                                 sendState = 8;
                             }
                         }
                         break;
                     }
+//                    case 7: {
+//                        if (isCorrupt) {
+//                            return;
+//                        } else {
+////                            lock.lock();
+////                            if (!sendWindow.checkWindow(sentNum + 1)) {
+////                                Log.log(CLASS_NAME, "sentNum + 1 check fail " + sentNum + " !", IS_DEBUG);
+////                                lock.unlock();
+////                                return;
+////                            } else {
+//                                sendState = 8;
+////                            }
+//                        }
+//                        break;
+//                    }
                     case 8: {
                         if (isCorrupt) {
+//                            lock.unlock();
                             return;
                         } else {
-                            synchronized (StableUDP.class) {
+                            synchronized (this) {
                                 int curHead = sendWindow.getHead();
-                                Log.log(CLASS_NAME, "current sent num is " + " " + sentNum, IS_DEBUG);
                                 synchronized (TimetableHandler.class) {
                                     for (int i = sentNum + 1; i <= curHead; i++) {
                                         if (i < sendData.size() && sendWindow.checkWindow(i)) {
-//
                                             timetableHandler.add(i);
                                             helper.sendUDP(sendData.get(i), hostName, sendPort);
                                             Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);
@@ -437,8 +452,9 @@ public class StableUDP {
                                     }
                                 }
                                 sentNum = curHead;
+                                Log.log(CLASS_NAME, "current sent num is " + " " + sentNum, IS_DEBUG);
+//                                lock.unlock();
                                 return;
-
                             }
                         }
                     }
@@ -492,10 +508,14 @@ public class StableUDP {
                         if (isCorrupt) {
                             return;
                         } else {
-                            helper.sendUDP(sendData.get(seqNum), hostName, sendPort);
-                            timetableHandler.refresh(seqNum);
-                            countTime++;
-                            sendTimerState = 0;
+                            synchronized (this) {
+                                helper.sendUDP(sendData.get(seqNum), hostName, sendPort);
+//                                synchronized (TimetableHandler.class) {
+                                timetableHandler.refresh(seqNum);
+//                                }
+                                countTime++;
+                                sendTimerState = 0;
+                            }
                         }
                         break;
                     }
@@ -530,7 +550,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 100; i++) {
             builder.append(SAMPLE_TEXT);
         }
         StableUDP sender = new StableUDP();

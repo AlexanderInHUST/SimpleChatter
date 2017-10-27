@@ -63,6 +63,12 @@ public class TimetableHandler {
         }
     }
 
+    public boolean contains(int seqNum) {
+        synchronized (TimetableHandler.class) {
+            return timeTable.containsKey(seqNum);
+        }
+    }
+
     public int checkTime() {
         boolean timeoutFound = false;
         int result = -1;
