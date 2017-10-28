@@ -1,6 +1,7 @@
 package udp;
 
 import util.Log;
+import util.SafeTimer;
 import util.Timer;
 import webUtil.UDPHelper;
 
@@ -17,7 +18,7 @@ public class FourGoodbye {
     private static final boolean IS_DEBUG = true;
 
     private volatile int state;
-    private Timer timer;
+    private SafeTimer timer;
 
     private UDPHelper helper = new UDPHelper();
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
@@ -27,24 +28,30 @@ public class FourGoodbye {
 
     public void startAsSender(String hostname, int sendPort, int recvPort) {
         timer = getTimer();
-        while (true) {
-            switch (state) {
-                case 0: {
-                    state = 1;
-                    break;
-                }
-                case 1: {
-                    goodbye1 = packageHelper.getGoodbyePackage(1).get(0);
-                    helper.sendUDP(goodbye1, hostname, sendPort);
-                    Log.log(CLASS_NAME, "goodbye 1 has sent! (send)", IS_DEBUG);
+//        state = 1;
+//        while (true) {
+//            switch (state) {
+//                case 0: {
+//                    state = 1;
+//                    break;
+//                }
+//                case 1: {
+        goodbye1 = packageHelper.getGoodbyePackage(1).get(0);
+        helper.sendUDP(goodbye1, hostname, sendPort);
+        Log.log(CLASS_NAME, "goodbye 1 has sent! (send)", IS_DEBUG);
 //                    startTimer();
-                    timer.startCount();
-                    ack1 = helper.receiveUDP(recvPort);
-                    Log.log(CLASS_NAME, "ack 1 has received! (send)", IS_DEBUG);
-                    timer.stopCount();
-                    state = 4;
-                    break;
-                }
+        timer.startCount();
+        ack1 = helper.receiveUDP(recvPort);
+        Log.log(CLASS_NAME, "ack 1 has received! (send)", IS_DEBUG);
+        timer.stopCount();
+//                    state = 4;
+        timer.killCount();
+//        helper.shutdownReceiveUDP();
+        Log.log(CLASS_NAME, "See you dude! (send)", IS_DEBUG);
+//                    killTimer();
+//                    return;
+//                    break;
+//                }
 //                case 2: {
 ////                    clearTimer();
 ////                    startTimer();
@@ -66,28 +73,25 @@ public class FourGoodbye {
 //                    state = 4;
 //                    break;
 //                }
-                case 4: {
-//                    clearTimer();
-                    timer.killCount();
-                    helper.shutdownReceiveUDP();
-                    Log.log(CLASS_NAME, "See you dude! (send)", IS_DEBUG);
-//                    killTimer();
-                    return;
-                }
-            }
-        }
+//                case 4: {
+////                    clearTimer();
+//
+//                }
+//            }
+//        }
     }
 
     public void startAsReceiver(String sendHostname, int sendPort, int recvPort) {
-        while (true) {
-            switch (state) {
-                case 0: {
-                    ack1 = packageHelper.getAckPackage(1).get(0);
-                    helper.sendUDP(ack1, sendHostname, sendPort);
-                    Log.log(CLASS_NAME, "ack 1 has been sent! (recv)", IS_DEBUG);
-                    state = 4;
-                    break;
-                }
+//        while (true) {
+//            switch (state) {
+//                case 0: {
+        ack1 = packageHelper.getAckPackage(1).get(0);
+        helper.sendUDP(ack1, sendHostname, sendPort);
+        Log.log(CLASS_NAME, "ack 1 has been sent! (recv)", IS_DEBUG);
+//                    state = 4;
+//                    return;
+//                    break;
+//                }
 //                case 1: {
 //                    goodbye2 = packageHelper.getGoodbyePackage(2).get(0);
 //                    helper.sendUDP(goodbye2, sendHostname, sendPort);
@@ -103,21 +107,21 @@ public class FourGoodbye {
 //                    state = 4;
 //                    break;
 //                }
-                case 4: {
-//                    clearTimer();
-//                    timer.killCount();
-//                    helper.shutdownReceiveUDP();
-                    Log.log(CLASS_NAME, "See you dude! (recv)", IS_DEBUG);
-//                    killTimer();
-                    return;
-                }
-            }
-        }
+//                case 4: {
+////                    clearTimer();
+////                    timer.killCount();
+////                    helper.shutdownReceiveUDP();
+//                    Log.log(CLASS_NAME, "See you dude! (recv)", IS_DEBUG);
+////                    killTimer();
+//                    return;
+//                }
+//            }
+//        }
     }
 
-    private Timer getTimer() {
-        Timer timer = new Timer("FourGoodbye");
-        timer.setTimerListener(new Timer.TimerListener() {
+    private SafeTimer getTimer() {
+        SafeTimer timer = new SafeTimer("FourGoodbye");
+        timer.setTimerListener(new SafeTimer.SafeTimerListener() {
             @Override
             public void onTimeout() {
                 helper.shutdownReceiveUDP();
@@ -125,10 +129,12 @@ public class FourGoodbye {
             }
 
             @Override
-            public void onStop() {}
+            public void onStop() {
+            }
 
             @Override
-            public void onKill() {}
+            public void onKill() {
+            }
         });
         return timer;
     }

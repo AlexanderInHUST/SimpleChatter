@@ -2,6 +2,7 @@ package udp;
 
 import util.BitUtil;
 import util.Log;
+import util.SafeTimer;
 import util.Timer;
 import webUtil.UDPHelper;
 
@@ -26,7 +27,7 @@ public class ThreeHello {
     private volatile int state;
     private int sendCount, receiveCount;
 
-    private Timer timer = getTimer();
+    private SafeTimer timer = getTimer();
 
     private UDPHelper helper;
     private UDPPackageHelper packageHelper = new UDPPackageHelper();
@@ -55,7 +56,7 @@ public class ThreeHello {
                     timer.startCount();
                     ack1 = helper.receiveUDP(recvPort);
                     timer.stopCount();
-                    timer.resetCount();
+//                    timer.resetCount();
                     Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
 
                     if (ack1 != null) {
@@ -88,7 +89,7 @@ public class ThreeHello {
                     sendCount++;
 //                    clearTimer();
                     Log.log(CLASS_NAME, "sender timeout!", IS_DEBUG);
-                    if (sendCount > 50) {
+                    if (sendCount > 5) {
                         helper.shutdownReceiveUDP();
 //                        killTimer();
                         timer.killCount();
@@ -111,7 +112,7 @@ public class ThreeHello {
                     timer.startCount();
                     hello1 = helper.receiveUDP(recvPort);
                     timer.stopCount();
-                    timer.resetCount();
+//                    timer.resetCount();
 
                     Log.log(CLASS_NAME, "hello 1 has received!", IS_DEBUG);
                     if (hello1 != null) {
@@ -141,7 +142,7 @@ public class ThreeHello {
                     timer.startCount();
                     hello2 = helper.receiveUDP(recvPort);
                     timer.stopCount();
-                    timer.resetCount();
+//                    timer.resetCount();
 
 //                    if (hello2 != null) {
                         state = 3;
@@ -167,7 +168,7 @@ public class ThreeHello {
                     receiveCount++;
                     Log.log(CLASS_NAME, "receiver timeout!", IS_DEBUG);
 //                    clearTimer();
-                    if (receiveCount > 50) {
+                    if (receiveCount > 5) {
                         helper.shutdownReceiveUDP();
 //                        killTimer();
                         timer.killCount();
@@ -181,9 +182,9 @@ public class ThreeHello {
         }
     }
 
-    private Timer getTimer() {
-        Timer timer = new Timer("ThreeHello");
-        timer.setTimerListener(new Timer.TimerListener() {
+    private SafeTimer getTimer() {
+        SafeTimer timer = new SafeTimer("ThreeHello");
+        timer.setTimerListener(new SafeTimer.SafeTimerListener() {
             @Override
             public void onTimeout() {
                 helper.shutdownReceiveUDP();

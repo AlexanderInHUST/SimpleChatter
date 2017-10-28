@@ -75,6 +75,7 @@ public class UDPHelper {
             receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             receiveSocket = new DatagramSocket(port);
             receivePacket = new DatagramPacket(receiveBuff, 0, UDP_POWER_BYTE * PACKAGE_LEN);
+            receiveSocket.setSoTimeout(RECV_TIMEOUT);
             receiveSocket.receive(receivePacket);
 
             Log.log(CLASS_NAME, "pack has been received!", IS_DEBUG);
@@ -93,7 +94,7 @@ public class UDPHelper {
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             receiveSocket.close();
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;

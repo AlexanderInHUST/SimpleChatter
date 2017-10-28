@@ -28,19 +28,18 @@ public class Timer {
         this.whoIAm = whoIAm;
         setTimeout(DEFAULT_TIMEOUT);
         resetCount();
-        getCountThread().start();
     }
 
-    public void startCount() {
+    public synchronized void startCount() {
         startFlag = true;
         stopFlag = false;
     }
 
-    public void stopCount() {
+    public synchronized void stopCount() {
         stopFlag = true;
     }
 
-    public void killCount() {
+    public synchronized void killCount() {
         killFlag = true;
     }
 
@@ -48,8 +47,9 @@ public class Timer {
         this.timeout = timeout;
     }
 
-    public void setTimerListener(TimerListener timerListener) {
+    public synchronized void setTimerListener(TimerListener timerListener) {
         this.timerListener = timerListener;
+        getCountThread().start();
     }
 
     public boolean isStartFlag() {
@@ -68,21 +68,22 @@ public class Timer {
             @Override
             public void run() {
                 while (!killFlag) {
-                    switch (state) {
-                        case 0: {
-                            startTime = System.currentTimeMillis();
-                            if (startFlag) {
-                                state = 1;
-                            } else {
-                                state = 0;
+                    synchronized (this) {
+                        switch (state) {
+                            case 0: {
+                                startTime = System.currentTimeMillis();
+                                if (startFlag) {
+                                    state = 2;
+                                } else {
+                                    state = 0;
+                                }
+                                break;
                             }
-                            break;
-                        }
-                        case 1: {
-                            state = 2;
-                            break;
-                        }
-                        case 2: {
+//                            case 1: {
+//                                state = 2;
+//                                break;
+//                            }
+                            case 2: {
 //                            if (System.currentTimeMillis() - startTime <= timeout && !stopFlag) {
 //                                state = 2;
 //                            } else if (stopFlag) {
@@ -91,31 +92,33 @@ public class Timer {
 //                                System.out.println(System.currentTimeMillis() + " " + startTime + " " +  (System.currentTimeMillis() - startTime) + " " + timeout);
 //                                state = 3;
 //                            }
-                            if (stopFlag) {
-                                state = 4;
-                            } else if (System.currentTimeMillis() - startTime > timeout) {
-                                state = 3;
-                            } else {
-                                state = 2;
+                                if (stopFlag) {
+                                    state = 4;
+                                } else if (System.currentTimeMillis() - startTime > timeout) {
+                                    state = 3;
+                                } else {
+                                    state = 2;
+                                }
+                                break;
                             }
-                            break;
+                            case 3: {
+                                System.out.println(System.currentTimeMillis() + " " + startTime + " " + (System.currentTimeMillis() - startTime) + " " + timeout);
+                                timerListener.onTimeout();
+                                startFlag = false;
+                                state = 0;
+                                break;
+                            }
+                            case 4: {
+                                timerListener.onStop();
+                                startFlag = false;
+                                state = 0;
+                                break;
+                            }
                         }
-                        case 3: {
-                            System.out.println(System.currentTimeMillis() + " " + startTime + " " +  (System.currentTimeMillis() - startTime) + " " + timeout);
-                            timerListener.onTimeout();
-                            startFlag = false;
-                            state = 0;
-                            break;
-                        }
-                        case 4: {
-                            timerListener.onStop();
-                            startFlag = false;
-                            state = 0;
-                            break;
-                        }
+                        timerListener.onKill();
                     }
+
                 }
-                timerListener.onKill();
             }
         });
     }
