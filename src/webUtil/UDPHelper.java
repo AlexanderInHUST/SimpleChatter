@@ -90,11 +90,13 @@ public class UDPHelper {
             receiveSocket.close();
             return result;
         } catch (SocketException e1) {
+            System.out.println("timeout!");
             receiveSocket.close();
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
+            System.out.println("timeout!");
             receiveSocket.close();
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;

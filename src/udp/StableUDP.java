@@ -35,7 +35,7 @@ public class StableUDP {
     private volatile boolean isRecvGoodbye = false;
     private volatile boolean isDone = false;
     private volatile boolean isTimeOut = false;
-    private volatile Timer recvTimer;
+//    private volatile Timer recvTimer;
     private ExecutorService executorService;
 
     private volatile int countTime;
@@ -75,7 +75,7 @@ public class StableUDP {
             Log.log(CLASS_NAME, "hello recv failed!", IS_DEBUG);
             return false;
         }
-        recvTimer = getRecvTimer("send");
+//        recvTimer = getRecvTimer("send");
         isHelloed = true;
         Log.log(CLASS_NAME, "hello recv succeed!", IS_DEBUG);
         receiveWindow = new SlidingWindow();
@@ -99,20 +99,20 @@ public class StableUDP {
                         state = 6;
                     } else {
 
-                        recvTimer.startCount();
+//                        recvTimer.startCount();
                         UDPPackage pack = helper.receiveUDP(recvPort); // Receiver port
                         Log.log(CLASS_NAME, "pack recved! (main thread in recv)", IS_DEBUG);
-                        recvTimer.stopCount();
-                        recvTimer.resetCount();
+//                        recvTimer.stopCount();
+//                        recvTimer.resetCount();
                         if (isRecvGoodbye) {
                             state = 5;
                         } else {
                             if (pack == null) {
-                                if (isTimeOut) {
+//                                if (isTimeOut) {
                                     state = 6;
-                                } else {
-                                    state = 1;
-                                }
+//                                } else {
+//                                    state = 1;
+//                                }
                             } else {
                                 executorService.submit(new RecvThread(pack, helper.getSendPort())); // Sender port
                                 Log.log(CLASS_NAME, "recv thread submitted!", IS_DEBUG);
@@ -126,7 +126,7 @@ public class StableUDP {
                 case 5: {
                     isCorrupt = true;
                     executorService.shutdown();
-                    recvTimer.killCount();
+//                    recvTimer.killCount();
                     recvGoodbye = new FourGoodbye();
                     Log.log(CLASS_NAME, "goodbye recv! (recv)", IS_DEBUG);
                     recvGoodbye.startAsReceiver(helper.getSenderHost(), helper.getSendPort(), recvPort); // Receiver port
@@ -135,7 +135,7 @@ public class StableUDP {
                 case 6: {
                     isCorrupt = true;
                     executorService.shutdown();
-                    recvTimer.killCount();
+//                    recvTimer.killCount();
                     sendGoodbye = new FourGoodbye();
                     Log.log(CLASS_NAME, "goodbye send! (recv)", IS_DEBUG);
                     sendGoodbye.startAsSender(helper.getSenderHost(), helper.getSendPort(), recvPort); // care of port! !!!! Something will go wrong
@@ -239,8 +239,8 @@ public class StableUDP {
         timetableHandler = new TimetableHandler();
         state = 0;
 
-        recvTimer = getRecvTimer("recv");
-        recvTimer.setTimeout(RECV_TIMEOUT);
+//        recvTimer = getRecvTimer("recv");
+//        recvTimer.setTimeout(RECV_TIMEOUT);
 
 //        try {
 //            Thread.sleep(2000);
@@ -274,14 +274,14 @@ public class StableUDP {
                     if (isCorrupt) {
                         state = 10;
                     } else {
-                        recvTimer.startCount();
+//                        recvTimer.startCount();
 
                         Log.log(CLASS_NAME, "ack ready! (main thread in send)", IS_DEBUG);
                         UDPPackage someAck = helper.receiveUDP(recvPort); // care of port!
                         Log.log(CLASS_NAME, "ack got! (main thread in send)", IS_DEBUG);
 //
-                        recvTimer.stopCount();
-                        recvTimer.resetCount();
+//                        recvTimer.stopCount();
+//                        recvTimer.resetCount();
                         if (someAck == null) {
                             if (isCorrupt || isDone) {
                                 state = 10;
@@ -301,7 +301,7 @@ public class StableUDP {
                 }
                 case 9: {
                     isCorrupt = true;
-                    recvTimer.killCount();
+//                    recvTimer.killCount();
 
                     timetableHandler.setCorrupt(true);
                     executorService.shutdown();
@@ -313,7 +313,7 @@ public class StableUDP {
                 }
                 case 10: {
                     isCorrupt = true;
-                    recvTimer.killCount();
+//                    recvTimer.killCount();
 
                     timetableHandler.setCorrupt(true);
                     executorService.shutdown();
@@ -553,28 +553,28 @@ public class StableUDP {
         }
     }
 
-    private Timer getRecvTimer(String who) {
-        Timer timer = new Timer(who);
-        timer.setTimeout(RECV_TIMEOUT);
-        timer.setTimerListener(new Timer.TimerListener() {
-            @Override
-            public void onTimeout() {
-                helper.shutdownReceiveUDP();
-                Log.log(CLASS_NAME, "No recv in a long time!" + who, IS_DEBUG);
-                isTimeOut = true;
-//                state = 6;
-            }
-
-            @Override
-            public void onStop() {
-            }
-
-            @Override
-            public void onKill() {
-            }
-        });
-        return timer;
-    }
+//    private Timer getRecvTimer(String who) {
+//        Timer timer = new Timer(who);
+//        timer.setTimeout(RECV_TIMEOUT);
+//        timer.setTimerListener(new Timer.TimerListener() {
+//            @Override
+//            public void onTimeout() {
+//                helper.shutdownReceiveUDP();
+//                Log.log(CLASS_NAME, "No recv in a long time!" + who, IS_DEBUG);
+//                isTimeOut = true;
+////                state = 6;
+//            }
+//
+//            @Override
+//            public void onStop() {
+//            }
+//
+//            @Override
+//            public void onKill() {
+//            }
+//        });
+//        return timer;
+//    }
 
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
