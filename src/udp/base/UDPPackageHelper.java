@@ -1,4 +1,4 @@
-package udp;
+package udp.base;
 
 import util.ArrayUtils;
 import util.BitUtil;
@@ -6,7 +6,7 @@ import util.BitUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static util.Const.PACKAGE_LEN;
+import static udp.UDPConst.PACKAGE_LEN;
 
 /**
  * Created by tangyifeng on 2017/10/10.

@@ -1,15 +1,14 @@
-package webUtil;
+package udp.util;
 
-import udp.UDPPackage;
-import udp.UDPPackageHelper;
-import util.Const;
+import udp.base.UDPPackage;
+import udp.base.UDPPackageHelper;
 import util.Log;
 
 import java.io.*;
 import java.net.*;
 import java.util.Random;
 
-import static util.Const.*;
+import static udp.UDPConst.*;
 
 /**
  * Created by tangyifeng on 2017/10/12.

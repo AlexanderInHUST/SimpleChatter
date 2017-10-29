@@ -1,11 +1,10 @@
-package udp;
+package udp.base;
 
 import util.Log;
 
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
 
-import static util.Const.WINDOW_WIDTH;
+import static udp.UDPConst.WINDOW_WIDTH;
 
 /**
  * Created by tangyifeng on 2017/10/10.

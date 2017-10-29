@@ -1,13 +1,10 @@
-package udp;
+package udp.base;
 
 import util.Log;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static util.Const.SEND_TIMEOUT;
+import static udp.UDPConst.SEND_TIMEOUT;
 
 /**
  * Created by tangyifeng on 2017/10/17.

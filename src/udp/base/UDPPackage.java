@@ -1,4 +1,4 @@
-package udp;
+package udp.base;
 
 import java.io.Serializable;
 import java.util.Arrays;

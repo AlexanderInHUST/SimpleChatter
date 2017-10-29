@@ -1,17 +1,9 @@
-package udp;
+package udp.base;
 
 import util.BitUtil;
 import util.Log;
 import util.SafeTimer;
-import util.Timer;
-import webUtil.UDPHelper;
-
-import java.io.IOException;
-import java.util.HashMap;
-
-import static util.Const.RECEIVER;
-import static util.Const.SENDER;
-import static util.Const.UDP_SEND_PORT;
+import udp.util.UDPHelper;
 
 /**
  * Created by tangyifeng on 2017/10/12.

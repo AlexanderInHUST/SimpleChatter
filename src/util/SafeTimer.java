@@ -3,7 +3,7 @@ package util;
 import java.util.*;
 import java.util.Timer;
 
-import static util.Const.DEFAULT_TIMEOUT;
+import static udp.UDPConst.DEFAULT_TIMEOUT;
 
 /**
  * Created by tangyifeng on 2017/10/28.

@@ -1,23 +1,15 @@
-package util;
+package udp;
 
 /**
  * Created by tangyifeng on 2017/10/10.
  * Email: yifengtang_hust@outlook.com
  */
-public class Const {
-
-    // debug
-    public static final boolean IS_DEBUG = false;
+public class UDPConst {
 
     // package const
     public static final long DEFAULT_TIMEOUT = 50;
     public static final int PACKAGE_LEN = 1024 * 16; // 16kb per pack
     public static final int WINDOW_WIDTH = 8;
-
-    // three hello const
-    public final static int RECEIVER = 0;
-    public final static int SENDER = 1;
-
 
     //Stable UDP
     public final static int SEND_TIMEOUT = 5; // resend time out

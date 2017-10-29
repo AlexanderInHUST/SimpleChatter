@@ -1,7 +1,6 @@
 package util;
 
-import static util.Const.DEFAULT_TIMEOUT;
-import static util.Const.RECV_TIMEOUT;
+import static udp.UDPConst.DEFAULT_TIMEOUT;
 
 /**
  * Created by tangyifeng on 2017/10/10.

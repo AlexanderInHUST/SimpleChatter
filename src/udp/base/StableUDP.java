@@ -1,20 +1,15 @@
-package udp;
+package udp.base;
 
 import util.Log;
-import util.Timer;
-import webUtil.UDPHelper;
+import udp.util.UDPHelper;
 
-import java.io.*;
-import java.net.Socket;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static util.Const.*;
+import static udp.UDPConst.*;
 
 /**
  * Created by tangyifeng on 2017/10/10.
@@ -581,7 +576,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 100000; i++) {
             builder.append(SAMPLE_TEXT);
         }
         ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage(builder.toString().getBytes());
