@@ -23,7 +23,7 @@ import static util.Const.*;
 public class StableUDP {
 
     private static final String CLASS_NAME = "StableUDP";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private SlidingWindow sendWindow, receiveWindow;
     private ThreeHello sendHello, receiveHello;
@@ -341,11 +341,12 @@ public class StableUDP {
         @Override
         public void run() {
             while (!helper.isRunning()) ; // wait!
-            for (int i = 0; i < sendSize; i++) {
-                helper.sendUDP(sendData.get(i), hostname, sendPort); // ?
-                timetableHandler.add(i);
+            synchronized (StableUDP.this) {
+                for (int i = 0; i < sendSize; i++) {
+                    helper.sendUDP(sendData.get(i), hostname, sendPort); // ?
+                    timetableHandler.add(i);
 
-                sendArray.add(i);
+                    sendArray.add(i);
 
 //                try {
 //                    Thread.sleep(SEND_TIMEOUT / 2);
@@ -353,10 +354,11 @@ public class StableUDP {
 //                    e.printStackTrace();
 //                }
 
+                }
+                sentNum = sendSize - 1;
+                Log.log(CLASS_NAME, "first data (seq num " + sentNum + ") has been sent!", IS_DEBUG);
+                executorService.submit(new SendTimerThread(hostname, sendPort)); // care
             }
-            sentNum = sendSize - 1;
-            Log.log(CLASS_NAME, "first data (seq num " + sentNum + ") has been sent!", IS_DEBUG);
-            executorService.submit(new SendTimerThread(hostname, sendPort)); // care
         }
     }
 
@@ -462,7 +464,7 @@ public class StableUDP {
 //                            lock.unlock();
                             return;
                         } else {
-                            synchronized (this) {
+                            synchronized (StableUDP.this) {
                                 synchronized (SlidingWindow.class) {
                                     int curHead = sendWindow.getHead();
                                     synchronized (TimetableHandler.class) {
@@ -579,7 +581,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 20000; i++) {
+        for (int i = 0; i < 30; i++) {
             builder.append(SAMPLE_TEXT);
         }
         ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage(builder.toString().getBytes());
