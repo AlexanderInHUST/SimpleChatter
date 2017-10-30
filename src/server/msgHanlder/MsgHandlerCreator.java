@@ -16,7 +16,7 @@ public class MsgHandlerCreator {
 
     private MsgHandlerCreator() {}
 
-    public static MsgHandler create(int kind) {
+    public static IMsgHandler create(int kind) {
         switch (kind) {
             case REGISTER_MSG: {
                 if (registerMsgHandler == null) {

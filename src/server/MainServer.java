@@ -21,7 +21,7 @@ import static server.ServerConst.SERVER_TIME_OUT;
 public class MainServer {
 
     private MessageQueue queue;
-    private boolean isRunning;
+    private volatile boolean isRunning;
     private boolean isKilled;
     private ExecutorService executorService;
 
@@ -33,7 +33,6 @@ public class MainServer {
         executorService.submit(new ServerReceiveThread());
         queue.start();
         isRunning = true;
-        System.out.println("go!");
     }
 
     public void close() {
@@ -51,21 +50,13 @@ public class MainServer {
 
         private ServerSocket serverSocket;
 
-        public ServerReceiveThread() {
-            try {
-                serverSocket = new ServerSocket(SERVER_PORT, SERVER_BACK_LENGTH);
-                serverSocket.setSoTimeout(SERVER_TIME_OUT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         @Override
         public void run() {
             try {
-                while (!isRunning());
+                serverSocket = new ServerSocket(SERVER_PORT);
+                serverSocket.setSoTimeout(SERVER_TIME_OUT);
+                while (!isRunning);
                 while (!isKilled) {
-                    System.out.println("ready!");
                     Socket socket;
                     try {
                         socket = serverSocket.accept();
@@ -86,22 +77,22 @@ public class MainServer {
 
     public static void main(String[] args) {
         MainServer mainServer = new MainServer();
-        try {
-            while (!mainServer.isRunning());
-            Message message = new Message(REGISTER_MSG, "1;1;1;1;1");
-            Socket socket = new Socket("localhost", SERVER_PORT);
-            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.writeObject(message);
-            outputStream.flush();
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            Message msg = (Message) inputStream.readObject();
-            System.out.println(msg.getKind());
-            socket.close();
-            mainServer.close();
-            System.out.println("done!");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            while (!mainServer.isRunning());
+//            Message message = new Message(REGISTER_MSG, "1;1;1;1;1;");
+//            Socket socket = new Socket("localhost", SERVER_PORT);
+//            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+//            outputStream.writeObject(message);
+//            outputStream.flush();
+//            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+//            Message msg = (Message) inputStream.readObject();
+//            System.out.println(msg.getKind());
+//            socket.close();
+//            mainServer.close();
+//            System.out.println("done!");
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

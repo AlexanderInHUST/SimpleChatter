@@ -13,6 +13,7 @@ public class SecurityConst {
     public static final String PRIVATE_KEY = "RSAPrivateKey";
 
     public static final int KEY_LENGTH = 1024;
+    public static final int ENCRYPT_DATA_LENGTH = 128;
     public static final int MAX_DATA_SEG = 117;
 
     public static final int SERVER_RSA = 1;

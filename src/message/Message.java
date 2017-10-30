@@ -1,6 +1,7 @@
 package message;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by tangyifeng on 2017/10/29.
@@ -9,13 +10,17 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
     private int kind;
-    private String data;
+    private byte[] data;
+    private ArrayList<String> signs;
 
-    public Message() {}
+    public Message() {
+        signs = null;
+    }
 
     public Message(int kind, String data) {
         setKind(kind);
         setData(data);
+        signs = null;
     }
 
     public int getKind() {
@@ -26,11 +31,23 @@ public class Message implements Serializable {
         this.kind = kind;
     }
 
-    public String getData() {
+    public byte[] getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public void setData(String data) {
+        this.data = data.getBytes();
+    }
+
+    public ArrayList<String> getSigns() {
+        return signs;
+    }
+
+    public void setSigns(ArrayList<String> signs) {
+        this.signs = signs;
     }
 }

@@ -1,14 +1,12 @@
 package server;
 
 import message.Message;
-import server.msgHanlder.MsgHandler;
+import server.msgHanlder.IMsgHandler;
 import server.msgHanlder.MsgHandlerCreator;
 import server.sql.SqlHelper;
 
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static message.MessageConst.REGISTER_MSG;
 
 /**
  * Created by tangyifeng on 2017/10/29.
@@ -40,7 +38,7 @@ public class MessageQueue {
                         if (msg == null) {
                             continue;
                         }
-                        MsgHandler msgHandler = MsgHandlerCreator.create(msg.getKind());
+                        IMsgHandler msgHandler = MsgHandlerCreator.create(msg.getKind());
                         msgHandler.handleMsg(msg.getData(), sqlHelper, socket);
                     }
                 }

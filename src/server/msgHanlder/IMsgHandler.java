@@ -9,9 +9,9 @@ import java.sql.Connection;
  * Created by tangyifeng on 2017/10/29.
  * Email: yifengtang_hust@outlook.com
  */
-public interface MsgHandler {
+public interface IMsgHandler {
 
     void refresh();
-    void handleMsg(String data, SqlHelper sqlHelper, Socket socket);
+    void handleMsg(byte[] data, SqlHelper sqlHelper, Socket socket);
 
 }

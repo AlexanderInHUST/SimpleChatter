@@ -4,6 +4,7 @@ import util.ArrayUtils;
 
 import java.util.ArrayList;
 
+import static security.SecurityConst.ENCRYPT_DATA_LENGTH;
 import static security.SecurityConst.MAX_DATA_SEG;
 import static security.SecurityConst.SERVER_RSA;
 
@@ -50,9 +51,8 @@ public class SecurityGuard {
         helper.setPublicKey(publicKey);
     }
 
-    public ArrayList<byte[]> encryptByPublicKey(String data) {
+    public byte[] encryptByPublicKey(byte[] dataBytes) {
         ArrayList<byte[]> encryptData = new ArrayList<>();
-        byte[] dataBytes = data.getBytes();
         int nums = (dataBytes.length - 1) / MAX_DATA_SEG;
         for (int i = 0; i < nums + 1; i++) {
             int length = Math.min(MAX_DATA_SEG, dataBytes.length - i * MAX_DATA_SEG);
@@ -60,13 +60,12 @@ public class SecurityGuard {
             System.arraycopy(dataBytes, i * MAX_DATA_SEG, curBytes, 0, length);
             encryptData.add(helper.encryptByPublicKey(curBytes));
         }
-        return encryptData;
+        return ArrayUtils.concatAll(encryptData);
     }
 
-    public ArrayList<byte[]> encryptByPrivateKey(String data) {
+    public byte[] encryptByPrivateKey(byte[] dataBytes) {
         signatures = new ArrayList<>();
         ArrayList<byte[]> encryptData = new ArrayList<>();
-        byte[] dataBytes = data.getBytes();
         int nums = (dataBytes.length - 1) / MAX_DATA_SEG;
         for (int i = 0; i < nums + 1; i++) {
             int length = Math.min(MAX_DATA_SEG, dataBytes.length - i * MAX_DATA_SEG);
@@ -76,14 +75,18 @@ public class SecurityGuard {
             signatures.add(helper.sign(curEnBytes));
             encryptData.add(curEnBytes);
         }
-        return encryptData;
+        return ArrayUtils.concatAll(encryptData);
     }
 
-    public byte[] decryptByPublicKey(ArrayList<String> signatures, ArrayList<byte[]> encryptData) {
+    public byte[] decryptByPublicKey(ArrayList<String> signatures, byte[] encryptData) {
         ArrayList<byte[]> originalData = new ArrayList<>();
-        for (int i = 0; i < signatures.size(); i++) {
-            if (helper.verify(encryptData.get(i), signatures.get(i))) {
-                originalData.add(helper.decryptByPublicKey(encryptData.get(i)));
+        int nums = encryptData.length / ENCRYPT_DATA_LENGTH;
+        for (int i = 0; i < nums; i++) {
+            int length = ENCRYPT_DATA_LENGTH;
+            byte[] curBytes = new byte[length];
+            System.arraycopy(encryptData, i * ENCRYPT_DATA_LENGTH, curBytes, 0, length);
+            if (helper.verify(curBytes, signatures.get(i))) {
+                originalData.add(helper.decryptByPublicKey(curBytes));
             } else {
                 return null;
             }
@@ -91,10 +94,14 @@ public class SecurityGuard {
         return ArrayUtils.concatAll(originalData);
     }
 
-    public byte[] decryptByPrivateKey(ArrayList<byte[]> encryptData) {
+    public byte[] decryptByPrivateKey(byte[] encryptData) {
         ArrayList<byte[]> originalData = new ArrayList<>();
-        for (int i = 0; i < encryptData.size(); i++) {
-            originalData.add(helper.decryptByPrivateKey(encryptData.get(i)));
+        int nums = encryptData.length / ENCRYPT_DATA_LENGTH;
+        for (int i = 0; i < nums; i++) {
+            int length = ENCRYPT_DATA_LENGTH;
+            byte[] curBytes = new byte[length];
+            System.arraycopy(encryptData, i * ENCRYPT_DATA_LENGTH, curBytes, 0, length);
+            originalData.add(helper.decryptByPrivateKey(curBytes));
         }
         return ArrayUtils.concatAll(originalData);
     }
@@ -106,10 +113,10 @@ public class SecurityGuard {
         for (int i = 0; i < 500; i++) {
             builder.append(org);
         }
-        ArrayList<byte[]> encryptData = guard.encryptByPrivateKey(builder.toString());
-        ArrayList<String> signs = guard.getSignatures();
-        byte[] data = guard.decryptByPublicKey(signs, encryptData);
-        System.out.println(new String(data));
+        byte[] encryptData = guard.encryptByPublicKey(builder.toString().getBytes());
+//        ArrayList<String> signs = guard.getSignatures();
+//        byte[] data = guard.decryptByPublicKey(signs, encryptData);
+        System.out.println(new String(guard.decryptByPrivateKey(encryptData)));
     }
 
 }

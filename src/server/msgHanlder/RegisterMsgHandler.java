@@ -8,7 +8,6 @@ import server.sql.detail.SqlAccount;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import static message.MessageConst.ACC_MSG;
@@ -17,9 +16,7 @@ import static message.MessageConst.ACC_MSG;
  * Created by tangyifeng on 2017/10/29.
  * Email: yifengtang_hust@outlook.com
  */
-public class RegisterMsgHandler implements MsgHandler {
-
-
+public class RegisterMsgHandler implements IMsgHandler {
 
     @Override
     public void refresh() {
@@ -27,8 +24,8 @@ public class RegisterMsgHandler implements MsgHandler {
     }
 
     @Override
-    public void handleMsg(String data, SqlHelper sqlHelper, Socket socket) {
-        ArrayList<String> detailData = MessageCoder.decode(data);
+    public void handleMsg(byte[] data, SqlHelper sqlHelper, Socket socket) {
+        ArrayList<String> detailData = MessageCoder.decode(new String(data));
         // account; password; public_key; question; answer
         SqlAccount sqlAccount = sqlHelper.getSqlAccount();
         sqlAccount.insertAccount(detailData.get(0),
@@ -37,7 +34,7 @@ public class RegisterMsgHandler implements MsgHandler {
                 detailData.get(3),
                 detailData.get(4));
         try {
-            Message okMsg = new Message(ACC_MSG, "");
+            Message okMsg = new Message(ACC_MSG, "Complete");
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();
@@ -45,6 +42,5 @@ public class RegisterMsgHandler implements MsgHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
