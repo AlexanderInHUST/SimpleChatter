@@ -5,8 +5,13 @@ import message.MessageCoder;
 import server.sql.SqlHelper;
 import server.sql.detail.SqlAccount;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.sql.Connection;
 import java.util.ArrayList;
+
+import static message.MessageConst.ACC_MSG;
 
 /**
  * Created by tangyifeng on 2017/10/29.
@@ -22,7 +27,7 @@ public class RegisterMsgHandler implements MsgHandler {
     }
 
     @Override
-    public void handleMsg(String data, SqlHelper sqlHelper) {
+    public void handleMsg(String data, SqlHelper sqlHelper, Socket socket) {
         ArrayList<String> detailData = MessageCoder.decode(data);
         // account; password; public_key; question; answer
         SqlAccount sqlAccount = sqlHelper.getSqlAccount();
@@ -31,5 +36,15 @@ public class RegisterMsgHandler implements MsgHandler {
                 detailData.get(2),
                 detailData.get(3),
                 detailData.get(4));
+        try {
+            Message okMsg = new Message(ACC_MSG, "");
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.writeObject(okMsg);
+            outputStream.flush();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package server.msgHanlder;
 
 import server.sql.SqlHelper;
 
+import java.net.Socket;
 import java.sql.Connection;
 
 /**
@@ -15,7 +16,7 @@ public class ForgetPswordHandler implements MsgHandler {
     }
 
     @Override
-    public void handleMsg(String data, SqlHelper sqlHelper) {
+    public void handleMsg(String data, SqlHelper sqlHelper, Socket socket) {
         System.out.println("forget");
     }
 }
