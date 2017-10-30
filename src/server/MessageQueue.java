@@ -13,18 +13,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class MessageQueue {
 
     private ConcurrentLinkedQueue<Message> messageQueue;
-    private boolean isKilled;
+    private boolean isKilled, isKilledNow;
 
     public MessageQueue() {
         messageQueue = new ConcurrentLinkedQueue<>();
         isKilled = false;
+        isKilledNow = false;
     }
 
     public void start() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!isKilled) {
+                while (!isKilled && !isKilledNow) {
                     if (!messageQueue.isEmpty()) {
                         Message msg = messageQueue.poll();
                         if (msg == null) {
@@ -43,12 +44,12 @@ public class MessageQueue {
     }
 
     public void kill() {
-        while (!messageQueue.isEmpty());
+        while (!messageQueue.isEmpty() && !isKilledNow);
         this.isKilled = true;
     }
 
     public void killNow() {
-        this.isKilled = true;
+        this.isKilledNow = true;
     }
 
     public static void main(String[] args) {
@@ -57,7 +58,7 @@ public class MessageQueue {
         for (int i = 0; i < 10; i++) {
             queue.add(new Message(i % 3, "asd"));
         }
-        queue.killNow();
+        queue.kill();
     }
 
 }

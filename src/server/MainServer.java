@@ -5,4 +5,12 @@ package server;
  * Email: yifengtang_hust@outlook.com
  */
 public class MainServer {
+
+    public static void main(String[] args) {
+
+
+    }
+
 }
+
+
