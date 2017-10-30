@@ -11,4 +11,7 @@ public class SqlConst {
     public static final String JDBC_USER = "root";
     public static final String JDBC_PASSWORD = "39160816q";
 
+    public static final String DB_ACCOUNT_INSERT = "INSERT INTO ACCOUNT"
+            + "(ACCOUNT, PASSWORD, P_KEY, PWD_QUESTION, PWD_ANSWER) VALUES"
+            + "(?,?,?,?,?)";
 }

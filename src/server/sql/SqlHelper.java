@@ -1,5 +1,7 @@
 package server.sql;
 
+import server.sql.detail.SqlAccount;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,6 +15,7 @@ import static server.sql.SqlConst.*;
 public class SqlHelper {
 
     private Connection dbConnection;
+    private static SqlAccount sqlAccount;
 
     public SqlHelper() {
         initialSqlHelper();
@@ -27,9 +30,25 @@ public class SqlHelper {
         }
     }
 
+    public SqlAccount getSqlAccount() {
+        if (sqlAccount == null) {
+            sqlAccount = new SqlAccount(dbConnection);
+        }
+        return sqlAccount;
+    }
+
+    public void shutdownSqlHelper() {
+        try {
+            dbConnection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         SqlHelper sqlHelper = new SqlHelper();
-
+        SqlAccount sqlAccount = sqlHelper.getSqlAccount();
+        sqlAccount.insertAccount("test", "test", "test", "test", "test");
     }
 
 }

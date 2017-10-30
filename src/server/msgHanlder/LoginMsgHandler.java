@@ -1,5 +1,9 @@
 package server.msgHanlder;
 
+import server.sql.SqlHelper;
+
+import java.sql.Connection;
+
 /**
  * Created by tangyifeng on 2017/10/29.
  * Email: yifengtang_hust@outlook.com
@@ -11,7 +15,7 @@ public class LoginMsgHandler implements MsgHandler {
     }
 
     @Override
-    public void handleMsg(String data) {
+    public void handleMsg(String data, SqlHelper sqlHelper) {
         System.out.println("login");
     }
 }
