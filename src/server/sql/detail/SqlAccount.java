@@ -2,8 +2,10 @@ package server.sql.detail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static server.sql.SqlConst.DB_ACCOUNT_GET;
 import static server.sql.SqlConst.DB_ACCOUNT_INSERT;
 
 /**
@@ -31,5 +33,22 @@ public class SqlAccount {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean checkPassword(String account, String password) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_ACCOUNT_GET);
+            preparedStatement.setString(1, account);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            String correctPassword = resultSet.getString("password");
+            boolean result = correctPassword.equals(password);
+            resultSet.close();
+            preparedStatement.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

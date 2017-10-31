@@ -60,6 +60,7 @@ public class MainServer {
                     Socket socket;
                     try {
                         socket = serverSocket.accept();
+                        System.out.println("Msg got!");
                     } catch (SocketTimeoutException e) {
                         continue;
                     }

@@ -20,6 +20,8 @@ public class MessageSender {
 
     private SecurityGuard guard;
 
+    public MessageSender() {};
+
     public MessageSender(String privateKey) {
         guard = new SecurityGuard(privateKey, CLIENT_RSA);
     }

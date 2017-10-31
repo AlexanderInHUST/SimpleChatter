@@ -24,8 +24,8 @@ public class RegisterMsgHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(byte[] data, SqlHelper sqlHelper, Socket socket) {
-        ArrayList<String> detailData = MessageCoder.decode(new String(data));
+    public void handleMsg(Message message, SqlHelper sqlHelper, Socket socket) {
+        ArrayList<String> detailData = MessageCoder.decode(new String(message.getData()));
         // account; password; public_key; question; answer
         SqlAccount sqlAccount = sqlHelper.getSqlAccount();
         sqlAccount.insertAccount(detailData.get(0),

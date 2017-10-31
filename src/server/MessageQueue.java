@@ -39,7 +39,7 @@ public class MessageQueue {
                             continue;
                         }
                         IMsgHandler msgHandler = MsgHandlerCreator.create(msg.getKind());
-                        msgHandler.handleMsg(msg.getData(), sqlHelper, socket);
+                        msgHandler.handleMsg(msg, sqlHelper, socket);
                     }
                 }
                 sqlHelper.shutdownSqlHelper();

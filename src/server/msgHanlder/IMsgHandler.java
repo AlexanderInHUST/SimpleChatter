@@ -1,5 +1,6 @@
 package server.msgHanlder;
 
+import message.Message;
 import server.sql.SqlHelper;
 
 import java.net.Socket;
@@ -11,6 +12,6 @@ import java.net.Socket;
 public interface IMsgHandler {
 
     void refresh();
-    void handleMsg(byte[] data, SqlHelper sqlHelper, Socket socket);
+    void handleMsg(Message message, SqlHelper sqlHelper, Socket socket);
 
 }

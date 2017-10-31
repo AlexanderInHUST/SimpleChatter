@@ -8,7 +8,6 @@ public class SqlConst {
 
     public static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String JDBC_DB_ADDRESS = "jdbc:mysql://localhost/chatter_server?autoReconnect=true&useSSL=false";
-//    public static final String JDBC_DB_ADDRESS_CLIENT = "jdbc:mysql://localhost/chatter_user?autoReconnect=true&useSSL=false";
 
     public static final String JDBC_USER = "root";
     public static final String JDBC_PASSWORD = "39160816q";
@@ -17,7 +16,6 @@ public class SqlConst {
             + "(ACCOUNT, PASSWORD, P_KEY, PWD_QUESTION, PWD_ANSWER) VALUES"
             + "(?,?,?,?,?)";
 
-//    public static final String DB_ACCOUNT_INSERT_CLIENT = "INSERT INTO ACCOUNT"
-//            + "(ACCOUNT, P_KEY) VALUES"
-//            + "(?,?)";
+    public static final String DB_ACCOUNT_GET = "SELECT * FROM ACCOUNT WHERE "
+            + "ACCOUNT=?";
 }
