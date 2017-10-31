@@ -81,7 +81,7 @@ public class ThreeHello {
                     sendCount++;
 //                    clearTimer();
                     Log.log(CLASS_NAME, "sender timeout!", IS_DEBUG);
-                    if (sendCount > 5) {
+                    if (sendCount > 50) {
                         helper.shutdownReceiveUDP();
 //                        killTimer();
                         timer.killCount();
@@ -160,7 +160,7 @@ public class ThreeHello {
                     receiveCount++;
                     Log.log(CLASS_NAME, "receiver timeout!", IS_DEBUG);
 //                    clearTimer();
-                    if (receiveCount > 5) {
+                    if (receiveCount > 50) {
                         helper.shutdownReceiveUDP();
 //                        killTimer();
                         timer.killCount();

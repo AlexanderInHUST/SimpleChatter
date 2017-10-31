@@ -45,9 +45,10 @@ public class MessageSender {
         return null;
     }
 
-    public Message sendMessageSafely(Message msg) {
+    public Message sendMessageSafely(Message msg, String account) {
         Message encryptMsg = new Message();
         encryptMsg.setKind(msg.getKind());
+        encryptMsg.setFromWho(account);
         encryptMsg.setData(guard.encryptByPrivateKey(msg.getData()));
         encryptMsg.setSigns(guard.getSignatures());
         Message reply = sendMessageUnsafely(encryptMsg);

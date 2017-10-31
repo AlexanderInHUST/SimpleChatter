@@ -42,19 +42,22 @@ public class UDPHelper {
             outputStream.writeObject(pack);
 
             Random random = new Random();
-            offset = (random.nextInt() * 10000) % 10;
-            InetAddress address = InetAddress.getByName(hostname);
-            sendBuff = bytes.toByteArray();
-            sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
+            offset = (random.nextInt() * 10000) % 100;
 
-            synchronized (this) {
-                sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
-                sendSocket.send(sendPacket);
+//            if (offset > 10) {
+                InetAddress address = InetAddress.getByName(hostname);
+                sendBuff = bytes.toByteArray();
+                sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
 
-                Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
+                synchronized (this) {
+                    sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
+                    sendSocket.send(sendPacket);
 
-                sendSocket.close();
-            }
+                    Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
+
+                    sendSocket.close();
+                }
+//            }
             bytes.close();
             outputStream.close();
             return true;

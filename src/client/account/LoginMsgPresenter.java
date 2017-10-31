@@ -1,7 +1,6 @@
 package client.account;
 
 import client.c2s.MessageSender;
-import client.sql.SqlHelper;
 import message.Message;
 import security.MD5Verify;
 
@@ -13,7 +12,7 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class LoginPresenter {
+public class LoginMsgPresenter {
 
     private MessageSender sender;
 
@@ -36,7 +35,7 @@ public class LoginPresenter {
     }
 
     public static void main(String[] args) {
-        LoginPresenter presenter = new LoginPresenter();
+        LoginMsgPresenter presenter = new LoginMsgPresenter();
         System.out.println(presenter.login("myh", "1234"));
     }
 }

@@ -12,13 +12,19 @@ public class SqlConst {
     public static final String JDBC_USER = "root";
     public static final String JDBC_PASSWORD = "39160816q";
 
+    // Account
     public static final String DB_ACCOUNT_INSERT = "INSERT INTO ACCOUNT"
             + "(ACCOUNT, PASSWORD, P_KEY, PWD_QUESTION, PWD_ANSWER) VALUES"
             + "(?,?,?,?,?)";
-
     public static final String DB_ACCOUNT_GET = "SELECT * FROM ACCOUNT WHERE "
             + "ACCOUNT=?";
-
     public static final String DB_ACCOUNT_EDIT_PASSWORD = "UPDATE ACCOUNT SET "
             + "PASSWORD=? WHERE ACCOUNT=?";
+
+    // State
+    public static final String DB_STATE_INSERT = "INSERT INTO USER_STATE"
+            + "(ACCOUNT, IP_ADDRESS, PORT) VALUES"
+            + "(?,?,?)";
+
+
 }

@@ -1,8 +1,12 @@
 package server.msgHanlder;
 
-import static message.MessageConst.FORGET_PSWORD_MSG;
-import static message.MessageConst.LOGIN_MSG;
-import static message.MessageConst.REGISTER_MSG;
+import server.msgHanlder.account.ForgetPswordHandler;
+import server.msgHanlder.account.LoginMsgHandler;
+import server.msgHanlder.account.RegisterMsgHandler;
+import server.msgHanlder.state.LoginHandler;
+import server.msgHanlder.state.LogoutHandler;
+
+import static message.MessageConst.*;
 
 /**
  * Created by tangyifeng on 2017/10/29.
@@ -14,10 +18,14 @@ public class MsgHandlerCreator {
     private static LoginMsgHandler loginMsgHandler;
     private static ForgetPswordHandler forgetPswordHandler;
 
+    private static LoginHandler loginHandler;
+    private static LogoutHandler logoutHandler;
+
     private MsgHandlerCreator() {}
 
     public static IMsgHandler create(int kind) {
         switch (kind) {
+            // Account
             case REGISTER_MSG: {
                 if (registerMsgHandler == null) {
                     registerMsgHandler = new RegisterMsgHandler();
@@ -41,6 +49,24 @@ public class MsgHandlerCreator {
                     forgetPswordHandler.refresh();
                 }
                 return forgetPswordHandler;
+            }
+
+            // State
+            case LOG_IN_MSG: {
+                if (loginHandler == null) {
+                    loginHandler = new LoginHandler();
+                } else {
+                    loginHandler.refresh();
+                }
+                return loginHandler;
+            }
+            case LOG_OUT_MSG: {
+                if (logoutHandler == null) {
+                    logoutHandler = new LogoutHandler();
+                } else {
+                    logoutHandler.refresh();
+                }
+                return logoutHandler;
             }
         }
         return null;

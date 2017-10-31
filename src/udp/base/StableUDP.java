@@ -471,6 +471,12 @@ public class StableUDP {
                                                 timetableHandler.add(i);
                                                 helper.sendUDP(sendData.get(i), hostName, sendPort);
                                                 Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);
+
+//                                                try {
+//                                                    Thread.sleep(SEND_TIMEOUT / 2);
+//                                                } catch (InterruptedException e) {
+//                                                    e.printStackTrace();
+//                                                }
 //                                        }
 //                                    timetableHandler.add(i);
                                             }
@@ -576,7 +582,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 50000; i++) {
             builder.append(SAMPLE_TEXT);
         }
         ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage(builder.toString().getBytes());
@@ -596,7 +602,6 @@ public class StableUDP {
                         String s = new String(packageHelper.composeDataUDPPackage(data));
 //                    System.out.println(s);
                         System.out.println("recv test done!");
-                        System.out.println(data.size());
 //                        for (int i = 0; i < 1440000; i++) {
 //                            if (!recv.recvArray.contains(i)) {
 //                                System.out.println("shit! " + i);
@@ -619,6 +624,7 @@ public class StableUDP {
 
 //        } while (!recv.isHelloed());
             System.out.println("send test done!");
+            System.out.println(data.size());
 //        System.out.println(data.size());
 
 //        }
