@@ -1,6 +1,8 @@
 package client.account;
 
 import client.c2s.MessageSender;
+import client.sql.SqlHelper;
+import client.sql.detail.SqlAccount;
 import message.Message;
 import security.MD5Verify;
 import security.SecurityGuard;
@@ -16,20 +18,26 @@ public class RegisterPresenter {
 
     private MessageSender sender;
     private SecurityGuard guard;
+    private SqlHelper helper;
+
+    public RegisterPresenter(SqlHelper helper) {
+        this.helper = helper;
+    }
 
     public boolean register(String account, String password, String pwdQuestion, String pwdAnswer) {
         guard = new SecurityGuard();
         String privateKey = guard.getPrivateKey();
         String publicKey = guard.getPublicKey();
-        storePrivateKey(privateKey);
+        storePrivateKey(account, privateKey);
         sender = new MessageSender(privateKey);
         Message msg = getMsg(account, password, publicKey, pwdQuestion, pwdAnswer);
         Message reply = sender.sendMessageUnsafely(msg);
         return reply.getKind() == ACC_MSG && new String(reply.getData()).equals("Complete");
     }
 
-    private void storePrivateKey(String key) {
-        System.out.println(key);
+    private void storePrivateKey(String account, String key) {
+        SqlAccount sqlAccount = helper.getSqlAccount();
+        sqlAccount.insertAccount(account, key);
     }
 
     private Message getMsg(String account, String password, String publicKey, String pwdQuestion, String pwdAnswer) {
@@ -49,9 +57,9 @@ public class RegisterPresenter {
         return msg;
     }
 
-    public static void main(String[] args) {
-        RegisterPresenter presenter = new RegisterPresenter();
-        System.out.println(presenter.register("myh", "123", "who i am", "tyf"));
-    }
-
+//    public static void main(String[] args) {
+//        SqlHelper helper = new SqlHelper();
+//        RegisterPresenter presenter = new RegisterPresenter(helper);
+//        System.out.println(presenter.register("myh", "123", "who i am", "tyf"));
+//    }
 }
