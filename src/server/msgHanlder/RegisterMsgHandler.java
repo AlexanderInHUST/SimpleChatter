@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import static message.MessageConst.ACC_MSG;
+import static message.MessageConst.SUCCESS;
 
 /**
  * Created by tangyifeng on 2017/10/29.
@@ -34,7 +35,7 @@ public class RegisterMsgHandler implements IMsgHandler {
                 detailData.get(3),
                 detailData.get(4));
         try {
-            Message okMsg = new Message(ACC_MSG, "Complete");
+            Message okMsg = new Message(ACC_MSG, SUCCESS);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();

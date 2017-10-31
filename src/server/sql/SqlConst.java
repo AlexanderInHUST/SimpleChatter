@@ -18,4 +18,7 @@ public class SqlConst {
 
     public static final String DB_ACCOUNT_GET = "SELECT * FROM ACCOUNT WHERE "
             + "ACCOUNT=?";
+
+    public static final String DB_ACCOUNT_EDIT_PASSWORD = "UPDATE ACCOUNT SET "
+            + "PASSWORD=? WHERE ACCOUNT=?";
 }

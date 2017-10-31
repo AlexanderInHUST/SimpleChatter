@@ -9,6 +9,7 @@ import security.SecurityGuard;
 
 import static message.MessageConst.ACC_MSG;
 import static message.MessageConst.REGISTER_MSG;
+import static message.MessageConst.SUCCESS;
 
 /**
  * Created by tangyifeng on 2017/10/30.
@@ -28,11 +29,15 @@ public class RegisterPresenter {
         guard = new SecurityGuard();
         String privateKey = guard.getPrivateKey();
         String publicKey = guard.getPublicKey();
-        storePrivateKey(account, privateKey);
         sender = new MessageSender(privateKey);
         Message msg = getMsg(account, password, publicKey, pwdQuestion, pwdAnswer);
         Message reply = sender.sendMessageUnsafely(msg);
-        return reply.getKind() == ACC_MSG && new String(reply.getData()).equals("Complete");
+        if (reply.getKind() == ACC_MSG && new String(reply.getData()).equals(SUCCESS)) {
+            storePrivateKey(account, privateKey);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void storePrivateKey(String account, String key) {
@@ -43,7 +48,7 @@ public class RegisterPresenter {
     private Message getMsg(String account, String password, String publicKey, String pwdQuestion, String pwdAnswer) {
         Message msg = new Message();
         StringBuilder builder = new StringBuilder();
-        builder.append(MD5Verify.getMd5(account))
+        builder.append(account)
                 .append(";")
                 .append(MD5Verify.getMd5(password))
                 .append(";")
@@ -57,9 +62,9 @@ public class RegisterPresenter {
         return msg;
     }
 
-//    public static void main(String[] args) {
-//        SqlHelper helper = new SqlHelper();
-//        RegisterPresenter presenter = new RegisterPresenter(helper);
-//        System.out.println(presenter.register("myh", "123", "who i am", "tyf"));
-//    }
+    public static void main(String[] args) {
+        SqlHelper helper = new SqlHelper();
+        RegisterPresenter presenter = new RegisterPresenter(helper);
+        System.out.println(presenter.register("myh", "123", "who i am", "tyf"));
+    }
 }
