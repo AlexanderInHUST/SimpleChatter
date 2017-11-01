@@ -18,7 +18,7 @@ import static udp.UDPConst.*;
 public class StableUDP {
 
     private static final String CLASS_NAME = "StableUDP";
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
 
     private SlidingWindow sendWindow, receiveWindow;
     private ThreeHello sendHello, receiveHello;
@@ -582,7 +582,7 @@ public class StableUDP {
     public static void main(String[] args) {
         UDPPackageHelper packageHelper = new UDPPackageHelper();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             builder.append(SAMPLE_TEXT);
         }
         ArrayList<UDPPackage> data = packageHelper.cutDataUDPPackage(builder.toString().getBytes());

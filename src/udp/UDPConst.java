@@ -8,7 +8,7 @@ public class UDPConst {
 
     // package const
     public static final long DEFAULT_TIMEOUT = 50;
-    public static final int PACKAGE_LEN = 1024 * 16; // 16kb per pack
+    public static final int PACKAGE_LEN = 1024 * 60; // 60kb per pack
     public static final int WINDOW_WIDTH = 8;
 
     //Stable UDP
@@ -20,8 +20,8 @@ public class UDPConst {
     // UDP
     public final static int UDP_BACK_PORT = 25555;
     public final static int UDP_SEND_PORT = 8999;
-    public final static int UDP_POWER_BYTE = 1000;
-    public final static int UDP_TIMEOUT = 500;
+    public final static int UDP_POWER_BYTE = 1;
 
     public final static String SAMPLE_TEXT = "Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!";
+
 }

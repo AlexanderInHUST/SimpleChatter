@@ -8,6 +8,7 @@ public class MessageConst {
 
     public static final int ACC_MSG = -1;
 
+    // C2S
     // Server response MSG
     public static final String SUCCESS = "Complete!";
     public static final String CHECK_FAIL = "Fail!";
@@ -23,5 +24,12 @@ public class MessageConst {
     // State MSG
     public static final int LOG_IN_MSG = 3;
     public static final int LOG_OUT_MSG = 4;
+
+    // P2P
+    // File transmit
+    public static final int FILE_WANNA_MSG = 100; // recv in msgQueue
+    public static final int FILE_READY_MSG = 101;
+    public static final int FILE_DONE_MSG = 102;
+
 
 }

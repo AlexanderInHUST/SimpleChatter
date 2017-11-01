@@ -23,43 +23,41 @@ public class UDPHelper {
     private String senderHost = "", receiverHost = "";
     private int sendPort, receiverPort;
     private volatile int offset = 0;
-
-    public interface TimeoutListener {
-        void onTimeout();
-    }
+    private byte[] receiveBuff;
 
     public UDPHelper() {
-
+        receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + PACKAGE_LEN];
     }
 
     public boolean sendUDP(UDPPackage pack, String hostname, int port) {
-        byte[] sendBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
-        boolean result;
+        byte[] sendBuff;
         DatagramPacket sendPacket;
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream outputStream = new ObjectOutputStream(bytes);
             outputStream.writeObject(pack);
 
-            Random random = new Random();
-            offset = (random.nextInt() * 10000) % 100;
+//            Random random = new Random();
+//            offset = (random.nextInt() * 10000) % 100;
 
 //            if (offset > 10) {
-                InetAddress address = InetAddress.getByName(hostname);
-                sendBuff = bytes.toByteArray();
-                sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
+            InetAddress address = InetAddress.getByName(hostname);
+            sendBuff = bytes.toByteArray();
+            sendPacket = new DatagramPacket(sendBuff, sendBuff.length, address, port);
 
-                synchronized (this) {
-                    sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
-                    sendSocket.send(sendPacket);
+            synchronized (this) {
+                sendSocket = new DatagramSocket(UDP_BACK_PORT + port);
+                sendSocket.send(sendPacket);
 
-                    Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
+                Log.log(CLASS_NAME, "pack has been sent!", IS_DEBUG);
 
-                    sendSocket.close();
-                }
+                sendSocket.close();
+            }
 //            }
             bytes.close();
             outputStream.close();
+//            sendObjectOutputStream.reset();
+//            sendByteOutputStream.reset();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,18 +69,18 @@ public class UDPHelper {
 
     public UDPPackage receiveUDP(int port) {
         try {
-            byte[] receiveBuff;
             DatagramPacket receivePacket;
-
-            receiveBuff = new byte[UDP_POWER_BYTE * PACKAGE_LEN + 1];
             receiveSocket = new DatagramSocket(port);
-            receivePacket = new DatagramPacket(receiveBuff, 0, UDP_POWER_BYTE * PACKAGE_LEN);
+            receivePacket = new DatagramPacket(receiveBuff, 0, UDP_POWER_BYTE * PACKAGE_LEN + PACKAGE_LEN);
             receiveSocket.setSoTimeout(RECV_TIMEOUT);
             receiveSocket.receive(receivePacket);
 
             Log.log(CLASS_NAME, "pack has been received!", IS_DEBUG);
 
-            senderHost = receivePacket.getAddress().getHostAddress();
+            if (senderHost.isEmpty()) {
+                senderHost = receivePacket.getAddress().getHostAddress();
+            }
+
             ByteArrayInputStream bytes = new ByteArrayInputStream(receiveBuff);
             ObjectInputStream inputStream = new ObjectInputStream(bytes);
             UDPPackage result = (UDPPackage) inputStream.readObject();
@@ -92,13 +90,11 @@ public class UDPHelper {
             receiveSocket.close();
             return result;
         } catch (SocketException e1) {
-            System.out.println("timeout!");
             receiveSocket.close();
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
-            System.out.println("timeout!");
             receiveSocket.close();
             Log.log(CLASS_NAME, "pack-receive fail", IS_DEBUG);
             return null;
