@@ -12,11 +12,11 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class LoginMsgPresenter {
+public class LoginCheckPresenter {
 
     private MessageSender sender;
 
-    public boolean login(String account, String password) {
+    public boolean loginCheck(String account, String password) {
         Message msg = getMsg(account, password);
         sender = new MessageSender();
         Message reply = sender.sendMessageUnsafely(msg);
@@ -35,7 +35,7 @@ public class LoginMsgPresenter {
     }
 
     public static void main(String[] args) {
-        LoginMsgPresenter presenter = new LoginMsgPresenter();
-        System.out.println(presenter.login("myh", "1234"));
+        LoginCheckPresenter presenter = new LoginCheckPresenter();
+        System.out.println(presenter.loginCheck("myh", "1234"));
     }
 }

@@ -1,6 +1,7 @@
 package client.sql;
 
 import client.sql.detail.SqlAccount;
+import client.sql.detail.SqlSecurity;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +17,7 @@ public class SqlHelper {
 
     private Connection dbConnection;
     private static SqlAccount sqlAccount;
+    private static SqlSecurity sqlSecurity;
 
     public SqlHelper() {
         initialSqlHelper();
@@ -36,6 +38,14 @@ public class SqlHelper {
         }
         return sqlAccount;
     }
+
+    public SqlSecurity getSqlSecurity() {
+        if (sqlSecurity == null) {
+            sqlSecurity = new SqlSecurity(dbConnection);
+        }
+        return sqlSecurity;
+    }
+
 
     public void shutdownSqlHelper() {
         try {

@@ -15,4 +15,6 @@ public class SqlConst {
     public static final String DB_ACCOUNT_INSERT = "INSERT INTO ACCOUNT"
             + "(ACCOUNT, P_KEY) VALUES"
             + "(?,?)";
+    public static final String DB_ACCOUNT_GET = "SELECT * FROM ACCOUNT WHERE "
+            + "ACCOUNT=?";
 }

@@ -80,8 +80,8 @@ public class SecurityGuard {
 
     public byte[] decryptByPublicKey(ArrayList<String> signatures, byte[] encryptData) {
         ArrayList<byte[]> originalData = new ArrayList<>();
-        int nums = encryptData.length / ENCRYPT_DATA_LENGTH;
-        for (int i = 0; i < nums; i++) {
+        int nums = (encryptData.length - 1) / ENCRYPT_DATA_LENGTH;
+        for (int i = 0; i < nums + 1; i++) {
             int length = ENCRYPT_DATA_LENGTH;
             byte[] curBytes = new byte[length];
             System.arraycopy(encryptData, i * ENCRYPT_DATA_LENGTH, curBytes, 0, length);
@@ -96,8 +96,8 @@ public class SecurityGuard {
 
     public byte[] decryptByPrivateKey(byte[] encryptData) {
         ArrayList<byte[]> originalData = new ArrayList<>();
-        int nums = encryptData.length / ENCRYPT_DATA_LENGTH;
-        for (int i = 0; i < nums; i++) {
+        int nums = (encryptData.length - 1) / ENCRYPT_DATA_LENGTH;
+        for (int i = 0; i < nums + 1; i++) {
             int length = ENCRYPT_DATA_LENGTH;
             byte[] curBytes = new byte[length];
             System.arraycopy(encryptData, i * ENCRYPT_DATA_LENGTH, curBytes, 0, length);
@@ -108,12 +108,8 @@ public class SecurityGuard {
 
     public static void main(String[] args) {
         SecurityGuard guard = new SecurityGuard();
-        String org = "hello world!";
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 500; i++) {
-            builder.append(org);
-        }
-        byte[] encryptData = guard.encryptByPublicKey(builder.toString().getBytes());
+        String org = "Complete!";
+        byte[] encryptData = guard.encryptByPublicKey(org.getBytes());
 //        ArrayList<String> signs = guard.getSignatures();
 //        byte[] data = guard.decryptByPublicKey(signs, encryptData);
         System.out.println(new String(guard.decryptByPrivateKey(encryptData)));

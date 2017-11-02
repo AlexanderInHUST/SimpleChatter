@@ -4,11 +4,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +43,9 @@ public class KeyPairHelper {
     public void setPublicKey(String key) {
         try {
             byte[] keyBytes = Base64.getDecoder().decode(key);
-            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-            publicKey = (RSAPublicKey) keyFactory.generatePublic(pkcs8KeySpec);
+            publicKey = (RSAPublicKey) keyFactory.generatePublic(x509EncodedKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
@@ -147,16 +150,15 @@ public class KeyPairHelper {
         return Base64.getEncoder().encodeToString(key);
     }
 
-    public static void main(String[] args) {
-        String s = "hello world!";
-        KeyPairHelper helper = new KeyPairHelper();
-        helper.createKeys();
-//        byte[] encryptData = helper.encryptByPrivateKey(s.getBytes());
-//        String sign = helper.sign(encryptData);
-//        System.out.println(helper.verify(encryptData, sign));
-//        System.out.println(new String(helper.decryptByPublicKey(encryptData)));
-        byte[] encryptData = helper.encryptByPublicKey(s.getBytes());
-        System.out.println(new String(helper.decryptByPrivateKey(encryptData)));
-
-    }
+//    public static void main(String[] args) {
+//        String s = "Complete!";
+//        KeyPairHelper helper = new KeyPairHelper();
+//        helper.createKeys();
+//        String publicKey = helper.getPublicKey();
+//        KeyPairHelper test = new KeyPairHelper();
+//        test.setPublicKey(publicKey);
+//        byte[] testData = test.encryptByPublicKey(s.getBytes());
+//        System.out.println(new String(helper.decryptByPrivateKey(testData)));
+//
+//    }
 }
