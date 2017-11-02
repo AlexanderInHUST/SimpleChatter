@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import static message.MessageConst.ACC_MSG;
+import static message.MessageConst.ERROR;
 import static message.MessageConst.SUCCESS;
 
 /**
@@ -30,13 +31,13 @@ public class RegisterMsgHandler implements IMsgHandler {
         ArrayList<String> detailData = MessageCoder.decode(new String(message.getData()));
         // account; password; public_key; question; answer
         SqlAccount sqlAccount = sqlHelper.getSqlAccount();
-        sqlAccount.insertAccount(detailData.get(0),
+        boolean result = sqlAccount.insertAccount(detailData.get(0),
                 detailData.get(1),
                 detailData.get(2),
                 detailData.get(3),
                 detailData.get(4));
         try {
-            Message okMsg = new Message(ACC_MSG, SUCCESS);
+            Message okMsg = new Message(ACC_MSG, (result) ? SUCCESS : ERROR);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();

@@ -2,9 +2,12 @@ package server.sql.detail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static server.sql.SqlConst.DB_STATE_DELETE;
+import static server.sql.SqlConst.DB_STATE_GET;
 import static server.sql.SqlConst.DB_STATE_INSERT;
 
 /**
@@ -45,6 +48,21 @@ public class SqlState {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public ArrayList<String> getOnlineUsers() {
+        try {
+            ArrayList<String> result = new ArrayList<>();
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_STATE_GET);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(resultSet.getString("account"));
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

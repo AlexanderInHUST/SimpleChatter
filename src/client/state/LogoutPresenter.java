@@ -26,7 +26,7 @@ public class LogoutPresenter {
         sender = new MessageSender(privateKey);
         Message msg = getMsg();
         Message reply = sender.sendMessageSafely(msg, account);
-        return reply.getKind() == ACC_MSG && new String(reply.getData()).equals(SUCCESS);
+        return reply.getKind() == ACC_MSG && new String(reply.getData()).equals(BYE);
     }
 
     private Message getMsg() {
@@ -39,7 +39,7 @@ public class LogoutPresenter {
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
         LogoutPresenter presenter = new LogoutPresenter(helper);
-        boolean result = presenter.logout("tyf");
+        boolean result = presenter.logout("myh");
         System.out.println(result);
     }
 

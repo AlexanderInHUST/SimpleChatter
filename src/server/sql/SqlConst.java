@@ -27,6 +27,7 @@ public class SqlConst {
             + "(?,?,?)";
     public static final String DB_STATE_DELETE = "DELETE FROM USER_STATE WHERE "
             + "ACCOUNT=?";
+    public static final String DB_STATE_GET = "SELECT * FROM USER_STATE WHERE 1=1";
 
 
 }

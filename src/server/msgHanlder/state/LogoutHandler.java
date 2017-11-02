@@ -13,8 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import static message.MessageConst.ACC_MSG;
-import static message.MessageConst.SUCCESS;
+import static message.MessageConst.*;
 import static security.SecurityConst.SERVER_RSA;
 
 /**
@@ -34,11 +33,11 @@ public class LogoutHandler implements IMsgHandler {
         String publicKey = sqlSecurity.getPublicKey(fromWho);
         SecurityGuard guard = new SecurityGuard(publicKey, SERVER_RSA);
         SqlState sqlState = sqlHelper.getSqlState();
-        sqlState.deleteLogin(fromWho);
+        boolean result = sqlState.deleteLogin(fromWho);
         try {
             Message okMsg = new Message();
             okMsg.setKind(ACC_MSG);
-            okMsg.setData(guard.encryptByPublicKey(SUCCESS.getBytes()));
+            okMsg.setData(guard.encryptByPublicKey((result) ? BYE.getBytes() : ERROR.getBytes()));
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();

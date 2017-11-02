@@ -1,6 +1,7 @@
 package server.sql;
 
 import server.sql.detail.SqlAccount;
+import server.sql.detail.SqlChat;
 import server.sql.detail.SqlSecurity;
 import server.sql.detail.SqlState;
 
@@ -20,6 +21,7 @@ public class SqlHelper {
     private static SqlAccount sqlAccount;
     private static SqlState sqlState;
     private static SqlSecurity sqlSecurity;
+    private static SqlChat sqlChat;
 
     public SqlHelper() {
         initialSqlHelper();
@@ -53,6 +55,13 @@ public class SqlHelper {
             sqlSecurity = new SqlSecurity(dbConnection);
         }
         return sqlSecurity;
+    }
+
+    public SqlChat getSqlChat() {
+        if (sqlChat == null) {
+            sqlChat = new SqlChat(dbConnection);
+        }
+        return sqlChat;
     }
 
     public void shutdownSqlHelper() {

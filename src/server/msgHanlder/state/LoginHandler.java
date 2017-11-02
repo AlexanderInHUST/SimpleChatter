@@ -41,10 +41,16 @@ public class LoginHandler implements IMsgHandler {
         boolean result = sqlState.insertLogin(detailData.get(0),
                 detailData.get(1),
                 detailData.get(2));
+        ArrayList<String> onlineUsers = sqlState.getOnlineUsers();
+        String oUs = "";
+        for (String s : onlineUsers) {
+            oUs += s;
+            oUs += ";";
+        }
         try {
             Message okMsg = new Message();
             okMsg.setKind(ACC_MSG);
-            okMsg.setData(guard.encryptByPublicKey((result) ? SUCCESS.getBytes() : ERROR.getBytes()));
+            okMsg.setData(guard.encryptByPublicKey((result) ? oUs.getBytes() : ERROR.getBytes()));
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();
