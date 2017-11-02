@@ -25,6 +25,8 @@ public class SqlConst {
     public static final String DB_STATE_INSERT = "INSERT INTO USER_STATE"
             + "(ACCOUNT, IP_ADDRESS, PORT) VALUES"
             + "(?,?,?)";
+    public static final String DB_STATE_DELETE = "DELETE FROM USER_STATE WHERE "
+            + "ACCOUNT=?";
 
 
 }

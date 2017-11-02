@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import static message.MessageConst.ACC_MSG;
+import static message.MessageConst.ERROR;
 import static message.MessageConst.SUCCESS;
 import static security.SecurityConst.SERVER_RSA;
 
@@ -37,13 +38,13 @@ public class LoginHandler implements IMsgHandler {
         ArrayList<String> detailData = MessageCoder.decode(decryptData);
         // account; ip_address; port
         SqlState sqlState = sqlHelper.getSqlState();
-        sqlState.insertLogin(detailData.get(0),
+        boolean result = sqlState.insertLogin(detailData.get(0),
                 detailData.get(1),
                 detailData.get(2));
         try {
             Message okMsg = new Message();
             okMsg.setKind(ACC_MSG);
-            okMsg.setData(guard.encryptByPublicKey(SUCCESS.getBytes()));
+            okMsg.setData(guard.encryptByPublicKey((result) ? SUCCESS.getBytes() : ERROR.getBytes()));
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
             outputStream.flush();

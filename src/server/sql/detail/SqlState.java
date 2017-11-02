@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static server.sql.SqlConst.DB_STATE_DELETE;
 import static server.sql.SqlConst.DB_STATE_INSERT;
 
 /**
@@ -24,6 +25,19 @@ public class SqlState {
             preparedStatement.setString(1, account);
             preparedStatement.setString(2, ipAddress);
             preparedStatement.setString(3, port);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteLogin(String account) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_STATE_DELETE);
+            preparedStatement.setString(1, account);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return true;

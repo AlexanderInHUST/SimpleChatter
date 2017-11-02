@@ -36,6 +36,6 @@ public class LoginCheckPresenter {
 
     public static void main(String[] args) {
         LoginCheckPresenter presenter = new LoginCheckPresenter();
-        System.out.println(presenter.loginCheck("myh", "1234"));
+        System.out.println(presenter.loginCheck("tyf", "123"));
     }
 }

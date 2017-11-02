@@ -65,6 +65,6 @@ public class RegisterMsgPresenter {
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
         RegisterMsgPresenter presenter = new RegisterMsgPresenter(helper);
-        System.out.println(presenter.register("myh", "123", "who i am", "tyf"));
+        System.out.println(presenter.register("tyf", "123", "who i am", "tyf"));
     }
 }
