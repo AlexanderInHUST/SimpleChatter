@@ -8,7 +8,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static message.MessageConst.FILE_OK_MSG;
 import static message.MessageConst.FILE_READY_MSG;
+import static message.MessageConst.SUCCESS;
 
 /**
  * Created by tangyifeng on 2017/11/1.
@@ -16,31 +18,63 @@ import static message.MessageConst.FILE_READY_MSG;
  */
 public class ExtraCommunication {
 
-    private String recvHost;
-    private int sendPort, recvPort;
-    private Socket socket;
-    private ObjectOutputStream sendOutputStream, recvOutputStream;
-    private ObjectInputStream sendInputStream, recvInputStream;
-
-    public ExtraCommunication(String recvHost, int sendPort, int recvPort) {
-        this.recvHost = recvHost;
-        this.sendPort = sendPort;
-        this.recvPort = recvPort;
-    }
-
-    public boolean sendPreparedMsg(String fileName) throws IOException, ClassNotFoundException {
+    // for sender
+    public static int sendPreparedMsg(String sendHost, int sendPort, String fileName) throws IOException, ClassNotFoundException {
         Message wannaMsg = ExtraCommMsgCreator.getWannaMsg(fileName);
-        socket = new Socket(recvHost, recvPort);
-        sendOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        Socket socket = new Socket(sendHost, sendPort);
+        ObjectOutputStream sendOutputStream = new ObjectOutputStream(socket.getOutputStream());
         sendOutputStream.writeObject(wannaMsg);
         sendOutputStream.flush();
 
-        sendInputStream = new ObjectInputStream(socket.getInputStream());
+        ObjectInputStream sendInputStream = new ObjectInputStream(socket.getInputStream());
         Message reply = (Message) sendInputStream.readObject();
-        if (!(reply.getKind() == FILE_READY_MSG && new String(reply.getData()).equals(fileName))) {
-            return false;
+        if (reply.getKind() != FILE_READY_MSG) {
+            return -1;
         }
-        
+
+        sendInputStream.close();
+        sendOutputStream.close();
+        socket.close();
+        return Integer.parseInt(new String(reply.getData()));
+    }
+
+    // for recv in Msg queue
+    public static boolean replyPrepareMsg(int port, Socket socket) throws IOException {
+//        this.socket = socket;
+        Message readyMsg = ExtraCommMsgCreator.getReadyMsg(Integer.toString(port));
+        ObjectOutputStream recvOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        recvOutputStream.writeObject(readyMsg);
+        recvOutputStream.flush();
+
+        recvOutputStream.close();
+        return true;
+    }
+
+    // for send
+    public static boolean sendDoneMsg(String sendHost, int sendPort, String md5) throws IOException, ClassNotFoundException {
+        Message doneMsg = ExtraCommMsgCreator.getDoneMsg(md5);
+        Socket socket = new Socket(sendHost, sendPort);
+        ObjectOutputStream recvOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        recvOutputStream.writeObject(doneMsg);
+        recvOutputStream.flush();
+
+        ObjectInputStream recvInputStream = new ObjectInputStream(socket.getInputStream());
+        Message reply = (Message) recvInputStream.readObject();
+        recvInputStream.close();
+        recvOutputStream.close();
+        socket.close();
+        return reply.getKind() == FILE_OK_MSG && new String(reply.getData()).equals(SUCCESS);
+    }
+
+    // for recv in Msg queue
+    public static boolean replyDoneMsg(boolean isOK, Socket socket) throws IOException {
+        Message okMsg = ExtraCommMsgCreator.getOKMsg(isOK);
+        ObjectOutputStream recvOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        recvOutputStream.writeObject(okMsg);
+        recvOutputStream.flush();
+
+        recvOutputStream.close();
+        return true;
     }
 
 }

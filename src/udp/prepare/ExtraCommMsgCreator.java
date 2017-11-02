@@ -2,9 +2,7 @@ package udp.prepare;
 
 import message.Message;
 
-import static message.MessageConst.FILE_DONE_MSG;
-import static message.MessageConst.FILE_READY_MSG;
-import static message.MessageConst.FILE_WANNA_MSG;
+import static message.MessageConst.*;
 
 /**
  * Created by tangyifeng on 2017/11/1.
@@ -19,17 +17,24 @@ public class ExtraCommMsgCreator {
         return msg;
     }
 
-    public static Message getReadyMsg(String fileName) {
+    public static Message getReadyMsg(String port) {
         Message msg = new Message();
         msg.setKind(FILE_READY_MSG);
-        msg.setData(fileName);
+        msg.setData(port);
         return msg;
     }
 
-    public static Message getDoneMsg() {
+    public static Message getDoneMsg(String md5) {
         Message msg = new Message();
         msg.setKind(FILE_DONE_MSG);
-        msg.setData("");
+        msg.setData(md5);
+        return msg;
+    }
+
+    public static Message getOKMsg(boolean isOK) {
+        Message msg = new Message();
+        msg.setKind(FILE_OK_MSG);
+        msg.setData((isOK) ? SUCCESS : CHECK_FAIL);
         return msg;
     }
 
