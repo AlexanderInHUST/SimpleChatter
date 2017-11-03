@@ -1,4 +1,4 @@
-package client.chat;
+package client.c2s.chat;
 
 import client.c2s.MessageSender;
 import client.sql.SqlHelper;

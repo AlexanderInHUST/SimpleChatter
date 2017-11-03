@@ -1,4 +1,4 @@
-package client.account;
+package client.c2s.account;
 
 import client.c2s.MessageSender;
 import message.Message;

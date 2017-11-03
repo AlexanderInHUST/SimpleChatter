@@ -1,4 +1,4 @@
-package client.state;
+package client.c2s.state;
 
 import client.c2s.MessageSender;
 import client.sql.SqlHelper;
