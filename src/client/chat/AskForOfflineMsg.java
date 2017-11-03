@@ -16,12 +16,12 @@ import static message.MessageConst.CHECK_FAIL;
  * Created by tangyifeng on 2017/11/3.
  * Email: yifengtang_hust@outlook.com
  */
-public class AskForOfflineMsgPresenter {
+public class AskForOfflineMsg {
 
     private MessageSender sender;
     private SqlHelper sqlHelper;
 
-    public AskForOfflineMsgPresenter(SqlHelper sqlHelper) {
+    public AskForOfflineMsg(SqlHelper sqlHelper) {
         this.sqlHelper = sqlHelper;
     }
 
@@ -56,8 +56,8 @@ public class AskForOfflineMsgPresenter {
 
     public static void main(String[] args) {
         SqlHelper sqlHelper = new SqlHelper();
-        AskForOfflineMsgPresenter askForOfflineMsgPresenter = new AskForOfflineMsgPresenter(sqlHelper);
-        ArrayList<HashMap<String, String>> result = askForOfflineMsgPresenter.ask("myh");
+        AskForOfflineMsg askForOfflineMsg = new AskForOfflineMsg(sqlHelper);
+        ArrayList<HashMap<String, String>> result = askForOfflineMsg.ask("myh");
         for (HashMap<String, String> map : result) {
             System.out.println(map.get("fromWho") + ":" + map.get("whatMsg"));
         }

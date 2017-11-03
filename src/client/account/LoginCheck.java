@@ -12,7 +12,7 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class LoginCheckPresenter {
+public class LoginCheck {
 
     private MessageSender sender;
 
@@ -35,7 +35,7 @@ public class LoginCheckPresenter {
     }
 
     public static void main(String[] args) {
-        LoginCheckPresenter presenter = new LoginCheckPresenter();
+        LoginCheck presenter = new LoginCheck();
         System.out.println(presenter.loginCheck("tyf", "123"));
     }
 }

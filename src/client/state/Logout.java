@@ -11,12 +11,12 @@ import static message.MessageConst.*;
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class LogoutPresenter {
+public class Logout {
 
     private MessageSender sender;
     private SqlHelper helper;
 
-    public LogoutPresenter(SqlHelper helper) {
+    public Logout(SqlHelper helper) {
         this.helper = helper;
     }
 
@@ -38,7 +38,7 @@ public class LogoutPresenter {
 
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
-        LogoutPresenter presenter = new LogoutPresenter(helper);
+        Logout presenter = new Logout(helper);
         boolean result = presenter.logout("myh");
         System.out.println(result);
     }

@@ -5,26 +5,23 @@ import client.sql.SqlHelper;
 import client.sql.detail.SqlSecurity;
 import message.Message;
 import message.MessageCoder;
-import security.SecurityGuard;
 
-import java.security.Signature;
 import java.util.ArrayList;
 
 import static message.MessageConst.ACC_MSG;
 import static message.MessageConst.LOG_IN_MSG;
 import static message.MessageConst.SUCCESS;
-import static security.SecurityConst.CLIENT_RSA;
 
 /**
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class LoginPresenter  {
+public class Login {
 
     private MessageSender sender;
     private SqlHelper helper;
 
-    public LoginPresenter(SqlHelper helper) {
+    public Login(SqlHelper helper) {
         this.helper = helper;
     }
 
@@ -51,7 +48,7 @@ public class LoginPresenter  {
 
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
-        LoginPresenter presenter = new LoginPresenter(helper);
+        Login presenter = new Login(helper);
         ArrayList<String> result = presenter.login("myh", "localhost", 123);
         for (String s : result) {
             System.out.println(s);

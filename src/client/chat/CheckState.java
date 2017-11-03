@@ -15,12 +15,12 @@ import static message.MessageConst.CHECK_STATE_MSG;
  * Created by tangyifeng on 2017/11/3.
  * Email: yifengtang_hust@outlook.com
  */
-public class CheckStatePresenter {
+public class CheckState {
 
     private MessageSender sender;
     private SqlHelper sqlHelper;
 
-    public CheckStatePresenter(SqlHelper sqlHelper) {
+    public CheckState(SqlHelper sqlHelper) {
         this.sqlHelper = sqlHelper;
     }
 
@@ -47,8 +47,8 @@ public class CheckStatePresenter {
 
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
-        CheckStatePresenter checkStatePresenter = new CheckStatePresenter(helper);
-        ArrayList<String> arrayList = checkStatePresenter.check("myh", "tyf");
+        CheckState checkState = new CheckState(helper);
+        ArrayList<String> arrayList = checkState.check("myh", "tyf");
         for (String s : arrayList) {
             System.out.println(s);
         }

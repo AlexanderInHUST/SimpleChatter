@@ -15,13 +15,13 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/10/30.
  * Email: yifengtang_hust@outlook.com
  */
-public class RegisterMsgPresenter {
+public class RegisterMsg {
 
     private MessageSender sender;
     private SecurityGuard guard;
     private SqlHelper helper;
 
-    public RegisterMsgPresenter(SqlHelper helper) {
+    public RegisterMsg(SqlHelper helper) {
         this.helper = helper;
     }
 
@@ -64,7 +64,7 @@ public class RegisterMsgPresenter {
 
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
-        RegisterMsgPresenter presenter = new RegisterMsgPresenter(helper);
+        RegisterMsg presenter = new RegisterMsg(helper);
         System.out.println(presenter.register("tyf", "123", "who i am", "tyf"));
     }
 }

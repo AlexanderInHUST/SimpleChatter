@@ -4,7 +4,6 @@ import client.c2s.MessageSender;
 import client.sql.SqlHelper;
 import client.sql.detail.SqlSecurity;
 import message.Message;
-import security.SecurityGuard;
 
 import static message.MessageConst.ACC_MSG;
 import static message.MessageConst.SEND_OFFLINE_CHAT_MSG;
@@ -14,12 +13,12 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/11/3.
  * Email: yifengtang_hust@outlook.com
  */
-public class SendOfflinePresenter {
+public class SendOffline {
 
     private MessageSender sender;
     private SqlHelper sqlHelper;
 
-    public SendOfflinePresenter(SqlHelper sqlHelper) {
+    public SendOffline(SqlHelper sqlHelper) {
         this.sqlHelper = sqlHelper;
     }
 
@@ -42,11 +41,11 @@ public class SendOfflinePresenter {
 
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
-        SendOfflinePresenter sendOfflinePresenter = new SendOfflinePresenter(helper);
-        sendOfflinePresenter.send("tyf", "myh", "hello1!");
-        sendOfflinePresenter.send("tyf", "myh", "hello2!");
-        sendOfflinePresenter.send("tyf", "myh", "hello3!");
-        sendOfflinePresenter.send("tyf", "myh", "hello4!");
+        SendOffline sendOffline = new SendOffline(helper);
+        sendOffline.send("tyf", "myh", "hello1!");
+        sendOffline.send("tyf", "myh", "hello2!");
+        sendOffline.send("tyf", "myh", "hello3!");
+        sendOffline.send("myh", "tyf", "hello4!");
     }
 
 }

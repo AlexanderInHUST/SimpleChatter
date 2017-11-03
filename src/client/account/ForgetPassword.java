@@ -5,13 +5,12 @@ import message.Message;
 import security.MD5Verify;
 
 import static message.MessageConst.FORGET_PSWORD_MSG;
-import static message.MessageConst.LOGIN_MSG;
 
 /**
  * Created by tangyifeng on 2017/10/31.
  * Email: yifengtang_hust@outlook.com
  */
-public class ForgetPasswordPresenter {
+public class ForgetPassword {
 
     private MessageSender sender;
 
@@ -38,8 +37,8 @@ public class ForgetPasswordPresenter {
     }
 
     public static void main(String[] args) {
-        ForgetPasswordPresenter forgetPasswordPresenter = new ForgetPasswordPresenter();
-        String result = forgetPasswordPresenter.forgetPassword("myh", "who u ar", "tyf", "1234");
+        ForgetPassword forgetPassword = new ForgetPassword();
+        String result = forgetPassword.forgetPassword("myh", "who u ar", "tyf", "1234");
         System.out.println(result);
     }
 }
