@@ -4,7 +4,6 @@ import security.MD5Verify;
 import udp.base.StableUDP;
 import udp.base.UDPPackage;
 import udp.base.UDPPackageHelper;
-import udp.prepare.ExtraCommunication;
 import util.BitUtil;
 
 import java.io.*;
@@ -31,38 +30,41 @@ public class TransmitFile {
             byte[] fileData = BitUtil.fileToByteArray(fileName);
             ArrayList<UDPPackage> packages = packageHelper.cutDataUDPPackage(fileData);
             stableUDP.setSendData(packages);
-            String md5 = MD5Verify.getFileMD5(fileName);
-            int port = ExtraCommunication.sendPreparedMsg(sendHost, sendPort, fileName);
-            if (!stableUDP.startAsSender(sendHost, port, recvPort)) {
-                return false;
+            return !stableUDP.startAsSender(sendHost, sendPort, recvPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean recv(int recvPort, String fileName) {
+        try {
+            stableUDP.startAsReceiver(recvPort);
+            ArrayList<UDPPackage> packages = stableUDP.getRecvData();
+            byte[] fileData = packageHelper.composeDataUDPPackage(packages);
+            BitUtil.byteArrayToFile(fileData, fileName);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        TransmitFile transmitFile = new TransmitFile();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TransmitFile transmitFile1 = new TransmitFile();
+                transmitFile1.recv(5656, "/Users/tangyifeng/Desktop/test.mp4");
             }
-            return ExtraCommunication.sendDoneMsg(sendHost, sendPort, md5);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean recvStepOne(int recvPort, Socket socket) {
-        try {
-            ExtraCommunication.replyPrepareMsg(recvPort, socket);
-            socket.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean recvStepTwo(boolean isOK, Socket socket) {
-        try {
-            ExtraCommunication.replyDoneMsg(isOK, socket);
-            socket.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        }).start();
+        transmitFile.send("localhost", 5656, 5858, "/Users/tangyifeng/Desktop/sjhs.ml_0001.mp4");
     }
 
 }

@@ -18,7 +18,7 @@ import static udp.UDPConst.*;
 public class StableUDP {
 
     private static final String CLASS_NAME = "StableUDP";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private SlidingWindow sendWindow, receiveWindow;
     private ThreeHello sendHello, receiveHello;
