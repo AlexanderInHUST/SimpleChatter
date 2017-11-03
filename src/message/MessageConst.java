@@ -25,6 +25,10 @@ public class MessageConst {
     public static final int LOG_IN_MSG = 3;
     public static final int LOG_OUT_MSG = 4;
 
+    // Chat MSG
+    public static final int START_CHAT_MSG = 5;
+    public static final int ASK_OFFLINE_CHAT_MSG = 6;
+
     // P2P
     // File transmit
     public static final int FILE_WANNA_MSG = 100; // recv in msgQueue

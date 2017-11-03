@@ -124,13 +124,13 @@ public class UDPHelper {
         return receiveSocket != null && !receiveSocket.isClosed();
     }
 
-    public static void main(String[] args) {
-        UDPHelper helper = new UDPHelper();
-        UDPPackageHelper packageHelper = new UDPPackageHelper();
-        new Thread(() -> {
-            helper.sendUDP(packageHelper.getAckPackage(1).get(0), "localhost", UDP_SEND_PORT);
-        }).start();
-        UDPPackage pack = helper.receiveUDP(UDP_SEND_PORT);
-        helper.shutdownReceiveUDP();
-    }
+//    public static void main(String[] args) {
+//        UDPHelper helper = new UDPHelper();
+//        UDPPackageHelper packageHelper = new UDPPackageHelper();
+//        new Thread(() -> {
+//            helper.sendUDP(packageHelper.getAckPackage(1).get(0), "localhost", UDP_SEND_PORT);
+//        }).start();
+//        UDPPackage pack = helper.receiveUDP(UDP_SEND_PORT);
+//        helper.shutdownReceiveUDP();
+//    }
 }

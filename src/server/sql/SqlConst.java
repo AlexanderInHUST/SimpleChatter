@@ -29,5 +29,10 @@ public class SqlConst {
             + "ACCOUNT=?";
     public static final String DB_STATE_GET = "SELECT * FROM USER_STATE WHERE 1=1";
 
-
+    // Chat
+    public static final String DB_CHAT_INSERT = "INSERT INTO OFFLINE_MSG"
+            + "(SEND_TIME, FROM_WHO, TO_WHO, WHAT_MSG) VALUES"
+            + "(?,?,?,?)";
+    public static final String DB_CHAT_GET = "SELECT * FROM OFFLINE_MSG WHERE "
+            + "TO_WHO=?";
 }

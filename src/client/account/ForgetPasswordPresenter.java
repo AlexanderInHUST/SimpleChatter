@@ -39,7 +39,7 @@ public class ForgetPasswordPresenter {
 
     public static void main(String[] args) {
         ForgetPasswordPresenter forgetPasswordPresenter = new ForgetPasswordPresenter();
-        String result = forgetPasswordPresenter.forgetPassword("myh", "who u are", "tyf", "1234");
+        String result = forgetPasswordPresenter.forgetPassword("myh", "who u ar", "tyf", "1234");
         System.out.println(result);
     }
 }

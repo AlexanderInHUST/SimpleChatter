@@ -94,6 +94,18 @@ public class SecurityGuard {
         return ArrayUtils.concatAll(originalData);
     }
 
+    public byte[] decryptByPublicKeyWithoutSigns(byte[] encryptData) {
+        ArrayList<byte[]> originalData = new ArrayList<>();
+        int nums = (encryptData.length - 1) / ENCRYPT_DATA_LENGTH;
+        for (int i = 0; i < nums + 1; i++) {
+            int length = ENCRYPT_DATA_LENGTH;
+            byte[] curBytes = new byte[length];
+            System.arraycopy(encryptData, i * ENCRYPT_DATA_LENGTH, curBytes, 0, length);
+            originalData.add(helper.decryptByPublicKey(curBytes));
+        }
+        return ArrayUtils.concatAll(originalData);
+    }
+
     public byte[] decryptByPrivateKey(byte[] encryptData) {
         ArrayList<byte[]> originalData = new ArrayList<>();
         int nums = (encryptData.length - 1) / ENCRYPT_DATA_LENGTH;

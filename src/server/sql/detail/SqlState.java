@@ -58,6 +58,7 @@ public class SqlState {
             while (resultSet.next()) {
                 result.add(resultSet.getString("account"));
             }
+            preparedStatement.close();
             return result;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -3,6 +3,8 @@ package server.msgHanlder;
 import server.msgHanlder.account.ForgetPswordHandler;
 import server.msgHanlder.account.LoginMsgHandler;
 import server.msgHanlder.account.RegisterMsgHandler;
+import server.msgHanlder.chat.AskForOfflineMsgHandler;
+import server.msgHanlder.chat.StartChatHandler;
 import server.msgHanlder.state.LoginHandler;
 import server.msgHanlder.state.LogoutHandler;
 
@@ -20,6 +22,9 @@ public class MsgHandlerCreator {
 
     private static LoginHandler loginHandler;
     private static LogoutHandler logoutHandler;
+
+    private static AskForOfflineMsgHandler askForOfflineMsgHandler;
+    private static StartChatHandler startChatHandler;
 
     private MsgHandlerCreator() {}
 
@@ -67,6 +72,24 @@ public class MsgHandlerCreator {
                     logoutHandler.refresh();
                 }
                 return logoutHandler;
+            }
+
+            // Chat
+            case START_CHAT_MSG: {
+                if (startChatHandler == null) {
+                    startChatHandler = new StartChatHandler();
+                } else {
+                    startChatHandler.refresh();
+                }
+                return startChatHandler;
+            }
+            case ASK_OFFLINE_CHAT_MSG: {
+                if (askForOfflineMsgHandler == null) {
+                    askForOfflineMsgHandler = new AskForOfflineMsgHandler();
+                } else {
+                    askForOfflineMsgHandler.refresh();
+                }
+                return askForOfflineMsgHandler;
             }
         }
         return null;

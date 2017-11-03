@@ -19,7 +19,6 @@ public class UDPConst {
 
     // UDP
     public final static int UDP_BACK_PORT = 25555;
-    public final static int UDP_SEND_PORT = 8999;
     public final static int UDP_POWER_BYTE = 1;
 
     public final static String SAMPLE_TEXT = "Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!";

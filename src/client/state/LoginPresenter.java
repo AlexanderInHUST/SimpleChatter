@@ -52,7 +52,7 @@ public class LoginPresenter  {
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
         LoginPresenter presenter = new LoginPresenter(helper);
-        ArrayList<String> result = presenter.login("tyf", "1.1.1.1", 123);
+        ArrayList<String> result = presenter.login("myh", "localhost", 123);
         for (String s : result) {
             System.out.println(s);
         }

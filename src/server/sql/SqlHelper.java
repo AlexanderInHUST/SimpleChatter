@@ -8,6 +8,8 @@ import server.sql.detail.SqlState;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static server.sql.SqlConst.*;
 
@@ -74,8 +76,13 @@ public class SqlHelper {
 
     public static void main(String[] args) {
         SqlHelper sqlHelper = new SqlHelper();
-        SqlAccount sqlAccount = sqlHelper.getSqlAccount();
-        sqlAccount.insertAccount("test", "test", "test", "test", "test");
+        SqlChat sqlChat = sqlHelper.getSqlChat();
+        sqlChat.insertOfflineMsg("tyf", "myh", "hello!".getBytes());
+        sqlChat.insertOfflineMsg("tyf", "myh", "bye!".getBytes());
+        ArrayList<HashMap<String, Object>> result = sqlChat.getOfflineMsg("myh");
+        for (HashMap<String, Object> map : result) {
+            System.out.println(map.get("fromWho") + ":" + new String((byte[]) map.get("whatMsg")));
+        }
     }
 
 }
