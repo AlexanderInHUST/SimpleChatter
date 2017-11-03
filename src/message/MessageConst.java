@@ -26,8 +26,9 @@ public class MessageConst {
     public static final int LOG_OUT_MSG = 4;
 
     // Chat MSG
-    public static final int START_CHAT_MSG = 5;
+    public static final int CHECK_STATE_MSG = 5;
     public static final int ASK_OFFLINE_CHAT_MSG = 6;
+    public static final int SEND_OFFLINE_CHAT_MSG = 7;
 
     // P2P
     // File transmit

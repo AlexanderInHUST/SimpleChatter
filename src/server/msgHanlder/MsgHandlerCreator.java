@@ -4,7 +4,8 @@ import server.msgHanlder.account.ForgetPswordHandler;
 import server.msgHanlder.account.LoginMsgHandler;
 import server.msgHanlder.account.RegisterMsgHandler;
 import server.msgHanlder.chat.AskForOfflineMsgHandler;
-import server.msgHanlder.chat.StartChatHandler;
+import server.msgHanlder.chat.CheckStateHandler;
+import server.msgHanlder.chat.SendOfflineChatHandler;
 import server.msgHanlder.state.LoginHandler;
 import server.msgHanlder.state.LogoutHandler;
 
@@ -24,7 +25,8 @@ public class MsgHandlerCreator {
     private static LogoutHandler logoutHandler;
 
     private static AskForOfflineMsgHandler askForOfflineMsgHandler;
-    private static StartChatHandler startChatHandler;
+    private static CheckStateHandler checkStateHandler;
+    private static SendOfflineChatHandler sendOfflineChatHandler;
 
     private MsgHandlerCreator() {}
 
@@ -75,13 +77,13 @@ public class MsgHandlerCreator {
             }
 
             // Chat
-            case START_CHAT_MSG: {
-                if (startChatHandler == null) {
-                    startChatHandler = new StartChatHandler();
+            case CHECK_STATE_MSG: {
+                if (checkStateHandler == null) {
+                    checkStateHandler = new CheckStateHandler();
                 } else {
-                    startChatHandler.refresh();
+                    checkStateHandler.refresh();
                 }
-                return startChatHandler;
+                return checkStateHandler;
             }
             case ASK_OFFLINE_CHAT_MSG: {
                 if (askForOfflineMsgHandler == null) {
@@ -90,6 +92,14 @@ public class MsgHandlerCreator {
                     askForOfflineMsgHandler.refresh();
                 }
                 return askForOfflineMsgHandler;
+            }
+            case SEND_OFFLINE_CHAT_MSG: {
+                if (sendOfflineChatHandler == null) {
+                    sendOfflineChatHandler = new SendOfflineChatHandler();
+                } else {
+                    sendOfflineChatHandler.refresh();
+                }
+                return sendOfflineChatHandler;
             }
         }
         return null;

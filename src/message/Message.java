@@ -13,6 +13,7 @@ public class Message implements Serializable {
     private byte[] data;
     private ArrayList<String> signs;
     private String fromWho;
+    private String toWho;
 
     public Message() {
         signs = null;
@@ -34,6 +35,14 @@ public class Message implements Serializable {
 
     public void setFromWho(String fromWho) {
         this.fromWho = fromWho;
+    }
+
+    public String getToWho() {
+        return toWho;
+    }
+
+    public void setToWho(String toWho) {
+        this.toWho = toWho;
     }
 
     public void setKind(int kind) {

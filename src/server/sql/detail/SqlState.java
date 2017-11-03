@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static server.sql.SqlConst.DB_STATE_DELETE;
-import static server.sql.SqlConst.DB_STATE_GET;
-import static server.sql.SqlConst.DB_STATE_INSERT;
+import static server.sql.SqlConst.*;
 
 /**
  * Created by tangyifeng on 2017/10/31.
@@ -60,6 +58,26 @@ public class SqlState {
             }
             preparedStatement.close();
             return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<String> checkOnline(String account) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_STATE_CHECK);
+            preparedStatement.setString(1, account);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            boolean result = resultSet.next();
+            if (!result) {
+                return null;
+            }
+            ArrayList<String> userState = new ArrayList<>();
+            userState.add(resultSet.getString("ip_address"));
+            userState.add(resultSet.getString("port"));
+            preparedStatement.close();
+            return userState;
         } catch (SQLException e) {
             e.printStackTrace();
         }

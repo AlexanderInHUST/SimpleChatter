@@ -28,11 +28,15 @@ public class SqlConst {
     public static final String DB_STATE_DELETE = "DELETE FROM USER_STATE WHERE "
             + "ACCOUNT=?";
     public static final String DB_STATE_GET = "SELECT * FROM USER_STATE WHERE 1=1";
+    public static final String DB_STATE_CHECK = "SELECT * FROM USER_STATE WHERE "
+            + "ACCOUNT=?";
 
     // Chat
     public static final String DB_CHAT_INSERT = "INSERT INTO OFFLINE_MSG"
             + "(SEND_TIME, FROM_WHO, TO_WHO, WHAT_MSG) VALUES"
             + "(?,?,?,?)";
     public static final String DB_CHAT_GET = "SELECT * FROM OFFLINE_MSG WHERE "
+            + "TO_WHO=?";
+    public static final String DB_CHAT_DELETE = "DELETE FROM OFFLINE_MSG WHERE "
             + "TO_WHO=?";
 }

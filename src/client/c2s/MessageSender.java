@@ -49,6 +49,7 @@ public class MessageSender {
         Message encryptMsg = new Message();
         encryptMsg.setKind(msg.getKind());
         encryptMsg.setFromWho(account);
+        encryptMsg.setToWho(msg.getToWho());
         encryptMsg.setData(guard.encryptByPrivateKey(msg.getData()));
         encryptMsg.setSigns(guard.getSignatures());
         Message reply = sendMessageUnsafely(encryptMsg);

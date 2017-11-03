@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static server.sql.SqlConst.DB_CHAT_DELETE;
 import static server.sql.SqlConst.DB_CHAT_GET;
 import static server.sql.SqlConst.DB_CHAT_INSERT;
 
@@ -57,5 +58,18 @@ public class SqlChat {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean deleteOfflineMsg(String toWho) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_CHAT_DELETE);
+            preparedStatement.setString(1, toWho);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
