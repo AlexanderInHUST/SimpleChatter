@@ -1,5 +1,6 @@
 package client.p2p.client.fileTransmit;
 
+import client.p2p.client.MessageSender;
 import message.Message;
 
 import static message.MessageConst.FILE_WANNA_MSG;
@@ -10,9 +11,21 @@ import static message.MessageConst.FILE_WANNA_MSG;
  */
 public class SendWannaMessage {
 
-    public Message getWannaMsg(String fileName) {
+    public int send(String account, String host, int port, String fileName) {
+        Message sendMsg = getWannaMsg(account, fileName);
+        // fileName
+        Message reply = MessageSender.sendMessage(sendMsg, host, port);
+        // port
+        if (reply == null) {
+            return -1;
+        }
+        return Integer.parseInt(new String(reply.getData()));
+    }
+
+    public Message getWannaMsg(String account, String fileName) {
         Message msg = new Message();
         msg.setKind(FILE_WANNA_MSG);
+        msg.setFromWho(account);
         msg.setData(fileName);
         return msg;
     }

@@ -12,5 +12,6 @@ public interface IMsgHandler {
 
     void refresh();
     void handleMsg(Message message, Socket socket);
+    void setCallback(IMsgCallback callback);
 
 }

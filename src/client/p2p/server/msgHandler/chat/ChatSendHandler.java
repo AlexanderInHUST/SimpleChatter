@@ -1,5 +1,6 @@
 package client.p2p.server.msgHandler.chat;
 
+import client.p2p.server.msgHandler.IMsgCallback;
 import client.p2p.server.msgHandler.IMsgHandler;
 import message.Message;
 
@@ -8,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import static message.MessageConst.ACC_MSG;
+import static message.MessageConst.ERROR;
 import static message.MessageConst.SUCCESS;
 
 /**
@@ -15,6 +17,9 @@ import static message.MessageConst.SUCCESS;
  * Email: yifengtang_hust@outlook.com
  */
 public class ChatSendHandler implements IMsgHandler {
+
+    private IMsgCallback callback;
+
     @Override
     public void refresh() {
 
@@ -24,11 +29,10 @@ public class ChatSendHandler implements IMsgHandler {
     public void handleMsg(Message message, Socket socket) {
         String fromWho = message.getFromWho();
         String data = new String(message.getData());
-        //todo
-        System.out.println(data);
+        boolean result = (Boolean) callback.doSomething(data);
 
         try {
-            Message okMsg = new Message(ACC_MSG, SUCCESS);
+            Message okMsg = new Message(ACC_MSG, (result) ? SUCCESS : ERROR);
             okMsg.setFromWho(fromWho);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(okMsg);
@@ -37,5 +41,10 @@ public class ChatSendHandler implements IMsgHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setCallback(IMsgCallback callback) {
+        this.callback = callback;
     }
 }

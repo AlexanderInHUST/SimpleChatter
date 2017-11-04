@@ -14,7 +14,7 @@ public class ThreeHello {
     // Port should be managed!
 
     private static final String CLASS_NAME = "ThreeHello";
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
 
     private volatile int state;
     private int sendCount, receiveCount;
@@ -49,7 +49,7 @@ public class ThreeHello {
                     ack1 = helper.receiveUDP(recvPort);
                     timer.stopCount();
 //                    timer.resetCount();
-                    Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
+//                    Log.log(CLASS_NAME, "ack 1 has received!", IS_DEBUG);
 
                     if (ack1 != null) {
                         state = 2;

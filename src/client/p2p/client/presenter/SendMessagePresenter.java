@@ -1,4 +1,4 @@
-package client.p2p.client.chat;
+package client.p2p.client.presenter;
 
 import client.p2p.client.MessageSender;
 import message.Message;
@@ -11,7 +11,7 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/11/3.
  * Email: yifengtang_hust@outlook.com
  */
-public class SendMessage {
+public class SendMessagePresenter {
 
     public boolean send(String account, String host, int port, String data) {
         Message msg = getMsg(account, data);
@@ -28,8 +28,8 @@ public class SendMessage {
     }
 
     public static void main(String[] args) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.send("myh","localhost", 25252, "hello!");
+        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter();
+        sendMessagePresenter.send("myh","localhost", 25252, "hello!");
     }
 
 }

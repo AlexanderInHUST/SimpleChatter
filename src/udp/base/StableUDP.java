@@ -30,7 +30,7 @@ public class StableUDP {
     private volatile boolean isRecvGoodbye = false;
     private volatile boolean isDone = false;
     private volatile boolean isTimeOut = false;
-//    private volatile Timer recvTimer;
+    //    private volatile Timer recvTimer;
     private ExecutorService executorService;
 
     private volatile int countTime;
@@ -45,7 +45,6 @@ public class StableUDP {
 
     public ConcurrentLinkedQueue<Integer> recvArray = new ConcurrentLinkedQueue<>();
     public ConcurrentLinkedQueue<Integer> sendArray = new ConcurrentLinkedQueue<>();
-    public ConcurrentLinkedQueue<Integer> checkArray = new ConcurrentLinkedQueue<>();
 
     public ArrayList<UDPPackage> getRecvData() {
         ArrayList<UDPPackage> result = new ArrayList<>();
@@ -104,7 +103,7 @@ public class StableUDP {
                         } else {
                             if (pack == null) {
 //                                if (isTimeOut) {
-                                    state = 6;
+                                state = 6;
 //                                } else {
 //                                    state = 1;
 //                                }
@@ -185,6 +184,10 @@ public class StableUDP {
                                     recvState = 3;
                                 } else if (someData.isAck() || someData.isHello()) {
                                     Log.log(CLASS_NAME, "pack ack or hello found! (subthread in recv)", IS_DEBUG);
+                                    synchronized (this) {
+                                        UDPPackage ack1 = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
+                                        helper.sendUDP(ack1, helper.getSenderHost(), port);
+                                    }
                                     return;
                                 } else {
                                     recvState = 3;
@@ -594,14 +597,14 @@ public class StableUDP {
 
 //        for (int i = 1; i < 20; i++) {
         StableUDP recv = new StableUDP();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (recv.startAsReceiver(32323)) {
-                        ArrayList<UDPPackage> data = recv.getRecvData();
-                        String s = new String(packageHelper.composeDataUDPPackage(data));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (recv.startAsReceiver(32323)) {
+                    ArrayList<UDPPackage> data = recv.getRecvData();
+                    String s = new String(packageHelper.composeDataUDPPackage(data));
 //                    System.out.println(s);
-                        System.out.println("recv test done!");
+                    System.out.println("recv test done!");
 //                        for (int i = 0; i < 1440000; i++) {
 //                            if (!recv.recvArray.contains(i)) {
 //                                System.out.println("shit! " + i);
@@ -611,20 +614,20 @@ public class StableUDP {
 //                            }
 //                        }
 
-                        System.out.println("speed is " + (data.size() * PACKAGE_LEN / 1024) / (double) ((double) (System.currentTimeMillis() - startTime) / 1000) + "kb/s");
-                    } else {
-                        System.out.println("ERROR! hello failed!");
-                    }
+                    System.out.println("speed is " + (data.size() * PACKAGE_LEN / 1024) / (double) ((double) (System.currentTimeMillis() - startTime) / 1000) + "kb/s");
+                } else {
+                    System.out.println("ERROR! hello failed!");
                 }
-            }).start();
+            }
+        }).start();
 
 //        System.out.println(data.size());
         sender.startAsSender("localhost", 32323, 32324);
 //        do {
 
 //        } while (!recv.isHelloed());
-            System.out.println("send test done!");
-            System.out.println(data.size());
+        System.out.println("send test done!");
+        System.out.println(data.size());
 //        System.out.println(data.size());
 
 //        }

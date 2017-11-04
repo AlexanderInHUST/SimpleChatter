@@ -25,16 +25,20 @@ public class TransmitFile {
         packageHelper = new UDPPackageHelper();
     }
 
-    public boolean send(String sendHost, int sendPort, int recvPort, String fileName) {
+    public boolean readyToSend(String fileName) {
         try {
             byte[] fileData = BitUtil.fileToByteArray(fileName);
             ArrayList<UDPPackage> packages = packageHelper.cutDataUDPPackage(fileData);
             stableUDP.setSendData(packages);
-            return !stableUDP.startAsSender(sendHost, sendPort, recvPort);
-        } catch (IOException e) {
+            return true;
+        } catch (IOException e){
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean send(String sendHost, int sendPort, int recvPort) {
+        return stableUDP.startAsSender(sendHost, sendPort, recvPort);
     }
 
     public boolean recv(int recvPort, String fileName) {
@@ -50,21 +54,21 @@ public class TransmitFile {
         return false;
     }
 
-    public static void main(String[] args) {
-        TransmitFile transmitFile = new TransmitFile();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                TransmitFile transmitFile1 = new TransmitFile();
-                transmitFile1.recv(5656, "/Users/tangyifeng/Desktop/test.mp4");
-            }
-        }).start();
-        transmitFile.send("localhost", 5656, 5858, "/Users/tangyifeng/Desktop/sjhs.ml_0001.mp4");
-    }
+//    public static void main(String[] args) {
+//        TransmitFile transmitFile = new TransmitFile();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                TransmitFile transmitFile1 = new TransmitFile();
+//                transmitFile1.recv(5656, "/Users/tangyifeng/Desktop/test.mp4");
+//            }
+//        }).start();
+//        transmitFile.send("localhost", 5656, 5858, "/Users/tangyifeng/Desktop/sjhs.ml_0001.mp4");
+//    }
 
 }
