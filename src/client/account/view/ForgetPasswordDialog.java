@@ -24,11 +24,12 @@ public class ForgetPasswordDialog extends JFrame {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         forgetDescription = new JTextPane();
+        accountText = new JTextPane();
+        accountEditText = new JTextField();
         questionText = new JTextPane();
         questionEditText = new JTextField();
         answerText = new JTextPane();
         answerEditText = new JTextField();
-        checkButton = new JButton();
         passwordText = new JTextPane();
         passwordEditText = new JPasswordField();
         buttonBar = new JPanel();
@@ -58,7 +59,7 @@ public class ForgetPasswordDialog extends JFrame {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new FormLayout(
-                    "54dlu, $lcgap, 154dlu",
+                    "54dlu, $lcgap, 154dlu:grow",
                     "4*(default, $lgap), default"));
 
                 //---- forgetDescription ----
@@ -67,31 +68,34 @@ public class ForgetPasswordDialog extends JFrame {
                 forgetDescription.setText("\u8bf7\u586b\u5165\u4e0b\u5217\u5bc6\u7801\u63d0\u793a\u4fe1\u606f");
                 contentPanel.add(forgetDescription, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.DEFAULT));
 
+                //---- accountText ----
+                accountText.setEditable(false);
+                accountText.setBackground(SystemColor.window);
+                accountText.setText("\u8d26\u53f7\uff1a");
+                contentPanel.add(accountText, CC.xy(1, 3));
+                contentPanel.add(accountEditText, CC.xy(3, 3));
+
                 //---- questionText ----
                 questionText.setEditable(false);
                 questionText.setBackground(SystemColor.window);
                 questionText.setText("\u5bc6\u7801\u63d0\u793a\u95ee\u9898\uff1a");
-                contentPanel.add(questionText, CC.xy(1, 3, CC.FILL, CC.DEFAULT));
+                contentPanel.add(questionText, CC.xy(1, 5, CC.FILL, CC.DEFAULT));
 
                 //---- questionEditText ----
                 questionEditText.setPreferredSize(new Dimension(128, 26));
                 questionEditText.setMinimumSize(new Dimension(128, 26));
-                contentPanel.add(questionEditText, CC.xy(3, 3));
+                contentPanel.add(questionEditText, CC.xy(3, 5));
 
                 //---- answerText ----
                 answerText.setEditable(false);
                 answerText.setBackground(SystemColor.window);
                 answerText.setText("\u5bc6\u7801\u63d0\u793a\u7b54\u6848");
-                contentPanel.add(answerText, CC.xy(1, 5));
+                contentPanel.add(answerText, CC.xy(1, 7));
 
                 //---- answerEditText ----
                 answerEditText.setPreferredSize(new Dimension(128, 26));
                 answerEditText.setMinimumSize(new Dimension(128, 26));
-                contentPanel.add(answerEditText, CC.xy(3, 5));
-
-                //---- checkButton ----
-                checkButton.setText("\u68c0\u9a8c\u5bc6\u7801\u95ee\u9898\u4e0e\u7b54\u6848");
-                contentPanel.add(checkButton, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
+                contentPanel.add(answerEditText, CC.xy(3, 7));
 
                 //---- passwordText ----
                 passwordText.setEditable(false);
@@ -115,7 +119,6 @@ public class ForgetPasswordDialog extends JFrame {
 
                 //---- okButton ----
                 okButton.setText("\u4fee\u6539");
-                okButton.setEnabled(false);
                 buttonBar.add(okButton, CC.xy(2, 1));
 
                 //---- cancelButton ----
@@ -135,11 +138,12 @@ public class ForgetPasswordDialog extends JFrame {
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JTextPane forgetDescription;
+    private JTextPane accountText;
+    private JTextField accountEditText;
     private JTextPane questionText;
     private JTextField questionEditText;
     private JTextPane answerText;
     private JTextField answerEditText;
-    private JButton checkButton;
     private JTextPane passwordText;
     private JPasswordField passwordEditText;
     private JPanel buttonBar;
@@ -176,10 +180,6 @@ public class ForgetPasswordDialog extends JFrame {
         return answerEditText;
     }
 
-    public JButton getCheckButton() {
-        return checkButton;
-    }
-
     public JTextPane getPasswordText() {
         return passwordText;
     }
@@ -198,5 +198,13 @@ public class ForgetPasswordDialog extends JFrame {
 
     public JButton getCancelButton() {
         return cancelButton;
+    }
+
+    public JTextPane getAccountText() {
+        return accountText;
+    }
+
+    public JTextField getAccountEditText() {
+        return accountEditText;
     }
 }
