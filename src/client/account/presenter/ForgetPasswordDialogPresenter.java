@@ -22,7 +22,7 @@ public class ForgetPasswordDialogPresenter extends BasePresenter {
 
     private LoginDialog loginDialog;
 
-    private MainDialogPresenter mainDialogPresenter;
+    private LoginDialogPresenter loginDialogPresenter;
 
     private ForgetPassword forgetPassword;
 
@@ -62,7 +62,7 @@ public class ForgetPasswordDialogPresenter extends BasePresenter {
                     JOptionPane.showMessageDialog(null, "密码修改成功！",
                             "信息", JOptionPane.WARNING_MESSAGE);
                     loginDialog = new LoginDialog();
-                    mainDialogPresenter = new MainDialogPresenter(loginDialog, getSqlHelper());
+                    loginDialogPresenter = new LoginDialogPresenter(loginDialog, getSqlHelper());
                     forgetPasswordDialog.setVisible(false);
                     forgetPasswordDialog.dispose();
                     loginDialog.setVisible(true);
@@ -81,7 +81,7 @@ public class ForgetPasswordDialogPresenter extends BasePresenter {
         return (ActionEvent e) -> {
             ForgetPasswordDialog forgetPasswordDialog = (ForgetPasswordDialog) getFrame();
             loginDialog = new LoginDialog();
-            mainDialogPresenter = new MainDialogPresenter(loginDialog, getSqlHelper());
+            loginDialogPresenter = new LoginDialogPresenter(loginDialog, getSqlHelper());
             forgetPasswordDialog.setVisible(false);
             forgetPasswordDialog.dispose();
             loginDialog.setVisible(true);

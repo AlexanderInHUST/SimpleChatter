@@ -20,6 +20,7 @@ public class SqlConst {
             + "ACCOUNT=?";
     public static final String DB_ACCOUNT_EDIT_PASSWORD = "UPDATE ACCOUNT SET "
             + "PASSWORD=? WHERE ACCOUNT=?";
+    public static final String DB_ACCOUNT_GET_ALL = "SELECT * FROM ACCOUNT";
 
     // State
     public static final String DB_STATE_INSERT = "INSERT INTO USER_STATE"

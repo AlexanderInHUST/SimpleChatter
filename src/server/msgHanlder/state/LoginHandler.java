@@ -5,6 +5,7 @@ import message.MessageCoder;
 import security.SecurityGuard;
 import server.msgHanlder.IMsgHandler;
 import server.sql.SqlHelper;
+import server.sql.detail.SqlAccount;
 import server.sql.detail.SqlSecurity;
 import server.sql.detail.SqlState;
 
@@ -38,13 +39,17 @@ public class LoginHandler implements IMsgHandler {
         ArrayList<String> detailData = MessageCoder.decode(decryptData);
         // account; ip_address; port
         SqlState sqlState = sqlHelper.getSqlState();
+        SqlAccount sqlAccount = sqlHelper.getSqlAccount();
         boolean result = sqlState.insertLogin(detailData.get(0),
                 detailData.get(1),
                 detailData.get(2));
+        ArrayList<String> allUsers = sqlAccount.getAllAccount();
         ArrayList<String> onlineUsers = sqlState.getOnlineUsers();
         String oUs = "";
-        for (String s : onlineUsers) {
+        for (String s : allUsers) {
             oUs += s;
+            oUs += ";";
+            oUs += (onlineUsers.contains(s)) ? "y" : "n";
             oUs += ";";
         }
         try {

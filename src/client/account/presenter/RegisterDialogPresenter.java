@@ -3,9 +3,7 @@ package client.account.presenter;
 import client.account.view.LoginDialog;
 import client.account.view.RegisterDialog;
 import client.base.BasePresenter;
-import client.c2s.account.LoginCheck;
 import client.c2s.account.RegisterMsg;
-import client.c2s.state.Login;
 import client.sql.SqlHelper;
 import com.jgoodies.forms.factories.Borders;
 
@@ -21,7 +19,7 @@ public class RegisterDialogPresenter extends BasePresenter {
 
     private LoginDialog loginDialog;
 
-    private MainDialogPresenter mainDialogPresenter;
+    private LoginDialogPresenter loginDialogPresenter;
 
     private RegisterMsg registerMsg;
 
@@ -61,7 +59,7 @@ public class RegisterDialogPresenter extends BasePresenter {
                     JOptionPane.showMessageDialog(null, "注册成功！",
                             "信息", JOptionPane.WARNING_MESSAGE);
                     loginDialog = new LoginDialog();
-                    mainDialogPresenter = new MainDialogPresenter(loginDialog, getSqlHelper());
+                    loginDialogPresenter = new LoginDialogPresenter(loginDialog, getSqlHelper());
                     registerDialog.setVisible(false);
                     registerDialog.dispose();
                     loginDialog.setVisible(true);
@@ -77,7 +75,7 @@ public class RegisterDialogPresenter extends BasePresenter {
         return (ActionEvent e) -> {
             RegisterDialog registerDialog = (RegisterDialog) getFrame();
             loginDialog = new LoginDialog();
-            mainDialogPresenter = new MainDialogPresenter(loginDialog, getSqlHelper());
+            loginDialogPresenter = new LoginDialogPresenter(loginDialog, getSqlHelper());
             registerDialog.setVisible(false);
             registerDialog.dispose();
             loginDialog.setVisible(true);

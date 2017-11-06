@@ -4,10 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import static server.sql.SqlConst.DB_ACCOUNT_EDIT_PASSWORD;
-import static server.sql.SqlConst.DB_ACCOUNT_GET;
-import static server.sql.SqlConst.DB_ACCOUNT_INSERT;
+import static server.sql.SqlConst.*;
 
 /**
  * Created by tangyifeng on 2017/10/30.
@@ -89,5 +88,21 @@ public class SqlAccount {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public ArrayList<String> getAllAccount() {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DB_ACCOUNT_GET_ALL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<String> allAccount = new ArrayList<>();
+            while (resultSet.next()) {
+                allAccount.add(resultSet.getString("account"));
+            }
+            preparedStatement.close();
+            return allAccount;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

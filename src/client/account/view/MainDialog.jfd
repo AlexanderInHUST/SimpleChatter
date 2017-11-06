@@ -1,0 +1,71 @@
+JFDML JFormDesigner: "5.2.5.1.342" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"resizable": false
+			"defaultCloseOperation": 0
+			"title": "没用的聊天软件"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "dialogPane"
+				"border": sfield com.jgoodies.forms.factories.Borders DIALOG
+				"minimumSize": new java.awt.Dimension( 400, 600 )
+				"preferredSize": new java.awt.Dimension( 400, 600 )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "34dlu, labelcompgap, 88dlu, labelcompgap, 0dlu:grow"
+					"$rowSpecs": "default, linegap, default:grow, linegap, default"
+				} ) {
+					name: "contentPanel"
+					add( new FormComponent( "javax.swing.JTextPane" ) {
+						name: "currentUserDescription"
+						"editable": false
+						"background": sfield java.awt.SystemColor window
+						"text": "当前用户："
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JTextPane" ) {
+						name: "currentUserText"
+						"editable": false
+						"background": sfield java.awt.SystemColor window
+						"text": "sample"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						"preferredSize": new java.awt.Dimension( 100, 240 )
+						"minimumSize": new java.awt.Dimension( 100, 240 )
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "usersList"
+							"maximumSize": new java.awt.Dimension( 100, 240 )
+							"minimumSize": new java.awt.Dimension( 100, 240 )
+							"preferredSize": new java.awt.Dimension( 100, 240 )
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 3
+						"gridWidth": 5
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "endButton"
+						"text": "登出"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
+						"gridY": 5
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 425, 460 )
+		} )
+	}
+}

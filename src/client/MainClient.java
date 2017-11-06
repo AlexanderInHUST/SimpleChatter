@@ -1,7 +1,8 @@
 package client;
 
-import client.account.presenter.MainDialogPresenter;
+import client.account.presenter.LoginDialogPresenter;
 import client.account.view.LoginDialog;
+import client.account.view.MainDialog;
 
 /**
  * Created by tangyifeng on 2017/10/30.
@@ -10,11 +11,11 @@ import client.account.view.LoginDialog;
 public class MainClient {
 
     private LoginDialog mainDialog;
-    private MainDialogPresenter mainDialogPresenter;
+    private LoginDialogPresenter loginDialogPresenter;
 
     public MainClient() {
         mainDialog = new LoginDialog();
-        mainDialogPresenter = new MainDialogPresenter(mainDialog);
+        loginDialogPresenter = new LoginDialogPresenter(mainDialog);
     }
 
     public static void main(String[] args) {
