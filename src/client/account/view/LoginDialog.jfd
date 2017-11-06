@@ -3,97 +3,123 @@ JFDML JFormDesigner: "5.2.5.1.342" Java: "1.8.0_112-release" encoding: "UTF-8"
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
+			"title": "无用的聊天软件"
+			"resizable": false
+			"defaultCloseOperation": 3
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				"border": sfield com.jgoodies.forms.factories.Borders DIALOG
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "36dlu, labelcompgap, default:grow"
-					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default"
+					"$columnSpecs": "37dlu, labelcompgap, center:116dlu:grow"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
 				} ) {
 					name: "contentPanel"
 					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "textPane1"
+						name: "descriptionText"
+						"text": "欢迎试用无用的聊天软件"
+						"editable": false
+						"background": new com.jformdesigner.model.SwingColor( "window" )
+						"componentOrientation": sfield java.awt.ComponentOrientation LEFT_TO_RIGHT
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridWidth": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 					} )
 					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "textPane2"
+						name: "accountText"
+						"text": "账号："
+						"editable": false
+						"background": sfield java.awt.SystemColor window
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 3
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
-						name: "textField1"
+						name: "accountEditText"
+						"minimumSize": new java.awt.Dimension( 100, 26 )
+						"preferredSize": new java.awt.Dimension( 100, 26 )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 3
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "textPane3"
+						name: "passwordText"
+						"text": "密码："
+						"editable": false
+						"background": sfield java.awt.SystemColor window
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 5
 					} )
-					add( new FormComponent( "javax.swing.JTextField" ) {
-						name: "textField2"
+					add( new FormComponent( "javax.swing.JPasswordField" ) {
+						name: "passwordEditText"
+						"minimumSize": new java.awt.Dimension( 12, 26 )
+						"cursor": new java.awt.Cursor( 2 )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 5
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button1"
-						"text": "text"
+					add( new FormComponent( "javax.swing.JTextPane" ) {
+						name: "portText"
+						"editable": false
+						"background": sfield java.awt.SystemColor window
+						"text": "P2P端口："
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 7
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "portEditText"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 7
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
-					} )
-					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "textPane4"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 1
-						"gridY": 9
-					} )
-					add( new FormComponent( "javax.swing.JTextField" ) {
-						name: "textField4"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 3
-						"gridY": 9
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "glue, button, relgap, button"
+					"$columnSpecs": "glue, max(pref;45dlu), relgap, 45dlu, labelcompgap, max(pref;45dlu), labelcompgap, 0dlu"
 					"$rowSpecs": "pref"
 				} ) {
 					name: "buttonBar"
 					"border": sfield com.jgoodies.forms.factories.Borders BUTTON_BAR_PAD
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "okButton"
-						"text": "OK"
+						"text": "登陆"
+						"maximumSize": new java.awt.Dimension( 50, 27 )
+						"minimumSize": new java.awt.Dimension( 50, 27 )
+						"preferredSize": new java.awt.Dimension( 50, 27 )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
 						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "cancelButton"
-						"text": "Cancel"
+						name: "registerButton"
+						"text": "注册"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "forgetButton"
+						"text": "忘记密码"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "South"
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
-				"value": "Center"
+				"value": "North"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 390, 195 )
 		} )
 	}
 }

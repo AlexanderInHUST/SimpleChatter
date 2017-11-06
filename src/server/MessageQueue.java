@@ -32,9 +32,13 @@ public class MessageQueue {
             @Override
             public void run() {
                 while (!isKilled && !isKilledNow) {
-                    if (!messageQueue.isEmpty()) {
-                        Message msg = messageQueue.poll();
-                        Socket socket = socketQueue.poll();
+                    if (!messageQueue.isEmpty() && !socketQueue.isEmpty()) {
+                        Message msg;
+                        Socket socket;
+                        synchronized (MessageQueue.this) {
+                            msg = messageQueue.poll();
+                            socket = socketQueue.poll();
+                        }
                         if (msg == null) {
                             continue;
                         }
@@ -47,13 +51,13 @@ public class MessageQueue {
         }).start();
     }
 
-    public void add(Message msg, Socket socket) {
+    public synchronized void add(Message msg, Socket socket) {
         messageQueue.add(msg);
         socketQueue.add(socket);
     }
 
     public void kill() {
-        while (!messageQueue.isEmpty() && !isKilledNow);
+        while (!messageQueue.isEmpty() && !isKilledNow) ;
         this.isKilled = true;
     }
 

@@ -30,8 +30,12 @@ public class MessageQueue {
             public void run() {
                 while (!isKilled && !isKilledNow) {
                     if (!messageQueue.isEmpty()) {
-                        Message msg = messageQueue.poll();
-                        Socket socket = socketQueue.poll();
+                        Message msg;
+                        Socket socket;
+                        synchronized (MessageQueue.this) {
+                            msg = messageQueue.poll();
+                            socket = socketQueue.poll();
+                        }
                         if (msg == null) {
                             continue;
                         }
@@ -43,7 +47,7 @@ public class MessageQueue {
         }).start();
     }
 
-    public void add(Message msg, Socket socket) {
+    public synchronized void add(Message msg, Socket socket) {
         messageQueue.add(msg);
         socketQueue.add(socket);
     }
