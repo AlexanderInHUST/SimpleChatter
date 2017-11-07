@@ -2,6 +2,7 @@ package client.p2p.server.msgHandler.fileTransmit;
 
 import client.p2p.server.msgHandler.IMsgCallback;
 import client.p2p.server.msgHandler.IMsgHandler;
+import client.presenter.MainDialogPresenter;
 import message.Message;
 import udp.TransmitFile;
 
@@ -27,7 +28,7 @@ public class DoneMsgHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(Message message, Socket socket) {
+    public void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter) {
         String fromWho = message.getFromWho();
         String md5 = new String(message.getData());
         boolean result = (Boolean) callback.doSomething(md5);

@@ -37,7 +37,7 @@ public class MainDialogPresenter extends BasePresenter{
         this.account = account;
         this.p2pPort = p2pPort;
         this.users = users;
-        p2PServer = new P2PServer(p2pPort, DEFAULT_P2P_TIMEOUT);
+        p2PServer = new P2PServer(p2pPort, DEFAULT_P2P_TIMEOUT, this);
         chatDialogHashMap = new HashMap<>();
         chatDialogPresenterHashMap = new HashMap<>();
 
@@ -67,14 +67,15 @@ public class MainDialogPresenter extends BasePresenter{
 
     public void addToChatDialog(String withWhom, String s) {
         if (chatDialogHashMap.containsKey(withWhom)) {
-            //todo
+            ChatDialogPresenter chatDialogPresenter = chatDialogPresenterHashMap.get(withWhom);
+            chatDialogPresenter.addMsgToList(withWhom, s);
         } else {
             ChatDialog chatDialog = new ChatDialog();
             ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), this, account, withWhom);
             chatDialog.setVisible(true);
             chatDialogHashMap.put(withWhom, chatDialog);
             chatDialogPresenterHashMap.put(withWhom, chatDialogPresenter);
-            //todo
+            chatDialogPresenter.addMsgToList(withWhom, s);
         }
     }
 

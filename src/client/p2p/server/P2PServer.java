@@ -3,6 +3,7 @@ package client.p2p.server;
 import client.p2p.server.msgHandler.MsgHandlerCreator;
 import client.p2p.server.presenter.RecvChatPresenter;
 import client.p2p.server.presenter.RecvFilePresenter;
+import client.presenter.MainDialogPresenter;
 import message.Message;
 
 import java.io.IOException;
@@ -25,12 +26,12 @@ public class P2PServer {
     private ExecutorService executorService;
     private int serverPort, serverTimeout;
 
-    public P2PServer(int serverPort, int serverTimeout) {
+    public P2PServer(int serverPort, int serverTimeout, MainDialogPresenter mainDialogPresenter) {
         this.serverPort = serverPort;
         this.serverTimeout = serverTimeout;
         isRunning = false;
         isKilled = false;
-        queue = new MessageQueue();
+        queue = new MessageQueue(mainDialogPresenter);
         executorService = Executors.newCachedThreadPool();
         executorService.submit(new ServerReceiveThread());
         queue.start();
@@ -78,10 +79,9 @@ public class P2PServer {
         }
     }
 
-    public static void main(String[] args) {
-        P2PServer p2PServer = new P2PServer(25252, 2000);
-        RecvChatPresenter recvChatPresenter = new RecvChatPresenter();
-        RecvFilePresenter recvFilePresenter = new RecvFilePresenter(34333);
-
-    }
+//    public static void main(String[] args) {
+//        P2PServer p2PServer = new P2PServer(25252, 2000);
+//        RecvChatPresenter recvChatPresenter = new RecvChatPresenter();
+//        RecvFilePresenter recvFilePresenter = new RecvFilePresenter(34333);
+//    }
 }

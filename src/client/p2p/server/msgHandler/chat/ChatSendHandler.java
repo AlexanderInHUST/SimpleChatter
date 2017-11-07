@@ -2,6 +2,7 @@ package client.p2p.server.msgHandler.chat;
 
 import client.p2p.server.msgHandler.IMsgCallback;
 import client.p2p.server.msgHandler.IMsgHandler;
+import client.presenter.MainDialogPresenter;
 import message.Message;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class ChatSendHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(Message message, Socket socket) {
+    public void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter) {
         String fromWho = message.getFromWho();
         String data = new String(message.getData());
         boolean result = (Boolean) callback.doSomething(data);
@@ -40,6 +41,10 @@ public class ChatSendHandler implements IMsgHandler {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (result) {
+            mainDialogPresenter.addToChatDialog(fromWho, data);
         }
     }
 

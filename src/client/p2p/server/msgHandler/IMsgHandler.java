@@ -1,5 +1,6 @@
 package client.p2p.server.msgHandler;
 
+import client.presenter.MainDialogPresenter;
 import message.Message;
 
 import java.net.Socket;
@@ -11,7 +12,7 @@ import java.net.Socket;
 public interface IMsgHandler {
 
     void refresh();
-    void handleMsg(Message message, Socket socket);
+    void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter);
     void setCallback(IMsgCallback callback);
 
 }

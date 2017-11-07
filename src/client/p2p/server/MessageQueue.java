@@ -2,6 +2,7 @@ package client.p2p.server;
 
 import client.p2p.server.msgHandler.IMsgHandler;
 import client.p2p.server.msgHandler.MsgHandlerCreator;
+import client.presenter.MainDialogPresenter;
 import message.Message;
 
 import java.net.Socket;
@@ -16,12 +17,14 @@ public class MessageQueue {
     private ConcurrentLinkedQueue<Message> messageQueue;
     private ConcurrentLinkedQueue<Socket> socketQueue;
     private boolean isKilled, isKilledNow;
+    private MainDialogPresenter mainDialogPresenter;
 
-    public MessageQueue() {
+    public MessageQueue(MainDialogPresenter mainDialogPresenter) {
         messageQueue = new ConcurrentLinkedQueue<>();
         socketQueue = new ConcurrentLinkedQueue<>();
         isKilled = false;
         isKilledNow = false;
+        this.mainDialogPresenter = mainDialogPresenter;
     }
 
     public void start() {
@@ -40,7 +43,7 @@ public class MessageQueue {
                             continue;
                         }
                         IMsgHandler msgHandler = MsgHandlerCreator.create(msg.getKind());
-                        msgHandler.handleMsg(msg, socket);
+                        msgHandler.handleMsg(msg, socket, mainDialogPresenter);
                     }
                 }
             }

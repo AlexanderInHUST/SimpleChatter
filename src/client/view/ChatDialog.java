@@ -25,7 +25,7 @@ public class ChatDialog extends JFrame {
         chatDescription = new JTextPane();
         chatUserText = new JTextPane();
         scrollPane1 = new JScrollPane();
-        chatDetailText = new JTextPane();
+        chatDetailList = new JList();
         chatEditText = new JTextField();
         sendButton = new JButton();
         fileButton = new JButton();
@@ -74,10 +74,7 @@ public class ChatDialog extends JFrame {
 
                 //======== scrollPane1 ========
                 {
-
-                    //---- chatDetailText ----
-                    chatDetailText.setEditable(false);
-                    scrollPane1.setViewportView(chatDetailText);
+                    scrollPane1.setViewportView(chatDetailList);
                 }
                 contentPanel.add(scrollPane1, CC.xywh(1, 3, 7, 1, CC.DEFAULT, CC.FILL));
                 contentPanel.add(chatEditText, CC.xywh(1, 5, 3, 1));
@@ -114,7 +111,7 @@ public class ChatDialog extends JFrame {
     private JTextPane chatDescription;
     private JTextPane chatUserText;
     private JScrollPane scrollPane1;
-    private JTextPane chatDetailText;
+    private JList chatDetailList;
     private JTextField chatEditText;
     private JButton sendButton;
     private JButton fileButton;
@@ -143,8 +140,8 @@ public class ChatDialog extends JFrame {
         return scrollPane1;
     }
 
-    public JTextPane getChatDetailText() {
-        return chatDetailText;
+    public JList getChatDetailList() {
+        return chatDetailList;
     }
 
     public JTextField getChatEditText() {

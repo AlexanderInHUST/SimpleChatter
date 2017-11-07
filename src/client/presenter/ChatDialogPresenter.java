@@ -24,6 +24,7 @@ public class ChatDialogPresenter extends BasePresenter {
 
     private String account;
     private String withWhom;
+    private DefaultListModel<String> msgListModel = new DefaultListModel<>();
 
     private MainDialogPresenter mainDialogPresenter;
 
@@ -43,6 +44,7 @@ public class ChatDialogPresenter extends BasePresenter {
         checkState = new CheckState(sqlHelper);
         sendFile = new SendFile();
         sendMessage = new SendMessage();
+        msgListModel = new DefaultListModel<>();
 
         chatDialog.getChatUserText().setText(withWhom);
     }
@@ -59,6 +61,13 @@ public class ChatDialogPresenter extends BasePresenter {
         ChatDialog chatDialog = (ChatDialog) getFrame();
         chatDialog.getExitButton().addActionListener(getExitListener());
         chatDialog.getSendButton().addActionListener(getSendListener());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addMsgToList(String account, String msg) {
+        ChatDialog chatDialog = (ChatDialog) getFrame();
+        msgListModel.addElement(account + "：" + msg);
+        chatDialog.getChatDetailList().setModel(msgListModel);
     }
 
     private ActionListener getExitListener() {
@@ -84,6 +93,7 @@ public class ChatDialogPresenter extends BasePresenter {
                 } else {
                     sendMessage.send(account, isOnline.get(0), Integer.parseInt(isOnline.get(1)), msg);
                 }
+                addMsgToList(account, msg);
                 chatDialog.getChatEditText().setText("");
             }
         };
