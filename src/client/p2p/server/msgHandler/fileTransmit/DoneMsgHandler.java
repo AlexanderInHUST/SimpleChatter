@@ -28,7 +28,7 @@ public class DoneMsgHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter) {
+    public void handleMsg(Message message, Socket socket) {
         String fromWho = message.getFromWho();
         String md5 = new String(message.getData());
         boolean result = (Boolean) callback.doSomething(md5);

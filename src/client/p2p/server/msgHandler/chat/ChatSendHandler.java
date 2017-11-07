@@ -27,10 +27,10 @@ public class ChatSendHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter) {
+    public void handleMsg(Message message, Socket socket) {
         String fromWho = message.getFromWho();
         String data = new String(message.getData());
-        boolean result = (Boolean) callback.doSomething(data);
+        boolean result = (Boolean) callback.doSomething(fromWho, data);
 
         try {
             Message okMsg = new Message(ACC_MSG, (result) ? SUCCESS : ERROR);
@@ -41,10 +41,6 @@ public class ChatSendHandler implements IMsgHandler {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if (result) {
-            mainDialogPresenter.addToChatDialog(fromWho, data);
         }
     }
 

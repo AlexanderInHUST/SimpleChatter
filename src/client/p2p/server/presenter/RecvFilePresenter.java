@@ -1,6 +1,7 @@
 package client.p2p.server.presenter;
 
 import client.p2p.server.msgHandler.MsgHandlerCreator;
+import client.presenter.MainDialogPresenter;
 import security.MD5Verify;
 import udp.TransmitFile;
 
@@ -16,9 +17,11 @@ public class RecvFilePresenter {
     private String fileName;
     private int recvPort;
     private volatile boolean isDone = false;
+    private MainDialogPresenter mainDialogPresenter;
 
-    public RecvFilePresenter(int recvPort) {
+    public RecvFilePresenter(int recvPort, MainDialogPresenter mainDialogPresenter) {
         this.recvPort = recvPort;
+        this.mainDialogPresenter = mainDialogPresenter;
         initialRecvFile();
     }
 

@@ -75,7 +75,7 @@ public class ChatDialogPresenter extends BasePresenter {
             ChatDialog chatDialog = (ChatDialog) getFrame();
             chatDialog.setVisible(false);
             chatDialog.dispose();
-            mainDialogPresenter.removeChatDialog(account);
+            mainDialogPresenter.removeChatDialog(withWhom);
         };
     }
 

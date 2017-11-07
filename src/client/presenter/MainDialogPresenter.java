@@ -1,6 +1,7 @@
 package client.presenter;
 
 import client.c2s.chat.AskForOfflineMsg;
+import client.p2p.server.presenter.RecvChatPresenter;
 import client.view.ChatDialog;
 import client.view.MainDialog;
 import client.base.BasePresenter;
@@ -11,6 +12,8 @@ import com.jgoodies.forms.factories.Borders;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +30,8 @@ public class MainDialogPresenter extends BasePresenter{
     private ArrayList<String> users;
     private HashMap<String, ChatDialog> chatDialogHashMap;
     private HashMap<String, ChatDialogPresenter> chatDialogPresenterHashMap;
+    private DefaultListModel<String> listModel;
+    private RecvChatPresenter recvChatPresenter;
 
     private Logout logout;
     private P2PServer p2PServer;
@@ -37,9 +42,10 @@ public class MainDialogPresenter extends BasePresenter{
         this.account = account;
         this.p2pPort = p2pPort;
         this.users = users;
-        p2PServer = new P2PServer(p2pPort, DEFAULT_P2P_TIMEOUT, this);
+        p2PServer = new P2PServer(p2pPort, DEFAULT_P2P_TIMEOUT);
         chatDialogHashMap = new HashMap<>();
         chatDialogPresenterHashMap = new HashMap<>();
+        recvChatPresenter = new RecvChatPresenter(this);
 
         initialListeners();
         setCurrentUserText(account);
@@ -57,6 +63,7 @@ public class MainDialogPresenter extends BasePresenter{
         MainDialog mainDialog = (MainDialog) jFrame;
         mainDialog.getDialogPane().removePropertyChangeListener(mainDialog.getDialogPane().getPropertyChangeListeners()[0]);
         mainDialog.getDialogPane().setBorder(Borders.createEmptyBorder("9dlu, 9dlu, 9dlu, 9dlu"));
+        mainDialog.getUsersList().addMouseListener(getListMouseAdapter());
     }
 
     @Override
@@ -87,7 +94,7 @@ public class MainDialogPresenter extends BasePresenter{
     @SuppressWarnings("unchecked")
     private void setUsersData() {
         MainDialog mainDialog = (MainDialog) getFrame();
-        DefaultListModel<String> listModel = new DefaultListModel<>();
+        listModel = new DefaultListModel<>();
         for (int i = 0; i < users.size(); i += 2) {
             listModel.addElement(users.get(i) + "：" + (users.get(i + 1).equals("y") ? "在线中" : "离线中"));
         }
@@ -108,6 +115,29 @@ public class MainDialogPresenter extends BasePresenter{
             } else {
                 JOptionPane.showMessageDialog(null, "登出失败！",
                         "信息", JOptionPane.WARNING_MESSAGE);
+            }
+        };
+    }
+
+    private MouseAdapter getListMouseAdapter() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                MainDialog mainDialog = (MainDialog) getFrame();
+                if(mainDialog.getUsersList().getSelectedIndex() != -1) {
+                    if(e.getClickCount() == 1) {
+                        super.mouseClicked(e);
+                    }
+                    if(e.getClickCount() == 2) {
+                        int num = mainDialog.getUsersList().getSelectedIndex();
+                        String withWhom = listModel.getElementAt(num).split("：")[0];
+                        ChatDialog chatDialog = new ChatDialog();
+                        ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), MainDialogPresenter.this, account, withWhom);
+                        chatDialog.setVisible(true);
+                        chatDialogHashMap.put(withWhom, chatDialog);
+                        chatDialogPresenterHashMap.put(withWhom, chatDialogPresenter);
+                    }
+                }
             }
         };
     }

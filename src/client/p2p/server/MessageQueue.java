@@ -17,14 +17,12 @@ public class MessageQueue {
     private ConcurrentLinkedQueue<Message> messageQueue;
     private ConcurrentLinkedQueue<Socket> socketQueue;
     private boolean isKilled, isKilledNow;
-    private MainDialogPresenter mainDialogPresenter;
 
-    public MessageQueue(MainDialogPresenter mainDialogPresenter) {
+    public MessageQueue() {
         messageQueue = new ConcurrentLinkedQueue<>();
         socketQueue = new ConcurrentLinkedQueue<>();
         isKilled = false;
         isKilledNow = false;
-        this.mainDialogPresenter = mainDialogPresenter;
     }
 
     public void start() {
@@ -43,7 +41,7 @@ public class MessageQueue {
                             continue;
                         }
                         IMsgHandler msgHandler = MsgHandlerCreator.create(msg.getKind());
-                        msgHandler.handleMsg(msg, socket, mainDialogPresenter);
+                        msgHandler.handleMsg(msg, socket);
                     }
                 }
             }

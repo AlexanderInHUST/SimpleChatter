@@ -26,7 +26,7 @@ public class WannaMsgHandler implements IMsgHandler {
     }
 
     @Override
-    public void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter) {
+    public void handleMsg(Message message, Socket socket) {
         String fromWho = message.getFromWho();
         String fileName = new String(message.getData());
         int port = (Integer) callback.doSomething(fileName);

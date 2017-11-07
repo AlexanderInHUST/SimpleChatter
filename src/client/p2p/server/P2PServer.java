@@ -26,12 +26,12 @@ public class P2PServer {
     private ExecutorService executorService;
     private int serverPort, serverTimeout;
 
-    public P2PServer(int serverPort, int serverTimeout, MainDialogPresenter mainDialogPresenter) {
+    public P2PServer(int serverPort, int serverTimeout) {
         this.serverPort = serverPort;
         this.serverTimeout = serverTimeout;
         isRunning = false;
         isKilled = false;
-        queue = new MessageQueue(mainDialogPresenter);
+        queue = new MessageQueue();
         executorService = Executors.newCachedThreadPool();
         executorService.submit(new ServerReceiveThread());
         queue.start();

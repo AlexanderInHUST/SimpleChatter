@@ -12,7 +12,7 @@ import java.net.Socket;
 public interface IMsgHandler {
 
     void refresh();
-    void handleMsg(Message message, Socket socket, MainDialogPresenter mainDialogPresenter);
+    void handleMsg(Message message, Socket socket);
     void setCallback(IMsgCallback callback);
 
 }
