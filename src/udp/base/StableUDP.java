@@ -32,6 +32,7 @@ public class StableUDP {
     private volatile boolean isTimeOut = false;
     //    private volatile Timer recvTimer;
     private ExecutorService executorService;
+    private ICountListener countListener;
 
     private volatile int countTime;
     private volatile int sentNum;
@@ -557,6 +558,10 @@ public class StableUDP {
                 }
             }
         }
+    }
+
+    public void setCountListener(ICountListener countListener) {
+        this.countListener = countListener;
     }
 
 //    private Timer getRecvTimer(String who) {

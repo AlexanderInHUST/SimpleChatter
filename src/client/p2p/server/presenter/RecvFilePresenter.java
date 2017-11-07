@@ -17,16 +17,15 @@ public class RecvFilePresenter {
     private String fileName;
     private int recvPort;
     private volatile boolean isDone = false;
-    private MainDialogPresenter mainDialogPresenter;
 
-    public RecvFilePresenter(int recvPort, MainDialogPresenter mainDialogPresenter) {
+    public RecvFilePresenter(int recvPort) {
         this.recvPort = recvPort;
-        this.mainDialogPresenter = mainDialogPresenter;
         initialRecvFile();
     }
 
     private String editFileName(String fileName) {
-        return fileName + ".test"; //todo
+        return fileName + ".send";
+        //todo
     }
 
     private void initialRecvFile() {

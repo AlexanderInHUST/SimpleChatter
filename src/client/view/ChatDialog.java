@@ -28,8 +28,8 @@ public class ChatDialog extends JFrame {
         chatDetailList = new JList();
         chatEditText = new JTextField();
         sendButton = new JButton();
-        fileButton = new JButton();
         progressText = new JTextPane();
+        fileButton = new JButton();
         exitButton = new JButton();
 
         //======== this ========
@@ -57,7 +57,7 @@ public class ChatDialog extends JFrame {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new FormLayout(
-                    "34dlu, $lcgap, 70dlu, $lcgap, 50dlu, $lcgap, 50dlu:grow",
+                    "40dlu, $lcgap, 66dlu, $lcgap, 50dlu, $lcgap, 50dlu:grow",
                     "default, $lgap, default:grow, 2*($lgap, default)"));
 
                 //---- chatDescription ----
@@ -69,28 +69,27 @@ public class ChatDialog extends JFrame {
                 //---- chatUserText ----
                 chatUserText.setEditable(false);
                 chatUserText.setBackground(SystemColor.window);
-                chatUserText.setText("Sample");
-                contentPanel.add(chatUserText, CC.xywh(3, 1, 5, 1));
+                contentPanel.add(chatUserText, CC.xy(3, 1));
 
                 //======== scrollPane1 ========
                 {
                     scrollPane1.setViewportView(chatDetailList);
                 }
                 contentPanel.add(scrollPane1, CC.xywh(1, 3, 7, 1, CC.DEFAULT, CC.FILL));
-                contentPanel.add(chatEditText, CC.xywh(1, 5, 3, 1));
+                contentPanel.add(chatEditText, CC.xywh(1, 5, 5, 1));
 
                 //---- sendButton ----
                 sendButton.setText("\u53d1\u9001");
-                contentPanel.add(sendButton, CC.xy(5, 5));
-
-                //---- fileButton ----
-                fileButton.setText("\u53d1\u9001\u6587\u4ef6");
-                contentPanel.add(fileButton, CC.xy(7, 5));
+                contentPanel.add(sendButton, CC.xy(7, 5));
 
                 //---- progressText ----
                 progressText.setEditable(false);
                 progressText.setBackground(SystemColor.window);
-                contentPanel.add(progressText, CC.xywh(1, 7, 5, 1));
+                contentPanel.add(progressText, CC.xy(1, 7));
+
+                //---- fileButton ----
+                fileButton.setText("\u53d1\u9001\u6587\u4ef6");
+                contentPanel.add(fileButton, CC.xy(5, 7));
 
                 //---- exitButton ----
                 exitButton.setText("\u9000\u51fa");
@@ -114,8 +113,8 @@ public class ChatDialog extends JFrame {
     private JList chatDetailList;
     private JTextField chatEditText;
     private JButton sendButton;
-    private JButton fileButton;
     private JTextPane progressText;
+    private JButton fileButton;
     private JButton exitButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 

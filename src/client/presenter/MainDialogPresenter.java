@@ -27,6 +27,7 @@ public class MainDialogPresenter extends BasePresenter{
 
     private String account;
     private int p2pPort;
+    private int filePort;
     private ArrayList<String> users;
     private HashMap<String, ChatDialog> chatDialogHashMap;
     private HashMap<String, ChatDialogPresenter> chatDialogPresenterHashMap;
@@ -37,11 +38,12 @@ public class MainDialogPresenter extends BasePresenter{
     private P2PServer p2PServer;
     private AskForOfflineMsg askForOfflineMsg;
 
-    public MainDialogPresenter(MainDialog mainDialog, SqlHelper sqlHelper, String account, int p2pPort, ArrayList<String> users) {
+    public MainDialogPresenter(MainDialog mainDialog, SqlHelper sqlHelper, String account, int p2pPort, int filePort, ArrayList<String> users) {
         super(mainDialog, sqlHelper);
         this.account = account;
         this.p2pPort = p2pPort;
         this.users = users;
+        this.filePort = filePort;
         p2PServer = new P2PServer(p2pPort, DEFAULT_P2P_TIMEOUT);
         chatDialogHashMap = new HashMap<>();
         chatDialogPresenterHashMap = new HashMap<>();
@@ -78,7 +80,7 @@ public class MainDialogPresenter extends BasePresenter{
             chatDialogPresenter.addMsgToList(withWhom, s);
         } else {
             ChatDialog chatDialog = new ChatDialog();
-            ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), this, account, withWhom);
+            ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), this, account, withWhom, filePort);
             chatDialog.setVisible(true);
             chatDialogHashMap.put(withWhom, chatDialog);
             chatDialogPresenterHashMap.put(withWhom, chatDialogPresenter);
@@ -132,7 +134,7 @@ public class MainDialogPresenter extends BasePresenter{
                         int num = mainDialog.getUsersList().getSelectedIndex();
                         String withWhom = listModel.getElementAt(num).split("：")[0];
                         ChatDialog chatDialog = new ChatDialog();
-                        ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), MainDialogPresenter.this, account, withWhom);
+                        ChatDialogPresenter chatDialogPresenter = new ChatDialogPresenter(chatDialog, getSqlHelper(), MainDialogPresenter.this, account, withWhom, filePort);
                         chatDialog.setVisible(true);
                         chatDialogHashMap.put(withWhom, chatDialog);
                         chatDialogPresenterHashMap.put(withWhom, chatDialogPresenter);

@@ -68,7 +68,8 @@ public class LoginDialogPresenter extends BasePresenter {
             String account = loginDialog.getAccountEditText().getText();
             String password = loginDialog.getPasswordEditText().getText();
             String portString = loginDialog.getPortEditText().getText();
-            if (account.isEmpty() || password.isEmpty() || portString.isEmpty()) {
+            String filePortString = loginDialog.getFilePortEditText().getText();
+            if (account.isEmpty() || password.isEmpty() || portString.isEmpty() || filePortString.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "请完整输入信息！",
                         "错误", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -79,13 +80,14 @@ public class LoginDialogPresenter extends BasePresenter {
                     return;
                 }
                 int port = Integer.parseInt(portString);
+                int filePort = Integer.parseInt(filePortString);
                 ArrayList<String> onlineGuys = login.login(account, WebUtil.getLocalHostIP(), port);
                 if (onlineGuys == null) {
                     JOptionPane.showMessageDialog(null, "网络错误！",
                             "错误", JOptionPane.WARNING_MESSAGE);
                 } else {
                     mainDialog = new MainDialog();
-                    mainDialogPresenter = new MainDialogPresenter(mainDialog, getSqlHelper(), account, port, onlineGuys);
+                    mainDialogPresenter = new MainDialogPresenter(mainDialog, getSqlHelper(), account, port, filePort, onlineGuys);
                     loginDialog.setVisible(false);
                     loginDialog.dispose();
                     mainDialog.setVisible(true);

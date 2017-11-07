@@ -14,7 +14,7 @@ new FormModel {
 				"minimumSize": new java.awt.Dimension( 450, 600 )
 				"preferredSize": new java.awt.Dimension( 450, 600 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "34dlu, labelcompgap, 70dlu, labelcompgap, 50dlu, labelcompgap, 50dlu:grow"
+					"$columnSpecs": "40dlu, labelcompgap, 66dlu, labelcompgap, 50dlu, labelcompgap, 50dlu:grow"
 					"$rowSpecs": "default, linegap, default:grow, linegap, default, linegap, default"
 				} ) {
 					name: "contentPanel"
@@ -28,10 +28,9 @@ new FormModel {
 						name: "chatUserText"
 						"editable": false
 						"background": sfield java.awt.SystemColor window
-						"text": "Sample"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
-						"gridWidth": 5
+						"gridY": 1
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
@@ -47,18 +46,11 @@ new FormModel {
 						name: "chatEditText"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 5
-						"gridWidth": 3
+						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "sendButton"
 						"text": "发送"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 5
-						"gridY": 5
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "fileButton"
-						"text": "发送文件"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 7
 						"gridY": 5
@@ -69,7 +61,13 @@ new FormModel {
 						"background": sfield java.awt.SystemColor window
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 7
-						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "fileButton"
+						"text": "发送文件"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
+						"gridY": 7
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "exitButton"

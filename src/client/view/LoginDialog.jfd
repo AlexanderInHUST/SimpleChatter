@@ -12,7 +12,7 @@ new FormModel {
 				name: "dialogPane"
 				"border": sfield com.jgoodies.forms.factories.Borders DIALOG
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "37dlu, labelcompgap, center:116dlu:grow"
+					"$columnSpecs": "37dlu, labelcompgap, 46dlu, labelcompgap, 38dlu, labelcompgap, center:57dlu:grow"
 					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
 				} ) {
 					name: "contentPanel"
@@ -23,7 +23,7 @@ new FormModel {
 						"background": new com.jformdesigner.model.SwingColor( "window" )
 						"componentOrientation": sfield java.awt.ComponentOrientation LEFT_TO_RIGHT
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridWidth": 3
+						"gridWidth": 7
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 					} )
@@ -44,6 +44,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 3
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JTextPane" ) {
 						name: "passwordText"
@@ -62,6 +63,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 5
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JTextPane" ) {
 						name: "portText"
@@ -76,6 +78,20 @@ new FormModel {
 						name: "portEditText"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
+						"gridY": 7
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JTextPane" ) {
+						name: "filePortText"
+						"text": "文件端口："
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
+						"gridY": 7
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "filePortEditText"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 7
 						"gridY": 7
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )

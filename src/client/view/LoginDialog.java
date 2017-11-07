@@ -30,6 +30,8 @@ public class LoginDialog extends JFrame {
         passwordEditText = new JPasswordField();
         portText = new JTextPane();
         portEditText = new JTextField();
+        filePortText = new JTextPane();
+        filePortEditText = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         registerButton = new JButton();
@@ -58,7 +60,7 @@ public class LoginDialog extends JFrame {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new FormLayout(
-                    "37dlu, $lcgap, center:116dlu:grow",
+                    "37dlu, $lcgap, 46dlu, $lcgap, 38dlu, $lcgap, center:57dlu:grow",
                     "3*(default, $lgap), default"));
 
                 //---- descriptionText ----
@@ -66,7 +68,7 @@ public class LoginDialog extends JFrame {
                 descriptionText.setEditable(false);
                 descriptionText.setBackground(UIManager.getColor("window"));
                 descriptionText.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-                contentPanel.add(descriptionText, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.CENTER));
+                contentPanel.add(descriptionText, CC.xywh(1, 1, 7, 1, CC.CENTER, CC.CENTER));
 
                 //---- accountText ----
                 accountText.setText("\u8d26\u53f7\uff1a");
@@ -77,7 +79,7 @@ public class LoginDialog extends JFrame {
                 //---- accountEditText ----
                 accountEditText.setMinimumSize(new Dimension(100, 26));
                 accountEditText.setPreferredSize(new Dimension(100, 26));
-                contentPanel.add(accountEditText, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
+                contentPanel.add(accountEditText, CC.xywh(3, 3, 5, 1, CC.FILL, CC.DEFAULT));
 
                 //---- passwordText ----
                 passwordText.setText("\u5bc6\u7801\uff1a");
@@ -88,7 +90,7 @@ public class LoginDialog extends JFrame {
                 //---- passwordEditText ----
                 passwordEditText.setMinimumSize(new Dimension(12, 26));
                 passwordEditText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-                contentPanel.add(passwordEditText, CC.xy(3, 5, CC.FILL, CC.DEFAULT));
+                contentPanel.add(passwordEditText, CC.xywh(3, 5, 5, 1, CC.FILL, CC.DEFAULT));
 
                 //---- portText ----
                 portText.setEditable(false);
@@ -96,6 +98,11 @@ public class LoginDialog extends JFrame {
                 portText.setText("P2P\u7aef\u53e3\uff1a");
                 contentPanel.add(portText, CC.xy(1, 7));
                 contentPanel.add(portEditText, CC.xy(3, 7, CC.FILL, CC.DEFAULT));
+
+                //---- filePortText ----
+                filePortText.setText("\u6587\u4ef6\u7aef\u53e3\uff1a");
+                contentPanel.add(filePortText, CC.xy(5, 7));
+                contentPanel.add(filePortEditText, CC.xy(7, 7, CC.FILL, CC.DEFAULT));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -140,6 +147,8 @@ public class LoginDialog extends JFrame {
     private JPasswordField passwordEditText;
     private JTextPane portText;
     private JTextField portEditText;
+    private JTextPane filePortText;
+    private JTextField filePortEditText;
     private JPanel buttonBar;
     private JButton okButton;
     private JButton registerButton;
@@ -197,5 +206,13 @@ public class LoginDialog extends JFrame {
 
     public JButton getForgetButton() {
         return forgetButton;
+    }
+
+    public JTextPane getFilePortText() {
+        return filePortText;
+    }
+
+    public JTextField getFilePortEditText() {
+        return filePortEditText;
     }
 }
