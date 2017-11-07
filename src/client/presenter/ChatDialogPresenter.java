@@ -11,12 +11,16 @@ import client.sql.SqlHelper;
 import client.view.MainDialog;
 import com.jgoodies.forms.factories.Borders;
 import udp.TransmitFile;
+import udp.base.ICountListener;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+
+import static udp.UDPConst.PACKAGE_LEN;
 
 /**
  * Created by tangyifeng on 2017/11/7.
@@ -27,6 +31,8 @@ public class ChatDialogPresenter extends BasePresenter {
     private String account;
     private String withWhom;
     private int filePort;
+    private int lastCount = 0;
+    private long lastTime = 0;
     private DefaultListModel<String> msgListModel = new DefaultListModel<>();
 
     private MainDialogPresenter mainDialogPresenter;
@@ -51,7 +57,7 @@ public class ChatDialogPresenter extends BasePresenter {
         sendFile = new SendFile();
         sendMessage = new SendMessage();
         msgListModel = new DefaultListModel<>();
-        recvFilePresenter = new RecvFilePresenter(filePort);
+        recvFilePresenter = new RecvFilePresenter(filePort, getCountListener());
 
         chatDialog.getChatUserText().setText(withWhom);
     }
@@ -119,12 +125,11 @@ public class ChatDialogPresenter extends BasePresenter {
                 chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 chooser.showOpenDialog(new JPanel());
                 File file = chooser.getSelectedFile();
-                chatDialog.getProgressText().setText("文件发送中...");
                 if (file.exists()) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            boolean result = sendFile.transmit(account, file.getAbsolutePath(), isOnline.get(0), Integer.parseInt(isOnline.get(1)), filePort);
+                            boolean result = sendFile.transmit(account, file.getAbsolutePath(), isOnline.get(0), Integer.parseInt(isOnline.get(1)), filePort, getCountListener());
                             if (result) {
                                 JOptionPane.showMessageDialog(null, "发送成功！",
                                         "信息", JOptionPane.WARNING_MESSAGE);
@@ -138,6 +143,22 @@ public class ChatDialogPresenter extends BasePresenter {
                     JOptionPane.showMessageDialog(null, "请选择文件！",
                             "错误", JOptionPane.WARNING_MESSAGE);
                 }
+            }
+        };
+    }
+
+    private ICountListener getCountListener() {
+        return (int count, int amount) -> {
+            if (count % 50 == 0) {
+                ChatDialog chatDialog = (ChatDialog) getFrame();
+                chatDialog.getProgressText().setText("速度：" + (int) (((count - lastCount) * PACKAGE_LEN / 1024) /
+                        (float) ((float) (System.currentTimeMillis() - lastTime) / 1000)) + "kb/s"
+                        + "，剩余：" + (int) ((float) count / (float) amount * 100) + "%");
+                lastCount = count;
+                lastTime = System.currentTimeMillis();
+            }
+            if (count >= amount - 1) {
+                ChatDialog chatDialog = (ChatDialog) getFrame();
                 chatDialog.getProgressText().setText("");
             }
         };

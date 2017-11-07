@@ -11,8 +11,8 @@ import static message.MessageConst.FILE_WANNA_MSG;
  */
 public class SendWannaMessage {
 
-    public int send(String account, String host, int port, String fileName) {
-        Message sendMsg = getWannaMsg(account, fileName);
+    public int send(String account, String host, int port, String fileName, String fileLength) {
+        Message sendMsg = getWannaMsg(account, fileName, fileLength);
         // fileName
         Message reply = MessageSender.sendMessage(sendMsg, host, port);
         // port
@@ -22,11 +22,11 @@ public class SendWannaMessage {
         return Integer.parseInt(new String(reply.getData()));
     }
 
-    public Message getWannaMsg(String account, String fileName) {
+    public Message getWannaMsg(String account, String fileName, String fileLength) {
         Message msg = new Message();
         msg.setKind(FILE_WANNA_MSG);
         msg.setFromWho(account);
-        msg.setData(fileName);
+        msg.setData(fileName + ";" + fileLength);
         return msg;
     }
 }

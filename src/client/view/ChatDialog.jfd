@@ -61,6 +61,7 @@ new FormModel {
 						"background": sfield java.awt.SystemColor window
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 7
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "fileButton"

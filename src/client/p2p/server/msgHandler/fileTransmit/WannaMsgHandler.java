@@ -28,8 +28,10 @@ public class WannaMsgHandler implements IMsgHandler {
     @Override
     public void handleMsg(Message message, Socket socket) {
         String fromWho = message.getFromWho();
-        String fileName = new String(message.getData());
-        int port = (Integer) callback.doSomething(fileName);
+        String data[] = new String(message.getData()).split(";");
+        String fileName = data[0];
+        String fileLength = data[1];
+        int port = (Integer) callback.doSomething(fileName, fileLength);
 
         try {
             Message readyMsg = getReadyMsg(Integer.toString(port), port != -1);

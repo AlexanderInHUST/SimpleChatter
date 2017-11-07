@@ -4,6 +4,7 @@ import client.p2p.server.msgHandler.MsgHandlerCreator;
 import client.presenter.MainDialogPresenter;
 import security.MD5Verify;
 import udp.TransmitFile;
+import udp.base.ICountListener;
 
 import static message.MessageConst.FILE_DONE_MSG;
 import static message.MessageConst.FILE_WANNA_MSG;
@@ -15,11 +16,14 @@ import static message.MessageConst.FILE_WANNA_MSG;
 public class RecvFilePresenter {
 
     private String fileName;
+    private String fileLength;
     private int recvPort;
+    private ICountListener countListener;
     private volatile boolean isDone = false;
 
-    public RecvFilePresenter(int recvPort) {
+    public RecvFilePresenter(int recvPort, ICountListener countListener) {
         this.recvPort = recvPort;
+        this.countListener = countListener;
         initialRecvFile();
     }
 
@@ -31,6 +35,7 @@ public class RecvFilePresenter {
     private void initialRecvFile() {
         MsgHandlerCreator.setCallback(FILE_WANNA_MSG, (data) -> {
             fileName = editFileName(data[0]);
+            fileLength = data[1];
             new Thread(new RecvTask()).start();
             return recvPort;
         });
@@ -48,7 +53,7 @@ public class RecvFilePresenter {
         public void run() {
             isDone = false;
             TransmitFile transmitFile = new TransmitFile();
-            transmitFile.recv(recvPort, fileName);
+            transmitFile.recv(recvPort, fileName, fileLength, countListener);
             isDone = true;
         }
     }

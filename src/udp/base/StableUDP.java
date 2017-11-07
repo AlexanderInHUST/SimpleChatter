@@ -24,6 +24,7 @@ public class StableUDP {
     private ThreeHello sendHello, receiveHello;
     private FourGoodbye sendGoodbye, recvGoodbye;
     private int state;
+    private int fileLength;
 
     private volatile boolean isHelloed = false;
     private volatile boolean isCorrupt = false;
@@ -64,7 +65,8 @@ public class StableUDP {
         return isHelloed;
     }
 
-    public boolean startAsReceiver(int recvPort) {
+    public boolean startAsReceiver(int recvPort, int fileLeng) {
+        fileLength = fileLeng;
         receiveHello = new ThreeHello(helper);
         if (!receiveHello.startAsReceiver(recvPort)) { // Receiver port
             Log.log(CLASS_NAME, "hello recv failed!", IS_DEBUG);
@@ -216,6 +218,9 @@ public class StableUDP {
                                 UDPPackage ackPack = packageHelper.getAckPackage(someData.getSeqNum()).get(0);
                                 Log.log(CLASS_NAME, "ack send with " + someData.getSeqNum() + " ! (subthread in recv)", IS_DEBUG);
                                 helper.sendUDP(ackPack, helper.getSenderHost(), port); // care for port!
+
+                                countListener.onCount(someData.getSeqNum(), fileLength);
+
                                 return;
                             }
                         }
@@ -225,7 +230,8 @@ public class StableUDP {
         }
     }
 
-    public boolean startAsSender(String hostname, int sendPort, int recvPort) {
+    public boolean startAsSender(String hostname, int sendPort, int recvPort, int fileLen) {
+        fileLength = fileLen;
         sendHello = new ThreeHello(helper);
         if (!sendHello.startAsSender(hostname, sendPort, recvPort)) {
             Log.log(CLASS_NAME, "hello send failed!", IS_DEBUG);
@@ -346,6 +352,7 @@ public class StableUDP {
                     timetableHandler.add(i);
 
                     sendArray.add(i);
+                    countListener.onCount(i, fileLength);
 
 //                try {
 //                    Thread.sleep(SEND_TIMEOUT / 2);
@@ -471,6 +478,8 @@ public class StableUDP {
                                             if (i < sendData.size() && sendWindow.checkWindow(i)) {
 
                                                 sendArray.add(i);
+
+                                                countListener.onCount(i, fileLength);
 
                                                 timetableHandler.add(i);
                                                 helper.sendUDP(sendData.get(i), hostName, sendPort);
@@ -605,7 +614,7 @@ public class StableUDP {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (recv.startAsReceiver(32323)) {
+                if (recv.startAsReceiver(32323, 12)) {
                     ArrayList<UDPPackage> data = recv.getRecvData();
                     String s = new String(packageHelper.composeDataUDPPackage(data));
 //                    System.out.println(s);
@@ -627,7 +636,7 @@ public class StableUDP {
         }).start();
 
 //        System.out.println(data.size());
-        sender.startAsSender("localhost", 32323, 32324);
+        sender.startAsSender("localhost", 32323, 32324, 1);
 //        do {
 
 //        } while (!recv.isHelloed());

@@ -85,7 +85,7 @@ public class ChatDialog extends JFrame {
                 //---- progressText ----
                 progressText.setEditable(false);
                 progressText.setBackground(SystemColor.window);
-                contentPanel.add(progressText, CC.xy(1, 7));
+                contentPanel.add(progressText, CC.xywh(1, 7, 3, 1));
 
                 //---- fileButton ----
                 fileButton.setText("\u53d1\u9001\u6587\u4ef6");
