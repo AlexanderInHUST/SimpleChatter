@@ -84,6 +84,8 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JTextPane" ) {
 						name: "filePortText"
 						"text": "文件端口："
+						"editable": false
+						"background": sfield java.awt.SystemColor window
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 5
 						"gridY": 7

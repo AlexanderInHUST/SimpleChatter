@@ -101,6 +101,8 @@ public class LoginDialog extends JFrame {
 
                 //---- filePortText ----
                 filePortText.setText("\u6587\u4ef6\u7aef\u53e3\uff1a");
+                filePortText.setEditable(false);
+                filePortText.setBackground(SystemColor.window);
                 contentPanel.add(filePortText, CC.xy(5, 7));
                 contentPanel.add(filePortEditText, CC.xy(7, 7, CC.FILL, CC.DEFAULT));
             }
