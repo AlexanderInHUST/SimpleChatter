@@ -1,8 +1,7 @@
 package client;
 
-import client.account.presenter.LoginDialogPresenter;
-import client.account.view.LoginDialog;
-import client.account.view.MainDialog;
+import client.presenter.LoginDialogPresenter;
+import client.view.LoginDialog;
 
 /**
  * Created by tangyifeng on 2017/10/30.

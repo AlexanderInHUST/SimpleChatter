@@ -11,7 +11,7 @@ import static message.MessageConst.SUCCESS;
  * Created by tangyifeng on 2017/11/3.
  * Email: yifengtang_hust@outlook.com
  */
-public class SendMessagePresenter {
+public class SendMessage {
 
     public boolean send(String account, String host, int port, String data) {
         Message msg = getMsg(account, data);
@@ -28,8 +28,8 @@ public class SendMessagePresenter {
     }
 
     public static void main(String[] args) {
-        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter();
-        sendMessagePresenter.send("myh","localhost", 25252, "hello!");
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.send("myh","localhost", 25252, "hello!");
     }
 
 }

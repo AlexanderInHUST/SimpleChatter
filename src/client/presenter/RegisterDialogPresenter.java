@@ -1,7 +1,7 @@
-package client.account.presenter;
+package client.presenter;
 
-import client.account.view.LoginDialog;
-import client.account.view.RegisterDialog;
+import client.view.LoginDialog;
+import client.view.RegisterDialog;
 import client.base.BasePresenter;
 import client.c2s.account.RegisterMsg;
 import client.sql.SqlHelper;

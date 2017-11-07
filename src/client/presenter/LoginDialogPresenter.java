@@ -1,9 +1,9 @@
-package client.account.presenter;
+package client.presenter;
 
-import client.account.view.ForgetPasswordDialog;
-import client.account.view.LoginDialog;
-import client.account.view.MainDialog;
-import client.account.view.RegisterDialog;
+import client.view.ForgetPasswordDialog;
+import client.view.LoginDialog;
+import client.view.MainDialog;
+import client.view.RegisterDialog;
 import client.base.BasePresenter;
 import client.c2s.account.LoginCheck;
 import client.c2s.state.Login;

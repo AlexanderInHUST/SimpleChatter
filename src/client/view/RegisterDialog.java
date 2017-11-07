@@ -1,8 +1,8 @@
 /*
- * Created by JFormDesigner on Mon Nov 06 12:13:19 SGT 2017
+ * Created by JFormDesigner on Mon Nov 06 16:22:04 SGT 2017
  */
 
-package client.account.view;
+package client.view;
 
 import java.awt.*;
 import javax.swing.*;
@@ -12,9 +12,8 @@ import com.jgoodies.forms.layout.*;
 /**
  * @author Yihan Mei
  */
-
-public class ForgetPasswordDialog extends JFrame {
-    public ForgetPasswordDialog() {
+public class RegisterDialog extends JFrame {
+    public RegisterDialog() {
         initComponents();
     }
 
@@ -23,22 +22,21 @@ public class ForgetPasswordDialog extends JFrame {
         // Generated using JFormDesigner Evaluation license - Yihan Mei
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        forgetDescription = new JTextPane();
+        registerDescription = new JTextPane();
         accountText = new JTextPane();
         accountEditText = new JTextField();
+        passwordText = new JTextPane();
+        passwordEditText = new JPasswordField();
         questionText = new JTextPane();
         questionEditText = new JTextField();
         answerText = new JTextPane();
         answerEditText = new JTextField();
-        passwordText = new JTextPane();
-        passwordEditText = new JPasswordField();
         buttonBar = new JPanel();
         okButton = new JButton();
         cancelButton = new JButton();
 
         //======== this ========
-        setResizable(false);
-        setTitle("\u5fd8\u8bb0\u5bc6\u7801");
+        setTitle("\u7528\u6237\u6ce8\u518c");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -59,54 +57,42 @@ public class ForgetPasswordDialog extends JFrame {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new FormLayout(
-                    "54dlu, $lcgap, 154dlu:grow",
+                    "default, $lcgap, 135dlu:grow",
                     "4*(default, $lgap), default"));
 
-                //---- forgetDescription ----
-                forgetDescription.setEditable(false);
-                forgetDescription.setBackground(SystemColor.window);
-                forgetDescription.setText("\u8bf7\u586b\u5165\u4e0b\u5217\u5bc6\u7801\u63d0\u793a\u4fe1\u606f");
-                contentPanel.add(forgetDescription, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.DEFAULT));
+                //---- registerDescription ----
+                registerDescription.setEditable(false);
+                registerDescription.setBackground(SystemColor.window);
+                registerDescription.setText("\u8bf7\u8f93\u5165\u4ee5\u4e0b\u7684\u6ce8\u518c\u4fe1\u606f");
+                contentPanel.add(registerDescription, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.DEFAULT));
 
                 //---- accountText ----
                 accountText.setEditable(false);
                 accountText.setBackground(SystemColor.window);
                 accountText.setText("\u8d26\u53f7\uff1a");
                 contentPanel.add(accountText, CC.xy(1, 3));
-                contentPanel.add(accountEditText, CC.xy(3, 3));
-
-                //---- questionText ----
-                questionText.setEditable(false);
-                questionText.setBackground(SystemColor.window);
-                questionText.setText("\u5bc6\u7801\u63d0\u793a\u95ee\u9898\uff1a");
-                contentPanel.add(questionText, CC.xy(1, 5, CC.FILL, CC.DEFAULT));
-
-                //---- questionEditText ----
-                questionEditText.setPreferredSize(new Dimension(128, 26));
-                questionEditText.setMinimumSize(new Dimension(128, 26));
-                contentPanel.add(questionEditText, CC.xy(3, 5));
-
-                //---- answerText ----
-                answerText.setEditable(false);
-                answerText.setBackground(SystemColor.window);
-                answerText.setText("\u5bc6\u7801\u63d0\u793a\u7b54\u6848");
-                contentPanel.add(answerText, CC.xy(1, 7));
-
-                //---- answerEditText ----
-                answerEditText.setPreferredSize(new Dimension(128, 26));
-                answerEditText.setMinimumSize(new Dimension(128, 26));
-                contentPanel.add(answerEditText, CC.xy(3, 7));
+                contentPanel.add(accountEditText, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
 
                 //---- passwordText ----
                 passwordText.setEditable(false);
                 passwordText.setBackground(SystemColor.window);
-                passwordText.setText("\u65b0\u5bc6\u7801\uff1a");
-                contentPanel.add(passwordText, CC.xy(1, 9));
+                passwordText.setText("\u5bc6\u7801\uff1a");
+                contentPanel.add(passwordText, CC.xy(1, 5));
+                contentPanel.add(passwordEditText, CC.xy(3, 5, CC.FILL, CC.DEFAULT));
 
-                //---- passwordEditText ----
-                passwordEditText.setMinimumSize(new Dimension(128, 26));
-                passwordEditText.setPreferredSize(new Dimension(128, 26));
-                contentPanel.add(passwordEditText, CC.xy(3, 9));
+                //---- questionText ----
+                questionText.setEditable(false);
+                questionText.setBackground(SystemColor.window);
+                questionText.setText("\u627e\u56de\u5bc6\u7801\u95ee\u9898\uff1a");
+                contentPanel.add(questionText, CC.xy(1, 7));
+                contentPanel.add(questionEditText, CC.xy(3, 7, CC.FILL, CC.DEFAULT));
+
+                //---- answerText ----
+                answerText.setEditable(false);
+                answerText.setBackground(SystemColor.window);
+                answerText.setText("\u627e\u56de\u5bc6\u7801\u7b54\u6848\uff1a");
+                contentPanel.add(answerText, CC.xy(1, 9));
+                contentPanel.add(answerEditText, CC.xy(3, 9, CC.FILL, CC.DEFAULT));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -118,7 +104,7 @@ public class ForgetPasswordDialog extends JFrame {
                     "pref"));
 
                 //---- okButton ----
-                okButton.setText("\u4fee\u6539");
+                okButton.setText("\u6ce8\u518c");
                 buttonBar.add(okButton, CC.xy(2, 1));
 
                 //---- cancelButton ----
@@ -137,15 +123,15 @@ public class ForgetPasswordDialog extends JFrame {
     // Generated using JFormDesigner Evaluation license - Yihan Mei
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JTextPane forgetDescription;
+    private JTextPane registerDescription;
     private JTextPane accountText;
     private JTextField accountEditText;
+    private JTextPane passwordText;
+    private JPasswordField passwordEditText;
     private JTextPane questionText;
     private JTextField questionEditText;
     private JTextPane answerText;
     private JTextField answerEditText;
-    private JTextPane passwordText;
-    private JPasswordField passwordEditText;
     private JPanel buttonBar;
     private JButton okButton;
     private JButton cancelButton;
@@ -160,8 +146,24 @@ public class ForgetPasswordDialog extends JFrame {
         return contentPanel;
     }
 
-    public JTextPane getForgetDescription() {
-        return forgetDescription;
+    public JTextPane getRegisterDescription() {
+        return registerDescription;
+    }
+
+    public JTextPane getAccountText() {
+        return accountText;
+    }
+
+    public JTextField getAccountEditText() {
+        return accountEditText;
+    }
+
+    public JTextPane getPasswordText() {
+        return passwordText;
+    }
+
+    public JTextField getPasswordEditText() {
+        return passwordEditText;
     }
 
     public JTextPane getQuestionText() {
@@ -180,14 +182,6 @@ public class ForgetPasswordDialog extends JFrame {
         return answerEditText;
     }
 
-    public JTextPane getPasswordText() {
-        return passwordText;
-    }
-
-    public JTextField getPasswordEditText() {
-        return passwordEditText;
-    }
-
     public JPanel getButtonBar() {
         return buttonBar;
     }
@@ -198,13 +192,5 @@ public class ForgetPasswordDialog extends JFrame {
 
     public JButton getCancelButton() {
         return cancelButton;
-    }
-
-    public JTextPane getAccountText() {
-        return accountText;
-    }
-
-    public JTextField getAccountEditText() {
-        return accountEditText;
     }
 }

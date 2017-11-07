@@ -9,7 +9,7 @@ import udp.TransmitFile;
  * Created by tangyifeng on 2017/11/4.
  * Email: yifengtang_hust@outlook.com
  */
-public class SendFilePresenter {
+public class SendFile {
 
     public boolean transmit(String account, String fileName, String hostName, int p2pPort, int recvPort) {
         TransmitFile transmitFile = new TransmitFile();
@@ -27,8 +27,8 @@ public class SendFilePresenter {
     }
 
     public static void main(String[] args) {
-        SendFilePresenter sendFilePresenter = new SendFilePresenter();
-        boolean result = sendFilePresenter.transmit("tyf", "/Users/tangyifeng/Desktop/macOS.key", "localhost", 25252, 25253);
+        SendFile sendFile = new SendFile();
+        boolean result = sendFile.transmit("tyf", "/Users/tangyifeng/Desktop/macOS.key", "localhost", 25252, 25253);
         System.out.println(result);
     }
 

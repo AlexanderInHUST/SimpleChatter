@@ -1,8 +1,8 @@
 /*
- * Created by JFormDesigner on Mon Nov 06 16:22:04 SGT 2017
+ * Created by JFormDesigner on Mon Nov 06 10:53:25 SGT 2017
  */
 
-package client.account.view;
+package client.view;
 
 import java.awt.*;
 import javax.swing.*;
@@ -10,10 +10,11 @@ import com.jgoodies.forms.factories.*;
 import com.jgoodies.forms.layout.*;
 
 /**
- * @author Yihan Mei
+ * @author Alex Tang
  */
-public class RegisterDialog extends JFrame {
-    public RegisterDialog() {
+
+public class LoginDialog extends JFrame {
+    public LoginDialog() {
         initComponents();
     }
 
@@ -22,21 +23,21 @@ public class RegisterDialog extends JFrame {
         // Generated using JFormDesigner Evaluation license - Yihan Mei
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        registerDescription = new JTextPane();
+        descriptionText = new JTextPane();
         accountText = new JTextPane();
         accountEditText = new JTextField();
         passwordText = new JTextPane();
         passwordEditText = new JPasswordField();
-        questionText = new JTextPane();
-        questionEditText = new JTextField();
-        answerText = new JTextPane();
-        answerEditText = new JTextField();
+        portText = new JTextPane();
+        portEditText = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
-        cancelButton = new JButton();
+        registerButton = new JButton();
+        forgetButton = new JButton();
 
         //======== this ========
-        setTitle("\u7528\u6237\u6ce8\u518c");
+        setTitle("\u65e0\u7528\u7684\u804a\u5929\u8f6f\u4ef6");
+        setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -57,42 +58,44 @@ public class RegisterDialog extends JFrame {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new FormLayout(
-                    "default, $lcgap, 135dlu:grow",
-                    "4*(default, $lgap), default"));
+                    "37dlu, $lcgap, center:116dlu:grow",
+                    "3*(default, $lgap), default"));
 
-                //---- registerDescription ----
-                registerDescription.setEditable(false);
-                registerDescription.setBackground(SystemColor.window);
-                registerDescription.setText("\u8bf7\u8f93\u5165\u4ee5\u4e0b\u7684\u6ce8\u518c\u4fe1\u606f");
-                contentPanel.add(registerDescription, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.DEFAULT));
+                //---- descriptionText ----
+                descriptionText.setText("\u6b22\u8fce\u8bd5\u7528\u65e0\u7528\u7684\u804a\u5929\u8f6f\u4ef6");
+                descriptionText.setEditable(false);
+                descriptionText.setBackground(UIManager.getColor("window"));
+                descriptionText.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                contentPanel.add(descriptionText, CC.xywh(1, 1, 3, 1, CC.CENTER, CC.CENTER));
 
                 //---- accountText ----
+                accountText.setText("\u8d26\u53f7\uff1a");
                 accountText.setEditable(false);
                 accountText.setBackground(SystemColor.window);
-                accountText.setText("\u8d26\u53f7\uff1a");
                 contentPanel.add(accountText, CC.xy(1, 3));
+
+                //---- accountEditText ----
+                accountEditText.setMinimumSize(new Dimension(100, 26));
+                accountEditText.setPreferredSize(new Dimension(100, 26));
                 contentPanel.add(accountEditText, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
 
                 //---- passwordText ----
+                passwordText.setText("\u5bc6\u7801\uff1a");
                 passwordText.setEditable(false);
                 passwordText.setBackground(SystemColor.window);
-                passwordText.setText("\u5bc6\u7801\uff1a");
                 contentPanel.add(passwordText, CC.xy(1, 5));
+
+                //---- passwordEditText ----
+                passwordEditText.setMinimumSize(new Dimension(12, 26));
+                passwordEditText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
                 contentPanel.add(passwordEditText, CC.xy(3, 5, CC.FILL, CC.DEFAULT));
 
-                //---- questionText ----
-                questionText.setEditable(false);
-                questionText.setBackground(SystemColor.window);
-                questionText.setText("\u627e\u56de\u5bc6\u7801\u95ee\u9898\uff1a");
-                contentPanel.add(questionText, CC.xy(1, 7));
-                contentPanel.add(questionEditText, CC.xy(3, 7, CC.FILL, CC.DEFAULT));
-
-                //---- answerText ----
-                answerText.setEditable(false);
-                answerText.setBackground(SystemColor.window);
-                answerText.setText("\u627e\u56de\u5bc6\u7801\u7b54\u6848\uff1a");
-                contentPanel.add(answerText, CC.xy(1, 9));
-                contentPanel.add(answerEditText, CC.xy(3, 9, CC.FILL, CC.DEFAULT));
+                //---- portText ----
+                portText.setEditable(false);
+                portText.setBackground(SystemColor.window);
+                portText.setText("P2P\u7aef\u53e3\uff1a");
+                contentPanel.add(portText, CC.xy(1, 7));
+                contentPanel.add(portEditText, CC.xy(3, 7, CC.FILL, CC.DEFAULT));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -100,20 +103,27 @@ public class RegisterDialog extends JFrame {
             {
                 buttonBar.setBorder(Borders.createEmptyBorder("4dlu, 0dlu, 0dlu, 0dlu"));
                 buttonBar.setLayout(new FormLayout(
-                    "$glue, $button, $rgap, $button",
+                    "$glue, [45dlu,pref], $rgap, 45dlu, $lcgap, [45dlu,pref], $lcgap, 0dlu",
                     "pref"));
 
                 //---- okButton ----
-                okButton.setText("\u6ce8\u518c");
-                buttonBar.add(okButton, CC.xy(2, 1));
+                okButton.setText("\u767b\u9646");
+                okButton.setMaximumSize(new Dimension(50, 27));
+                okButton.setMinimumSize(new Dimension(50, 27));
+                okButton.setPreferredSize(new Dimension(50, 27));
+                buttonBar.add(okButton, CC.xy(2, 1, CC.FILL, CC.DEFAULT));
 
-                //---- cancelButton ----
-                cancelButton.setText("\u53d6\u6d88");
-                buttonBar.add(cancelButton, CC.xy(4, 1));
+                //---- registerButton ----
+                registerButton.setText("\u6ce8\u518c");
+                buttonBar.add(registerButton, CC.xy(4, 1));
+
+                //---- forgetButton ----
+                forgetButton.setText("\u5fd8\u8bb0\u5bc6\u7801");
+                buttonBar.add(forgetButton, CC.xy(6, 1));
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
-        contentPane.add(dialogPane, BorderLayout.CENTER);
+        contentPane.add(dialogPane, BorderLayout.NORTH);
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -123,18 +133,17 @@ public class RegisterDialog extends JFrame {
     // Generated using JFormDesigner Evaluation license - Yihan Mei
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JTextPane registerDescription;
+    private JTextPane descriptionText;
     private JTextPane accountText;
     private JTextField accountEditText;
     private JTextPane passwordText;
     private JPasswordField passwordEditText;
-    private JTextPane questionText;
-    private JTextField questionEditText;
-    private JTextPane answerText;
-    private JTextField answerEditText;
+    private JTextPane portText;
+    private JTextField portEditText;
     private JPanel buttonBar;
     private JButton okButton;
-    private JButton cancelButton;
+    private JButton registerButton;
+    private JButton forgetButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
@@ -146,8 +155,8 @@ public class RegisterDialog extends JFrame {
         return contentPanel;
     }
 
-    public JTextPane getRegisterDescription() {
-        return registerDescription;
+    public JTextPane getDescriptionText() {
+        return descriptionText;
     }
 
     public JTextPane getAccountText() {
@@ -162,24 +171,16 @@ public class RegisterDialog extends JFrame {
         return passwordText;
     }
 
-    public JTextField getPasswordEditText() {
+    public JPasswordField getPasswordEditText() {
         return passwordEditText;
     }
 
-    public JTextPane getQuestionText() {
-        return questionText;
+    public JTextPane getPortText() {
+        return portText;
     }
 
-    public JTextField getQuestionEditText() {
-        return questionEditText;
-    }
-
-    public JTextPane getAnswerText() {
-        return answerText;
-    }
-
-    public JTextField getAnswerEditText() {
-        return answerEditText;
+    public JTextField getPortEditText() {
+        return portEditText;
     }
 
     public JPanel getButtonBar() {
@@ -190,7 +191,11 @@ public class RegisterDialog extends JFrame {
         return okButton;
     }
 
-    public JButton getCancelButton() {
-        return cancelButton;
+    public JButton getRegisterButton() {
+        return registerButton;
+    }
+
+    public JButton getForgetButton() {
+        return forgetButton;
     }
 }

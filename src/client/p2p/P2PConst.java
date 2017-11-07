@@ -6,6 +6,6 @@ package client.p2p;
  */
 public class P2PConst {
 
-
+    public static final int DEFAULT_P2P_TIMEOUT = 2000;
 
 }

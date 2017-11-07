@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Mon Nov 06 22:59:24 SGT 2017
  */
 
-package client.account.view;
+package client.view;
 
 import java.awt.*;
 import javax.swing.*;

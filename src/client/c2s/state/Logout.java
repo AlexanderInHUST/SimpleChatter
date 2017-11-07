@@ -39,7 +39,7 @@ public class Logout {
     public static void main(String[] args) {
         SqlHelper helper = new SqlHelper();
         Logout presenter = new Logout(helper);
-        boolean result = presenter.logout("myh");
+        boolean result = presenter.logout("tyf");
         System.out.println(result);
     }
 

@@ -1,7 +1,7 @@
-package client.account.presenter;
+package client.presenter;
 
-import client.account.view.ForgetPasswordDialog;
-import client.account.view.LoginDialog;
+import client.view.ForgetPasswordDialog;
+import client.view.LoginDialog;
 import client.base.BasePresenter;
 import client.c2s.account.ForgetPassword;
 import client.sql.SqlHelper;
