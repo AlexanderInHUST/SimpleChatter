@@ -1,4 +1,4 @@
-package server;
+package server.unseen;
 
 import message.Message;
 import server.msgHanlder.IMsgHandler;
