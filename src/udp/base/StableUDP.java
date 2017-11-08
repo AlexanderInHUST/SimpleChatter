@@ -354,11 +354,11 @@ public class StableUDP {
                     sendArray.add(i);
                     countListener.onCount(i, fileLength);
 
-//                try {
-//                    Thread.sleep(SEND_TIMEOUT / 2);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    Thread.sleep(SEND_WAIT);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 }
                 sentNum = sendSize - 1;
@@ -485,11 +485,11 @@ public class StableUDP {
                                                 helper.sendUDP(sendData.get(i), hostName, sendPort);
                                                 Log.log(CLASS_NAME, "data (seq num " + i + " ) has been sent!", IS_DEBUG);
 
-//                                                try {
-//                                                    Thread.sleep(SEND_TIMEOUT / 2);
-//                                                } catch (InterruptedException e) {
-//                                                    e.printStackTrace();
-//                                                }
+                                                try {
+                                                    Thread.sleep(SEND_WAIT);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
 //                                        }
 //                                    timetableHandler.add(i);
                                             }

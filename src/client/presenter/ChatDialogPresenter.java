@@ -62,6 +62,15 @@ public class ChatDialogPresenter extends BasePresenter {
         chatDialog.getChatUserText().setText(withWhom);
     }
 
+    private void askForFresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();
+    }
+
     @Override
     public void removeLogo(JFrame jFrame) {
         ChatDialog chatDialog = (ChatDialog) jFrame;
@@ -137,6 +146,7 @@ public class ChatDialogPresenter extends BasePresenter {
                                 JOptionPane.showMessageDialog(null, "发送错误！",
                                         "错误", JOptionPane.WARNING_MESSAGE);
                             }
+                            chatDialog.getProgressText().setText("");
                         }
                     }).start();
                 } else {
@@ -149,15 +159,15 @@ public class ChatDialogPresenter extends BasePresenter {
 
     private ICountListener getCountListener() {
         return (int count, int amount) -> {
-            if (count % 50 == 0) {
+            if (count % 20 == 0) {
                 ChatDialog chatDialog = (ChatDialog) getFrame();
                 chatDialog.getProgressText().setText("速度：" + (int) (((count - lastCount) * PACKAGE_LEN / 1024) /
-                        (float) ((float) (System.currentTimeMillis() - lastTime) / 1000)) + "kb/s"
-                        + "，剩余：" + (int) ((float) count / (float) amount * 100) + "%");
+                        (float) ((float) (System.currentTimeMillis() - lastTime) / 1000)) + "kB/s"
+                        + "，已下载：" + (int) ((float) count / (float) amount * 100) + "%");
                 lastCount = count;
                 lastTime = System.currentTimeMillis();
             }
-            if (count >= amount - 1) {
+            if (count >= amount - 10) {
                 ChatDialog chatDialog = (ChatDialog) getFrame();
                 chatDialog.getProgressText().setText("");
             }

@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SimpleChattingProgram_server">
+    <output-path>$PROJECT_DIR$/out/artifacts/SimpleChattingProgram_server</output-path>
+    <root id="archive" name="SimpleChattingProgram_server.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/ser/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="SimpleChattingProgram" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jgoodies-forms.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jgoodies-common.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/mysql-connector-java-5.1.44-bin.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

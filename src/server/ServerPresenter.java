@@ -51,13 +51,10 @@ public class ServerPresenter {
         return (ActionEvent e) -> {
             if (mainServerCmd.isRunning()) {
                 mainServerCmd.close();
-                serverDialog.setVisible(false);
-                serverDialog.dispose();
-                System.exit(0);
-            } else {
-                JOptionPane.showMessageDialog(null, "Server已经开始停止！",
-                        "错误", JOptionPane.WARNING_MESSAGE);
             }
+            serverDialog.setVisible(false);
+            serverDialog.dispose();
+            System.exit(0);
         };
     }
 

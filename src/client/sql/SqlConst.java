@@ -10,7 +10,7 @@ public class SqlConst {
     public static final String JDBC_DB_ADDRESS = "jdbc:mysql://localhost/chatter_user?autoReconnect=true&useSSL=false";
 
     public static final String JDBC_USER = "root";
-    public static final String JDBC_PASSWORD = "39160816q";
+    public static final String JDBC_PASSWORD = "39160816q"; // b857738325
 
     public static final String DB_ACCOUNT_INSERT = "INSERT INTO ACCOUNT"
             + "(ACCOUNT, P_KEY) VALUES"

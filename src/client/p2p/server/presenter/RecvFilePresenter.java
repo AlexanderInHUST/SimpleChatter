@@ -6,6 +6,7 @@ import security.MD5Verify;
 import udp.TransmitFile;
 import udp.base.ICountListener;
 
+import static client.c2s.C2SConst.isMac;
 import static message.MessageConst.FILE_DONE_MSG;
 import static message.MessageConst.FILE_WANNA_MSG;
 
@@ -28,8 +29,7 @@ public class RecvFilePresenter {
     }
 
     private String editFileName(String fileName) {
-        return fileName + ".send";
-        //todo
+        return (isMac) ? "/Users/tangyifeng/Desktop/file" : "C:\\ForFile\\file";
     }
 
     private void initialRecvFile() {
