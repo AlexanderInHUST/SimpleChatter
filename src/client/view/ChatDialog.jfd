@@ -55,21 +55,6 @@ new FormModel {
 						"gridX": 7
 						"gridY": 5
 					} )
-					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "progressText"
-						"editable": false
-						"background": sfield java.awt.SystemColor window
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 7
-						"gridWidth": 3
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "fileButton"
-						"text": "发送文件"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 5
-						"gridY": 7
-					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "exitButton"
 						"text": "退出"

@@ -28,8 +28,6 @@ public class ChatDialog extends JFrame {
         chatDetailList = new JList();
         chatEditText = new JTextField();
         sendButton = new JButton();
-        progressText = new JTextPane();
-        fileButton = new JButton();
         exitButton = new JButton();
 
         //======== this ========
@@ -82,15 +80,6 @@ public class ChatDialog extends JFrame {
                 sendButton.setText("\u53d1\u9001");
                 contentPanel.add(sendButton, CC.xy(7, 5));
 
-                //---- progressText ----
-                progressText.setEditable(false);
-                progressText.setBackground(SystemColor.window);
-                contentPanel.add(progressText, CC.xywh(1, 7, 3, 1));
-
-                //---- fileButton ----
-                fileButton.setText("\u53d1\u9001\u6587\u4ef6");
-                contentPanel.add(fileButton, CC.xy(5, 7));
-
                 //---- exitButton ----
                 exitButton.setText("\u9000\u51fa");
                 contentPanel.add(exitButton, CC.xy(7, 7));
@@ -113,8 +102,6 @@ public class ChatDialog extends JFrame {
     private JList chatDetailList;
     private JTextField chatEditText;
     private JButton sendButton;
-    private JTextPane progressText;
-    private JButton fileButton;
     private JButton exitButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
@@ -149,14 +136,6 @@ public class ChatDialog extends JFrame {
 
     public JButton getSendButton() {
         return sendButton;
-    }
-
-    public JButton getFileButton() {
-        return fileButton;
-    }
-
-    public JTextPane getProgressText() {
-        return progressText;
     }
 
     public JButton getExitButton() {

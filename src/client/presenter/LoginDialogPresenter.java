@@ -68,8 +68,7 @@ public class LoginDialogPresenter extends BasePresenter {
             String account = loginDialog.getAccountEditText().getText();
             String password = loginDialog.getPasswordEditText().getText();
             String portString = loginDialog.getPortEditText().getText();
-            String filePortString = loginDialog.getFilePortEditText().getText();
-            if (account.isEmpty() || password.isEmpty() || portString.isEmpty() || filePortString.isEmpty()) {
+            if (account.isEmpty() || password.isEmpty() || portString.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "请完整输入信息！",
                         "错误", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -80,7 +79,7 @@ public class LoginDialogPresenter extends BasePresenter {
                     return;
                 }
                 int port = Integer.parseInt(portString);
-                int filePort = Integer.parseInt(filePortString);
+                int filePort = Integer.parseInt("-1");
                 ArrayList<String> onlineGuys = login.login(account, WebUtil.getLocalHostIP(), port);
                 if (onlineGuys == null) {
                     JOptionPane.showMessageDialog(null, "网络错误！",

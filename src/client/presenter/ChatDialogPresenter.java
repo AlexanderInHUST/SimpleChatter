@@ -2,25 +2,17 @@ package client.presenter;
 
 import client.c2s.chat.CheckState;
 import client.c2s.chat.SendOffline;
-import client.p2p.client.presenter.SendFile;
 import client.p2p.client.presenter.SendMessage;
-import client.p2p.server.presenter.RecvFilePresenter;
 import client.view.ChatDialog;
 import client.base.BasePresenter;
 import client.sql.SqlHelper;
-import client.view.MainDialog;
 import com.jgoodies.forms.factories.Borders;
-import udp.TransmitFile;
-import udp.base.ICountListener;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 
-import static udp.UDPConst.PACKAGE_LEN;
 
 /**
  * Created by tangyifeng on 2017/11/7.
@@ -39,10 +31,8 @@ public class ChatDialogPresenter extends BasePresenter {
 
     private SendOffline sendOffline;
     private CheckState checkState;
-    private SendFile sendFile;
     private SendMessage sendMessage;
 
-    private RecvFilePresenter recvFilePresenter;
 
     public ChatDialogPresenter(ChatDialog chatDialog, SqlHelper sqlHelper, MainDialogPresenter mainDialogPresenter, String account,
                                String withWhom, int filePort) {
@@ -54,10 +44,8 @@ public class ChatDialogPresenter extends BasePresenter {
         initialListeners();
         sendOffline = new SendOffline(sqlHelper);
         checkState = new CheckState(sqlHelper);
-        sendFile = new SendFile();
         sendMessage = new SendMessage();
         msgListModel = new DefaultListModel<>();
-        recvFilePresenter = new RecvFilePresenter(filePort, getCountListener());
 
         chatDialog.getChatUserText().setText(withWhom);
     }
@@ -83,7 +71,6 @@ public class ChatDialogPresenter extends BasePresenter {
         ChatDialog chatDialog = (ChatDialog) getFrame();
         chatDialog.getExitButton().addActionListener(getExitListener());
         chatDialog.getSendButton().addActionListener(getSendListener());
-        chatDialog.getFileButton().addActionListener(getFileListener());
     }
 
     @SuppressWarnings("unchecked")
@@ -118,58 +105,6 @@ public class ChatDialogPresenter extends BasePresenter {
                 }
                 addMsgToList(account, msg);
                 chatDialog.getChatEditText().setText("");
-            }
-        };
-    }
-
-    private ActionListener getFileListener() {
-        return (ActionEvent e) -> {
-            ChatDialog chatDialog = (ChatDialog) getFrame();
-            ArrayList<String> isOnline = checkState.check(account, withWhom);
-            if (isOnline == null) {
-                JOptionPane.showMessageDialog(null, "对方不在线！",
-                        "错误", JOptionPane.WARNING_MESSAGE);
-            } else {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                chooser.showOpenDialog(new JPanel());
-                File file = chooser.getSelectedFile();
-                if (file.exists()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean result = sendFile.transmit(account, file.getAbsolutePath(), isOnline.get(0), Integer.parseInt(isOnline.get(1)), filePort, getCountListener());
-                            if (result) {
-                                JOptionPane.showMessageDialog(null, "发送成功！",
-                                        "信息", JOptionPane.WARNING_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, "发送错误！",
-                                        "错误", JOptionPane.WARNING_MESSAGE);
-                            }
-                            chatDialog.getProgressText().setText("");
-                        }
-                    }).start();
-                } else {
-                    JOptionPane.showMessageDialog(null, "请选择文件！",
-                            "错误", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        };
-    }
-
-    private ICountListener getCountListener() {
-        return (int count, int amount) -> {
-            if (count % 20 == 0) {
-                ChatDialog chatDialog = (ChatDialog) getFrame();
-                chatDialog.getProgressText().setText("速度：" + (int) (((count - lastCount) * PACKAGE_LEN / 1024) /
-                        (float) ((float) (System.currentTimeMillis() - lastTime) / 1000)) + "kB/s"
-                        + "，已下载：" + (int) ((float) count / (float) amount * 100) + "%");
-                lastCount = count;
-                lastTime = System.currentTimeMillis();
-            }
-            if (count >= amount - 10) {
-                ChatDialog chatDialog = (ChatDialog) getFrame();
-                chatDialog.getProgressText().setText("");
             }
         };
     }

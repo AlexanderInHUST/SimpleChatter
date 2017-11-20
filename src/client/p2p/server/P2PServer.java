@@ -1,9 +1,5 @@
 package client.p2p.server;
 
-import client.p2p.server.msgHandler.MsgHandlerCreator;
-import client.p2p.server.presenter.RecvChatPresenter;
-import client.p2p.server.presenter.RecvFilePresenter;
-import client.presenter.MainDialogPresenter;
 import message.Message;
 
 import java.io.IOException;
@@ -78,10 +74,4 @@ public class P2PServer {
             }
         }
     }
-
-//    public static void main(String[] args) {
-//        P2PServer p2PServer = new P2PServer(25252, 2000);
-//        RecvChatPresenter recvChatPresenter = new RecvChatPresenter();
-//        RecvFilePresenter recvFilePresenter = new RecvFilePresenter(34333);
-//    }
 }

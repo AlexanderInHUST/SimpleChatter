@@ -3,7 +3,6 @@ package client.p2p.server.presenter;
 import client.p2p.server.msgHandler.IMsgCallback;
 import client.p2p.server.msgHandler.MsgHandlerCreator;
 import client.presenter.MainDialogPresenter;
-import udp.TransmitFile;
 
 import static message.MessageConst.CHAT_SEND_MSG;
 

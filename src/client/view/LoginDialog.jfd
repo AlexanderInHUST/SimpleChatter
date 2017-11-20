@@ -80,22 +80,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 7
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-					} )
-					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "filePortText"
-						"text": "文件端口："
-						"editable": false
-						"background": sfield java.awt.SystemColor window
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 5
-						"gridY": 7
-					} )
-					add( new FormComponent( "javax.swing.JTextField" ) {
-						name: "filePortEditText"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 7
-						"gridY": 7
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridWidth": 5
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"

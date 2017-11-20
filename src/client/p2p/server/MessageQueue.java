@@ -62,17 +62,4 @@ public class MessageQueue {
         this.isKilledNow = true;
     }
 
-//    public static void main(String[] args) {
-//        MessageQueue queue = new MessageQueue();
-//        queue.start();
-////        for (int i = 0; i < 10; i++) {
-////            queue.add(new Message(i % 3, "asd"));
-////        }
-////        queue.kill();
-//        queue.add(new Message(REGISTER_MSG, "2;1;1;1;1"));
-//        queue.add(new Message(REGISTER_MSG, "3;1;1;1;1"));
-//        queue.add(new Message(REGISTER_MSG, "4;1;1;1;1"));
-//        queue.kill();
-//    }
-
 }

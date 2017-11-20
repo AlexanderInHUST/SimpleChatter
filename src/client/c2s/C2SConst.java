@@ -7,8 +7,6 @@ package client.c2s;
 public class C2SConst {
 
     public static final int C2S_SERVER_PORT = 24444;
-    public static final String C2S_SERVER_HOST = "192.168.56.1";
-
-    public static final boolean isMac = true;
+    public static final String C2S_SERVER_HOST = "localhost";
 
 }

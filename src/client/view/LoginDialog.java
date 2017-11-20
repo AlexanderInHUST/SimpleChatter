@@ -30,8 +30,6 @@ public class LoginDialog extends JFrame {
         passwordEditText = new JPasswordField();
         portText = new JTextPane();
         portEditText = new JTextField();
-        filePortText = new JTextPane();
-        filePortEditText = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         registerButton = new JButton();
@@ -97,14 +95,7 @@ public class LoginDialog extends JFrame {
                 portText.setBackground(SystemColor.window);
                 portText.setText("P2P\u7aef\u53e3\uff1a");
                 contentPanel.add(portText, CC.xy(1, 7));
-                contentPanel.add(portEditText, CC.xy(3, 7, CC.FILL, CC.DEFAULT));
-
-                //---- filePortText ----
-                filePortText.setText("\u6587\u4ef6\u7aef\u53e3\uff1a");
-                filePortText.setEditable(false);
-                filePortText.setBackground(SystemColor.window);
-                contentPanel.add(filePortText, CC.xy(5, 7));
-                contentPanel.add(filePortEditText, CC.xy(7, 7, CC.FILL, CC.DEFAULT));
+                contentPanel.add(portEditText, CC.xywh(3, 7, 5, 1, CC.FILL, CC.DEFAULT));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -149,8 +140,6 @@ public class LoginDialog extends JFrame {
     private JPasswordField passwordEditText;
     private JTextPane portText;
     private JTextField portEditText;
-    private JTextPane filePortText;
-    private JTextField filePortEditText;
     private JPanel buttonBar;
     private JButton okButton;
     private JButton registerButton;
@@ -208,13 +197,5 @@ public class LoginDialog extends JFrame {
 
     public JButton getForgetButton() {
         return forgetButton;
-    }
-
-    public JTextPane getFilePortText() {
-        return filePortText;
-    }
-
-    public JTextField getFilePortEditText() {
-        return filePortEditText;
     }
 }

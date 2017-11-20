@@ -8,7 +8,6 @@ import message.MessageCoder;
 
 import java.util.ArrayList;
 
-import static client.c2s.C2SConst.isMac;
 import static message.MessageConst.ACC_MSG;
 import static message.MessageConst.LOG_IN_MSG;
 import static message.MessageConst.SUCCESS;
@@ -30,7 +29,7 @@ public class Login {
         SqlSecurity sqlSecurity = helper.getSqlSecurity();
         String privateKey = sqlSecurity.getPrivateKey(account);
         sender = new MessageSender(privateKey);
-        String data = account + ";" + ((isMac) ? "192.168.56.1" : host) + ";" + Integer.toString(port);
+        String data = account + ";" + host + ";" + Integer.toString(port);
         Message msg = getMsg(data.getBytes());
         Message reply = sender.sendMessageSafely(msg, account);
         boolean result = reply.getKind() == ACC_MSG && !(new String(reply.getData()).equals(SUCCESS));

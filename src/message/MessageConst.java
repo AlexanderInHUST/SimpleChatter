@@ -30,13 +30,6 @@ public class MessageConst {
     public static final int ASK_OFFLINE_CHAT_MSG = 6;
     public static final int SEND_OFFLINE_CHAT_MSG = 7;
 
-    // P2P
-    // File transmit MSG
-    public static final int FILE_WANNA_MSG = 100; // recv in msgQueue
-    public static final int FILE_READY_MSG = 101;
-    public static final int FILE_DONE_MSG = 102;
-    public static final int FILE_OK_MSG = 103;
-
     // Chat MSG
     public static final int CHAT_SEND_MSG = 105;
 }
